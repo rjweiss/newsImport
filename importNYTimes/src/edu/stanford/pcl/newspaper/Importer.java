@@ -65,6 +65,12 @@ public class Importer {
                     // Parse failed, skip.
                     return;
                 }
+                if (article.getFileName()=="" || article.getHeadline()=="" || article.getMediaSource()=="" ||
+                        article.getMediaType()=="" || article.getPageNumber()=="" ||
+                        article.getPublicationDate() =="" || article.getText()=="")
+                {
+                    return;
+                }
 
                 // Redundancy party party.
                 try {
