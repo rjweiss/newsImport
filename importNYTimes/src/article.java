@@ -99,13 +99,29 @@ public class article {
 
         doc.put("articlePageNumber", articlePageNumber);
         doc.put("articlePublicationDate", articlePublicationDate);
-        doc.put("articleHeadline", headline);
+        doc.put("articleHeadline", articleHeadline);
         doc.put("articleText", articleText);
-        doc.put("articleFile", articleFileName);
+        doc.put("articleFileName", articleFileName);
         doc.put("articleContentType", articleContentType);
         doc.put("articleContentSource", articleContentSource);
 
         myColl.insert(doc);
+    }
+
+    private void modifyLucene(){
+        Analyzer analyzer = new StandardAnalyzer();
+        // create an index in /tmp/index, overwriting an existing one:
+        IndexModifier indexModifier = new IndexModifier("/rawdata/luceneidex", analyzer, true);
+        Document doc = new Document();
+
+        doc.add(new Field("articleContentSource", articleContentSource, Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("articleContentType", articleContentType, Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("articleFileName", articleFileName, Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("articleText", articleText, Field.Store.YES, Field.Index.ANALYZED));
+        doc.add(new Field("articleHeadline", articleHeadline, Field.Store.YES, Field.Index.ANALYZED));
+
+        indexModifier.addDocument(doc);
+        indexModifier.close();
     }
 
     /*public static void buildIndex() throws IOException {
