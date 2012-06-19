@@ -1,55 +1,92 @@
 import java.io.*;
 import javax.xml.xpath.XPathConstants;
 import org.w3c.dom.*;
+import java.io.IOException;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+import javax.xml.parsers.*;
+import javax.xml.xpath.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: seanwestwood
- * Date: 6/18/12
- * Time: 3:02 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class importNYTimes {
-    public static void main(String... args) {
-        File[] files = new File("C:/").listFiles();
+    public static void main(String... args) throws ParserConfigurationException, SAXException,
+            IOException, XPathExpressionException{
+        File[] files = new File("/Users/seanwestwood/Dropbox/stanfordBigData/sampleData/02/").listFiles();
         findFiles(files);
     }
 
-    public static void findFiles(File[] files) {
+    public static void findFiles(File[] files) throws ParserConfigurationException, SAXException,
+            IOException, XPathExpressionException{
         for (File file : files) {
             if (file.isDirectory()) {
                 //System.out.println("Directory: " + file.getName());
                 findFiles(file.listFiles());
             } else {
-                parse(file.getName());
+
+                parser(file.getAbsolutePath());
+
             }
         }
     }
-    public static void parse(String fileName){
 
-        XPathReader reader = new XPathReader(fileName);
-        String expression = "//head/meta[@name=\"print_page_number\"]";
-        String articlePageNumber = reader.read(expression,XPathConstants.STRING).toString();
+        public static void parser(String fileName) throws ParserConfigurationException, SAXException,
+                IOException, XPathExpressionException{
 
-        expression = "//head/meta[@name=\"publication_month\"]";
-        String month = reader.read(expression,XPathConstants.STRING).toString();
-        expression = "//head/meta[@name=\"publication_day_of_month\"]";
-        String day = reader.read(expression,XPathConstants.STRING).toString();
-        expression = "//head/meta[@name=\"publication_year\"]";
-        String year = reader.read(expression,XPathConstants.STRING).toString();
+            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+            domFactory.setNamespaceAware(true); // never forget this!
+            domFactory.setValidating(false);
+            domFactory.setFeature("http://xml.org/sax/features/namespaces", false);
+            domFactory.setFeature("http://xml.org/sax/features/validation", false);
+            domFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+            domFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 
-        String articlePublicationdate = month + "/"+ day + "/"+year;
+            DocumentBuilder builder = domFactory.newDocumentBuilder();
 
-        expression = "//body/body.head/hedline/hl1";
-        String articleHeadline = reader.read(expression,XPathConstants.STRING).toString();
+            System.out.println(fileName);
+            Document doc = builder.parse(fileName);
 
-        expression = "//body/body.content/block[@class=\"full_text\"]/p/text()";
-        String articleText = reader.read(expression,XPathConstants.STRING).toString();
-        System.out.println(articleText);
-    }
+            XPathFactory factory = XPathFactory.newInstance();
+            XPath xpath = factory.newXPath();
+            XPathExpression expr = xpath.compile("//head/meta[@name=\"print_page_number\"]");
 
+            Object result = expr.evaluate(doc, XPathConstants.NODESET);
+            NodeList nodes = (NodeList) result;
+            String articlePageNumber = nodes.item(0).getAttributes().getNamedItem("content").getNodeValue().toString();
 
+            expr = xpath.compile("//head/meta[@name=\"publication_month\"]");
+            result = expr.evaluate(doc, XPathConstants.NODESET);
+            nodes = (NodeList) result;
+            String month = nodes.item(0).getAttributes().getNamedItem("content").getNodeValue().toString();
 
+            expr = xpath.compile("//head/meta[@name=\"publication_day_of_month\"]");
+            result = expr.evaluate(doc, XPathConstants.NODESET);
+            nodes = (NodeList) result;
+            String day = nodes.item(0).getAttributes().getNamedItem("content").getNodeValue().toString();
 
+            expr = xpath.compile("//head/meta[@name=\"publication_year\"]");
+            result = expr.evaluate(doc, XPathConstants.NODESET);
+            nodes = (NodeList) result;
+            String year = nodes.item(0).getAttributes().getNamedItem("content").getNodeValue().toString();
+
+            String articlePublicationdate = month + "/"+ day + "/"+year;
+
+            expr = xpath.compile("//body/body.head/hedline/hl1");
+            result = expr.evaluate(doc, XPathConstants.NODESET);
+            nodes = (NodeList) result;
+            String articleHeadline = nodes.item(0).getNodeValue();
+
+            expr = xpath.compile("//body/body.content/block[@class=\"full_text\"]/p/text()");
+            result = expr.evaluate(doc, XPathConstants.NODESET);
+            nodes = (NodeList) result;
+            String articleText ="";
+
+            try{
+            articleText = nodes.item(0).getNodeValue();
+            }
+            catch(NullPointerException e)
+            {
+                articleText ="";
+            }
+        }
 
 }
