@@ -9,32 +9,28 @@
 import com.mongodb.*;
 import java.util.*;
 
-
-
 public class insertMongo {
 
     public static void main(String[] args) throws Exception{
+
         Mongo myM = new Mongo();
         DB myDB = myM.getDB("test");
         DBCollection myColl = myDB.getCollection("articles");
 
-        Object o = new Object();
+//        Object o = new Object();
+//        insertDocument(o, myColl);
 
-        insertDocument(o, myColl);
     }
 
     private static void insertDocument(Object obj, DBCollection coll){
         BasicDBObject doc = new BasicDBObject();
 
-        //fix this shite
         doc.put("articlePageNumber", obj.toString());
         doc.put("articlePublicationDate", obj.toString());
         doc.put("articleHeadline", obj.toString());
         doc.put("articleText", obj.toString());
         doc.put("articleFile", obj.toString());
         doc.put("articlePath", obj.toString());
-        doc.put("contentType", obj.toString());
-        doc.put("contentSource", obj.toString());
 
         coll.insert(doc);
     }
