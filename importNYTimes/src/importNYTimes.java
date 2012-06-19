@@ -9,13 +9,26 @@ import javax.xml.xpath.*;
 
 
 public class importNYTimes {
-    public static void main(String... args) throws ParserConfigurationException, SAXException,
-            IOException, XPathExpressionException{
-        File[] files = new File("/Users/seanwestwood/Dropbox/stanfordBigData/sampleData/02/").listFiles();
+
+    public article NYTimesArticle;
+
+    public void main(String... args) throws ParserConfigurationException, SAXException,
+        IOException, XPathExpressionException{
+        try {
+            NYTimesArticle.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        File[] files = new File("~/Dropbox/stanfordBigData/sampleData/02/").listFiles();
         findFiles(files);
+        try {
+            NYTimesArticle.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void findFiles(File[] files) throws ParserConfigurationException, SAXException,
+    public void findFiles(File[] files) throws ParserConfigurationException, SAXException,
             IOException, XPathExpressionException{
         for (File file : files) {
             if (file.isDirectory()) {
@@ -29,7 +42,7 @@ public class importNYTimes {
         }
     }
 
-        public static void parser(String fileName) throws ParserConfigurationException, SAXException,
+        public void parser(String fileName) throws ParserConfigurationException, SAXException,
                 IOException, XPathExpressionException{
 
             DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
@@ -51,7 +64,7 @@ public class importNYTimes {
 
             Object result = expr.evaluate(doc, XPathConstants.NODESET);
             NodeList nodes = (NodeList) result;
-            String articlePageNumber = nodes.item(0).getAttributes().getNamedItem("content").getNodeValue().toString();
+            NYTimesArticle.setArticlePageNumber(nodes.item(0).getAttributes().getNamedItem("content").getNodeValue().toString());
 
             expr = xpath.compile("//head/meta[@name=\"publication_month\"]");
             result = expr.evaluate(doc, XPathConstants.NODESET);
@@ -68,25 +81,29 @@ public class importNYTimes {
             nodes = (NodeList) result;
             String year = nodes.item(0).getAttributes().getNamedItem("content").getNodeValue().toString();
 
-            String articlePublicationdate = month + "/"+ day + "/"+year;
+            NYTimesArticle.setArticlePublicationDate(month + "/"+ day + "/"+year);
 
             expr = xpath.compile("//body/body.head/hedline/hl1");
             result = expr.evaluate(doc, XPathConstants.NODESET);
             nodes = (NodeList) result;
-            String articleHeadline = nodes.item(0).getNodeValue();
+            NYTimesArticle.setArticleHeadline(nodes.item(0).getNodeValue());
 
             expr = xpath.compile("//body/body.content/block[@class=\"full_text\"]/p/text()");
             result = expr.evaluate(doc, XPathConstants.NODESET);
             nodes = (NodeList) result;
-            String articleText ="";
 
             try{
-            articleText = nodes.item(0).getNodeValue();
+            NYTimesArticle.setArticleText(nodes.item(0).getNodeValue());
             }
             catch(NullPointerException e)
             {
-                articleText ="";
+                NYTimesArticle.setArticleText("");
             }
+
+            NYTimesArticle.setArticleContentType("newspaper");
+            NYTimesArticle.setArticleContentSource("New York Times");
+
+            NYTimesArticle.insert();
         }
 
 }

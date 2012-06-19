@@ -1,3 +1,10 @@
+import com.mongodb.*;
+import java.io.IOException;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
 /**
  * Created with IntelliJ IDEA.
  * User: Rebecca
@@ -5,73 +12,116 @@
  * Time: 5:12 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Article {
+public class article {
 
-    public String pageNum;
-    public String headline;
-    public String text;
-    public String pubDate;
-    public String fileName;
-    public String dirPath;
-    public String contentType;
-    public String contentSource;
+    private String articlePageNumber;
+    private String articleHeadline;
+    private String articleText;
+    private String articlePublicationDate;
+    private String articleFileName;
+    private String articleContentType;
+    private String articleContentSource;
 
-    public Article(String type, String source){
-        contentType = type;
-        contentSource = source;
+    private DBCollection myColl;
+
+    public void setArticleContentType(String s){
+        articleContentType = s;
     }
+
+    public String getArticleContentType(){
+        return articleContentType;
+    }
+
+    public void setArticleContentSource(String s){
+        articleContentSource = s;
+    }
+
+    public String getArticleContentSource(){
+        return articleContentSource;
+    }
+
     //article page number
 
-    public void setPageNum(String s){
-        pageNum = s;
+    public void setArticlePageNumber(String s){
+        articlePageNumber = s;
     }
 
-    public String getPageNum(){
-        return pageNum;
+    public String getArticlePageNumber(){
+        return articlePageNumber;
     }
 
     //article headline
-    public void setHeadline(String s){
-        headline = s;
+    public void setArticleHeadline(String s){
+        articleHeadline = s;
     }
-    public String getHeadline(){
-        return headline;
+    public String getArticleHeadline(){
+        return articleHeadline;
     }
 
-    //article text
-    public void setText(String s){
-        text = s;
+    //article articleText
+    public void setArticleText(String s){
+        articleText = s;
     }
-    public String getText(){
-        return text;
+    public String getArticleText(){
+        return articleText;
     }
 
     //article publication date
-    public void setPubDate(String s){
-        pubDate = s;
+    public void setArticlePublicationDate(String s){
+        articlePublicationDate = s;
     }
-    public String getPubDate(){
-        return pubDate;
+    public String getArticlePublicationDate(){
+        return articlePublicationDate;
     }
 
     //article file
     public void setFile(String s){
-        fileName = s;
+        articleFileName = s;
     }
     public String getFile(){
-        return fileName;
+        return articleFileName;
     }
 
-    //article path
-    public void setPath(String s){
-        dirPath = s;
+    public void connect() throws Exception{
+
+        Mongo myM = new Mongo();
+        DB myDB = myM.getDB("test");
+        myColl = myDB.getCollection("articles");
+
     }
 
-    public String getPath(){
-        return dirPath;
+    public void disconnect() throws Exception{
+
     }
 
+    public void insert(){
+        BasicDBObject doc = new BasicDBObject();
 
+        doc.put("articlePageNumber", articlePageNumber);
+        doc.put("articlePublicationDate", articlePublicationDate);
+        doc.put("articleHeadline", headline);
+        doc.put("articleText", articleText);
+        doc.put("articleFile", articleFileName);
+        doc.put("articleContentType", articleContentType);
+        doc.put("articleContentSource", articleContentSource);
 
+        myColl.insert(doc);
+    }
 
+    /*public static void buildIndex() throws IOException {
+        IndexWriter indexWriter
+                = new IndexWriter(FSDirectory.getDirectory("/rawdata/luceneindex/"),
+                new StandardAnalyzer(),
+                IndexWriter.MaxFieldLength.LIMITED);
+        String[] texts = new String[] {  "hello world",
+                "hello sailor",
+                "goodnight moon" };
+        for (String text : texts) {
+            Document doc = new Document();
+            doc.add(new Field("text",text,
+                    Field.Store.YES,Field.Index.ANALYZED));
+            indexWriter.addDocument(doc);
+        }
+        indexWriter.close();*/
+    }
 }
