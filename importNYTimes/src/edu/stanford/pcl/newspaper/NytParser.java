@@ -41,7 +41,8 @@ public class NytParser extends Parser {
         Article article = new Article();
         article.setMediaType("newspaper");
         article.setContentSource("New York Times");
-        article.setFileName(file.getName());
+//        article.setFileName(file.getName());
+        article.setFileName(file.getAbsolutePath());
 
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         domFactory.setNamespaceAware(true); // never forget this!
@@ -71,16 +72,31 @@ public class NytParser extends Parser {
             }
 
             // Page Number
-            article.setPageNumber(attributes.get("articlePageNumber"));
+            try {
+                article.setPageNumber(attributes.get("articlePageNumber"));
+            }
+            catch (Exception e) {
+                article.setPageNumber("");
+            }
 
             // Publication Date
             // TODO: Use a real date object.
-            article.setPublicationDate(attributes.get("_articlePublicationMonth") + "/" + attributes.get("_articlePublicationDayOfMonth") + "/" + attributes.get("_articlePublicationYear"));
+            try {
+                article.setPublicationDate(attributes.get("_articlePublicationMonth") + "/" + attributes.get("_articlePublicationDayOfMonth") + "/" + attributes.get("_articlePublicationYear"));
+            }
+            catch (Exception e) {
+                article.setPublicationDate("");
+            }
 
             // Headline
             expr = xpath.compile("//body/body.head/hedline/hl1");
             result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
-            article.setHeadline(result.item(0).getTextContent());
+            try {
+                article.setHeadline(result.item(0).getTextContent());
+            }
+            catch (Exception e) {
+                article.setHeadline("");
+            }
 
             // Text
             StringBuilder sb = new StringBuilder();
@@ -89,8 +105,12 @@ public class NytParser extends Parser {
             for (int i = 0; i < result.getLength(); i++) {
                 sb.append(result.item(i).getTextContent()).append(" ");
             }
-            article.setText(sb.toString());
-
+            try {
+                article.setText(sb.toString());
+            }
+            catch (Exception e) {
+                article.setText("");
+            }
         }
         // TODO:  Exception handling.
         catch (XPathExpressionException e) {
