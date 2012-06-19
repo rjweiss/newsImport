@@ -7,43 +7,69 @@
  */
 public class Article {
 
-    public String pagenum;
+    public String pageNum;
     public String headline;
     public String text;
-    public String file;
-    public String path;
-    public String type;
-    public String source;
+    public String pubDate;
+    public String fileName;
+    public String dirPath;
+    public String contentType;
+    public String contentSource;
 
-
-    public Article(String){
-
+    public Article(String type, String source){
+        contentType = type;
+        contentSource = source;
     }
     //article page number
 
-    public void setPageNum(String s){}
+    public void setPageNum(String s){
+        pageNum = s;
+    }
 
-    public void getPageNum(String s){}
+    public String getPageNum(){
+        return pageNum;
+    }
 
     //article headline
-    public void setHeadline(String s){}
-    public void getHeadline(String s){}
+    public void setHeadline(String s){
+        headline = s;
+    }
+    public String getHeadline(){
+        return headline;
+    }
 
     //article text
-    public void setText(String s){}
-    public void getText(String s){}
+    public void setText(String s){
+        text = s;
+    }
+    public String getText(){
+        return text;
+    }
 
     //article publication date
-    public void setPubDate(String s){}
-    public void getPubDate(String s){}
+    public void setPubDate(String s){
+        pubDate = s;
+    }
+    public String getPubDate(){
+        return pubDate;
+    }
 
     //article file
-    public void setFile(String s){}
-    public void getFile(String s){}
+    public void setFile(String s){
+        fileName = s;
+    }
+    public String getFile(){
+        return fileName;
+    }
 
     //article path
-    public void setPath(String s){}
-    public void getPath(String s){}
+    public void setPath(String s){
+        dirPath = s;
+    }
+
+    public String getPath(){
+        return dirPath;
+    }
 
 
 
