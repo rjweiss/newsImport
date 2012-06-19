@@ -5,6 +5,8 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
+import sun.misc.Version;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Rebecca
@@ -12,6 +14,7 @@ import org.apache.lucene.store.FSDirectory;
  * Time: 5:12 PM
  * To change this template use File | Settings | File Templates.
  */
+
 public class article {
 
     private String articlePageNumber;
@@ -111,7 +114,9 @@ public class article {
     private void modifyLucene(){
         Analyzer analyzer = new StandardAnalyzer();
         // create an index in /tmp/index, overwriting an existing one:
-        IndexModifier indexModifier = new IndexModifier("/rawdata/luceneidex", analyzer, true);
+//        IndexModifier indexModifier = new IndexModifier("/rawdata/luceneidex", analyzer, true);
+        IndexWriter indexWriter = new IndexWriter("/rawdata/luceneindex", analyzer, true)
+
         Document doc = new Document();
 
         doc.add(new Field("articleContentSource", articleContentSource, Field.Store.YES, Field.Index.NOT_ANALYZED));
@@ -120,8 +125,10 @@ public class article {
         doc.add(new Field("articleText", articleText, Field.Store.YES, Field.Index.ANALYZED));
         doc.add(new Field("articleHeadline", articleHeadline, Field.Store.YES, Field.Index.ANALYZED));
 
-        indexModifier.addDocument(doc);
-        indexModifier.close();
+        indexWriter.addDocument(doc);
+//        indexModifier.addDocument(doc);
+        indexWriter.close();
+//        indexModifier.close();
     }
 
     /*public static void buildIndex() throws IOException {
