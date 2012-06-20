@@ -58,6 +58,7 @@ public class Importer {
                 try {
                     // TODO:  Instantiate the correct Parser subclass based on some hint.
                     article = new NytParser().parse(file);
+                    System.out.println("Actually parsing...");
                 }
                 catch (Exception e) {
                     // Parse failed, complain and skip.
@@ -65,15 +66,18 @@ public class Importer {
                     return;
                 }
 
-                if (article != null) {
+                if (article == null) {
                     // Parse failed, skip.
+                    System.out.println("Failed null check");
                     return;
                 }
                 if (article.getFileName()=="" || article.getHeadline()=="" || article.getMediaSource()=="" ||
                         article.getMediaType()=="" || article.getPageNumber()=="" ||
                         article.getPublicationDate() =="" || article.getText()=="")
                 {
+                    System.out.println("Empty fields");
                     return;
+
                 }
 
                 // Redundancy party party.
@@ -91,6 +95,8 @@ public class Importer {
                 }
                 catch (Exception e) {
                     // TODO:  Abort on insert failure (catch reasonable exceptions).
+                    e.printStackTrace();
+                    System.out.println("Mongo oops");
                 }
 
                 try {
@@ -108,6 +114,7 @@ public class Importer {
                 catch (IOException e) {
                     // TODO:  Roll back insert failure (even if unlikely).
                     e.printStackTrace();
+                    System.out.println("Lucene oops");
                 }
             }
 
