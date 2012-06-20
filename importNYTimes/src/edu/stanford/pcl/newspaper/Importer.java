@@ -1,5 +1,6 @@
 package edu.stanford.pcl.newspaper;
 
+import com.mongodb.ServerAddress;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -13,7 +14,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
-
+import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 
@@ -31,8 +32,8 @@ public class Importer {
 
     private static final String MONGO_DB_NAME = "test";
     private static final String MONGO_DB_ARTICLES_COLLECTION = "articles";
-    private static final String LUCENE_INDEX_DIRECTORY = "C:\\Users\\Rebecca\\Documents\\research\\newspaper-project\\lucene";
-    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "C:\\Users\\Rebecca\\Dropbox\\stanfordBigData\\sampleData\\02";
+    private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
+    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "/rawdata/nytimes/2000/01/01";
 
     public Importer(DBCollection collection, IndexWriter indexWriter) {
         this.collection = collection;
@@ -65,6 +66,12 @@ public class Importer {
 
                 if (article != null) {
                     // Parse failed, skip.
+                    return;
+                }
+                if (article.getFileName()=="" || article.getHeadline()=="" || article.getMediaSource()=="" ||
+                        article.getMediaType()=="" || article.getPageNumber()=="" ||
+                        article.getPublicationDate() =="" || article.getText()=="")
+                {
                     return;
                 }
 
@@ -107,7 +114,12 @@ public class Importer {
 
     public static void main(String[] args) throws IOException {
         // Connect to MongoDB.
-        Mongo mongo = new Mongo();
+
+        ArrayList address = new ArrayList();
+        address.add( new ServerAddress( "184.73.204.235" , 27017 ) );
+        address.add( new ServerAddress( "107.22.253.110" , 27017 ) );
+        Mongo mongo = new Mongo( address );
+
         DB db = mongo.getDB(MONGO_DB_NAME);
 
         // Create/Open Lucene index.
