@@ -111,7 +111,12 @@ public class Importer {
 
     public static void main(String[] args) throws IOException {
         // Connect to MongoDB.
-        Mongo mongo = new Mongo();
+
+        List addrs = new ArrayList();
+        addrs.add( new ServerAddress( "184.73.204.235" , 27017 ) );
+        addrs.add( new ServerAddress( "107.22.253.110" , 27017 ) );
+        Mongo mongo = new Mongo( addrs );
+
         DB db = mongo.getDB(MONGO_DB_NAME);
 
         // Create/Open Lucene index.
