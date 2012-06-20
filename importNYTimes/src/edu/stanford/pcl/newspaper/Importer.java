@@ -29,8 +29,8 @@ public class Importer {
 
     private static final String MONGO_DB_NAME = "test";
     private static final String MONGO_DB_ARTICLES_COLLECTION = "articles";
-    private static final String LUCENE_INDEX_DIRECTORY = "C:\\Users\\Rebecca\\Documents\\research\\newspaper-project\\lucene";
-    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "C:\\Users\\Rebecca\\Dropbox\\stanfordBigData\\sampleData\\02";
+    private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
+    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "/rawdata/nytimes/";
 
     public Importer(DBCollection collection, IndexWriter indexWriter) {
         this.collection = collection;
