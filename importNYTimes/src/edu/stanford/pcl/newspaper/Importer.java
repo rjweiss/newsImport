@@ -33,8 +33,8 @@ public class Importer {
 
     private static final String MONGO_DB_NAME = "test";
     private static final String MONGO_DB_ARTICLES_COLLECTION = "articles";
-    private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
-    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "/rawdata/nytimes/2000/01/01";
+    private static final String LUCENE_INDEX_DIRECTORY = "~/rawdata/luceneindex";
+    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "~/rawdata/newspapers/nytimes/2000/01/01";
 
     public Importer(DBCollection collection, IndexWriter indexWriter) {
         this.collection = collection;
@@ -45,7 +45,7 @@ public class Importer {
 
         for (File file : path.listFiles()) {
             if (file.isDirectory()) {
-                // Recursively import sub-directories.
+                // Recursively import sub-directories. and stuff
                 importAll(file);
             }
             else {
