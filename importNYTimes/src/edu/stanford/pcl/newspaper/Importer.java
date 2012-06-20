@@ -86,6 +86,7 @@ public class Importer {
                     mongoObject.put("fileName", article.getFileName());
                     mongoObject.put("mediaType", article.getMediaType());
                     mongoObject.put("mediaSource", article.getMediaSource());
+                    System.out.println("Mongo insertion...");
                     collection.insert(mongoObject);
                 }
                 catch (Exception e) {
@@ -101,6 +102,7 @@ public class Importer {
                     doc.add(new Field("fileName", article.getFileName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     doc.add(new Field("mediaType", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     doc.add(new Field("mediaSource", article.getMediaSource(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                    System.out.println("Lucene indexing...");
                     indexWriter.addDocument(doc);
                 }
                 catch (IOException e) {
@@ -133,6 +135,7 @@ public class Importer {
         Importer importer = new Importer(db.getCollection(MONGO_DB_ARTICLES_COLLECTION), indexWriter);
         importer.importAll(new File(ARTICLE_IMPORT_ROOT_DIRECTORY));
 
+        System.out.println("Done.");
         // Clean up.
         indexWriter.close();
         mongo.close();
