@@ -44,7 +44,7 @@ public class Importer {
 
         for (File file : path.listFiles()) {
             if (file.isDirectory()) {
-                // Recursively import sub-directories.
+                // Recursively import sub-directories. and stuff
                 importAll(file);
             }
             else {
