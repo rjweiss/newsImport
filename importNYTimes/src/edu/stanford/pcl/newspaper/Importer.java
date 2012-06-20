@@ -12,7 +12,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
-
+import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 
@@ -112,9 +112,9 @@ public class Importer {
     public static void main(String[] args) throws IOException {
         // Connect to MongoDB.
 
-        List addrs = new ArrayList();
-        addrs.add( new ServerAddress( "184.73.204.235" , 27017 ) );
-        addrs.add( new ServerAddress( "107.22.253.110" , 27017 ) );
+        ArrayList addrs = new ArrayList();
+      //  addrs.add( new ServerAddress( "184.73.204.235" , 27017 ) );
+      //  addrs.add( new ServerAddress( "107.22.253.110" , 27017 ) );
         Mongo mongo = new Mongo( addrs );
 
         DB db = mongo.getDB(MONGO_DB_NAME);
