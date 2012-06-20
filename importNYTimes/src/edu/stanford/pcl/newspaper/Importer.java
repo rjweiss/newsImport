@@ -1,5 +1,6 @@
 package edu.stanford.pcl.newspaper;
 
+import com.mongodb.ServerAddress;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -30,7 +31,7 @@ public class Importer {
     private static final String MONGO_DB_NAME = "test";
     private static final String MONGO_DB_ARTICLES_COLLECTION = "articles";
     private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
-    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "/rawdata/nytimes/";
+    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "/rawdata/nytimes/2000/01/01";
 
     public Importer(DBCollection collection, IndexWriter indexWriter) {
         this.collection = collection;
@@ -112,10 +113,10 @@ public class Importer {
     public static void main(String[] args) throws IOException {
         // Connect to MongoDB.
 
-        ArrayList addrs = new ArrayList();
-      //  addrs.add( new ServerAddress( "184.73.204.235" , 27017 ) );
-      //  addrs.add( new ServerAddress( "107.22.253.110" , 27017 ) );
-        Mongo mongo = new Mongo( addrs );
+        ArrayList address = new ArrayList();
+        address.add( new ServerAddress( "184.73.204.235" , 27017 ) );
+        address.add( new ServerAddress( "107.22.253.110" , 27017 ) );
+        Mongo mongo = new Mongo( address );
 
         DB db = mongo.getDB(MONGO_DB_NAME);
 
