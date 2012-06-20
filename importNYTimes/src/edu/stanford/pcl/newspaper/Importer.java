@@ -129,8 +129,12 @@ public class Importer {
         address.add( new ServerAddress( "184.73.204.235" , 27017 ) );
         address.add( new ServerAddress( "107.22.253.110" , 27017 ) );
         Mongo mongo = new Mongo( address );
+        System.out.println(mongo.getVersion());
 
         DB db = mongo.getDB(MONGO_DB_NAME);
+        System.out.println("here");
+        System.out.println(db.getLastError());
+        System.out.println("here again");
 
         // Create/Open Lucene index.
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
