@@ -5,6 +5,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -24,6 +25,7 @@ import java.io.IOException;
  * Time: 11:45 PM
  * To change this template use File | Settings | File Templates.
  */
+
 public class Importer {
     private DBCollection collection;
     private IndexWriter indexWriter;
