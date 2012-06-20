@@ -20,6 +20,7 @@ import java.util.Map;
  * Time: 11:59 PM
  * To change this template use File | Settings | File Templates.
  */
+
 public class NytParser extends Parser {
 
     private static Map<String, String> attributeMap = new HashMap<String, String>();
