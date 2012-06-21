@@ -1,11 +1,12 @@
-import com.mongodb.*;
-import java.io.IOException;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.Mongo;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.store.FSDirectory;
-import sun.misc.Version;
 
 /**
  * Created with IntelliJ IDEA.
