@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="corenlp">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp" />
+      <root url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp" />
+      <root url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp" recursive="false" type="SOURCES" />
+  </library>
+</component>

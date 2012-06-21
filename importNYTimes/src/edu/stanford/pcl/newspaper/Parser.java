@@ -10,5 +10,5 @@ import java.io.File;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class Parser {
-    public abstract Article parse(File file);
+    public abstract Article parse(File file, String source);
 }

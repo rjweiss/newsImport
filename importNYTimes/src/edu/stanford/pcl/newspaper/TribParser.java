@@ -10,8 +10,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,21 +19,9 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 
-public class NytParser extends Parser {
+public class TribParser extends Parser {
 
-    private static Map<String, String> attributeMap = new HashMap<String, String>();
-    static {
-        attributeMap.put("articlePageNumber", "//head/meta[@name=\"print_page_number\"]");
-        attributeMap.put("_articlePublicationMonth", "//head/meta[@name=\"publication_month\"]");
-        attributeMap.put("_articlePublicationDayOfMonth", "//head/meta[@name=\"publication_day_of_month\"]");
-        attributeMap.put("_articlePublicationYear", "//head/meta[@name=\"publication_year\"]");
-//        attributeMap.put("articleHeadline", articleHeadline);
-//        attributeMap.put("articleText", "//body/body.content/block[@class=\"full_text\"]/p/text()");
-//        attributeMap.put("articleFileName", articleFileName);
-//        attributeMap.put("articleContentType", articleContentType);
-//        attributeMap.put("articleContentSource", articleContentSource);
-        // TODO:  Fill out other attributes.
-    }
+
 
     // TODO:  Handle missing fields robustly.
     public Article parse(File file, String source) {
@@ -62,34 +48,29 @@ public class NytParser extends Parser {
             XPathExpression expr;
             NodeList result;
 
-            Map<String, String> attributes = new HashMap<String, String>();
-
-            // Attributes
-            for (Map.Entry<String, String> entry : attributeMap.entrySet()) {
-                expr = xpath.compile(entry.getValue());
-                result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
-                attributes.put(entry.getKey(), result.item(0).getAttributes().getNamedItem("content").getNodeValue());
-            }
-
             // Page Number
+            expr = xpath.compile("//docdt/startpg");
+            result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
             try {
-                article.setPageNumber(attributes.get("articlePageNumber"));
+                article.setPageNumber(result.item(0).getTextContent());
             }
             catch (Exception e) {
                 article.setPageNumber("");
             }
 
             // Publication Date
-            // TODO: Use a real date object.
+            expr = xpath.compile("//pcdt/pcdtn");
+            result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
             try {
-                article.setPublicationDate(attributes.get("_articlePublicationYear") + "/" + attributes.get("_articlePublicationMonth") + "/" + attributes.get("_articlePublicationDayOfMonth") );
+                article.setPublicationDate(result.item(0).getTextContent());
             }
             catch (Exception e) {
                 article.setPublicationDate("");
             }
 
+
             // Headline
-            expr = xpath.compile("//body/body.head/hedline/hl1");
+            expr = xpath.compile("//docdt/doctitle");
             result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
             try {
                 article.setHeadline(result.item(0).getTextContent());
@@ -100,7 +81,7 @@ public class NytParser extends Parser {
 
             // Text
             StringBuilder sb = new StringBuilder();
-            expr = xpath.compile("//body/body.content/block[@class=\"full_text\"]/p/text()");
+            expr = xpath.compile("//txtdt/text/paragraph/text()");
             result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
             for (int i = 0; i < result.getLength(); i++) {
                 sb.append(result.item(i).getTextContent()).append(" ");
@@ -115,7 +96,7 @@ public class NytParser extends Parser {
         // TODO:  Exception handling.
         catch (Exception e) {
             e.printStackTrace(System.err);
-	    return null;
+            return null;
         }
 
         return article;

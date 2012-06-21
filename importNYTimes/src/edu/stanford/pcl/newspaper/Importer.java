@@ -36,7 +36,6 @@ public class Importer {
     private static final String MONGO_DB_ARTICLES_COLLECTION = "articles";
     private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
 //    private static final String LUCENE_INDEX_DIRECTORY = "/Users/Rebecca/Documents/research/stanford/pcl/computationalNews/newsImport";
-    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "/rawdata/newspapers/nytimes";
 //    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "/Volumes/NEWSPAPER/nytimes/2001/01";
 
     public Importer(DBCollection collection, IndexWriter indexWriter) {
@@ -44,14 +43,14 @@ public class Importer {
         this.indexWriter = indexWriter;
     }
 
-    public int[] importAll(File path) {
+    public int[] importAll(File path, String source) {
 
 	int imported = 0;
 	int skipped = 0;
         for (File file : path.listFiles()) {
             if (file.isDirectory()) {
                 // Recursively import sub-directories. and stuff
-                int[] result = importAll(file);
+                int[] result = importAll(file, source);
                 System.out.println(file.getAbsolutePath() + " (" + result[0] + ", " + result[1] + ")");
             }
             else {
@@ -62,7 +61,12 @@ public class Importer {
 
                 try {
                     // TODO:  Instantiate the correct Parser subclass based on some hint.
-                    article = new NytParser().parse(file);
+                    if (source =="New York Times"){
+                        article = new NytParser().parse(file, source);
+                    }
+                    else{
+                        article = new TribParser().parse(file, source);
+                    }
                 }
                 catch (Exception e) {
                     // Parse failed, complain and skip.
@@ -137,8 +141,10 @@ public class Importer {
 
         // Recursively parse and import XML files...
         Importer importer = new Importer(db.getCollection(MONGO_DB_ARTICLES_COLLECTION), indexWriter);
-        importer.importAll(new File(ARTICLE_IMPORT_ROOT_DIRECTORY));
-
+        //importer.importAll(new File("/rawdata/newspapers/nytimes"), "New York Times");
+        importer.importAll(new File("/rawdata/newspapers/bsun/2000/20000101/1092295/txt"), "Baltimore Sun");
+        //importer.importAll(new File("/rawdata/newspapers/chitrib"), "Chicago Tribune");
+        //importer.importAll(new File("/rawdata/newspapers/latimes"), "Los Angeles Times");
         // Clean up.
         indexWriter.close();
         mongo.close();
