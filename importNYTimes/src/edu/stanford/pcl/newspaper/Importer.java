@@ -129,9 +129,13 @@ public class Importer {
         address.add( new ServerAddress( "184.73.204.235" , 27017 ) );
         address.add( new ServerAddress( "107.22.253.110" , 27017 ) );
         Mongo mongo = new Mongo( address );
-        System.out.println(mongo.getVersion());
+        System.out.println("Mongo version:" + mongo.getVersion());
+        System.out.println("Mongo addresses:" + mongo.getAllAddress());
+        System.out.println("Mongo connector addresses:" + mongo.getServerAddressList());
+        System.out.println("Mongo database names:" + mongo.getDatabaseNames());
 
         DB db = mongo.getDB(MONGO_DB_NAME);
+        System.out.println(db.getCollectionNames());
         System.out.println("here");
         System.out.println(db.getLastError());
         System.out.println("here again");
