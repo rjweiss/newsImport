@@ -96,7 +96,7 @@ public class NytParser extends Parser {
                 article.setHeadline(result.item(0).getTextContent());
             }
             catch (Exception e) {
-                article.setHeadline("");
+                article.setHeadline(" ");
             }
 
             // Text
@@ -110,7 +110,7 @@ public class NytParser extends Parser {
                 article.setText(sb.toString());
             }
             catch (Exception e) {
-                article.setText("");
+                article.setText(" ");
             }
         }
         // TODO:  Exception handling.

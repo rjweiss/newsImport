@@ -127,12 +127,10 @@ public class Importer {
     public static void main(String[] args) throws IOException {
         // Connect to MongoDB.
 
-//        ArrayList address = new ArrayList();
-//        address.add( new ServerAddress( "184.73.204.235" , 27017 ) );
-//        address.add( new ServerAddress( "107.22.253.110" , 27017 ) );
-//        Mongo mongo = new Mongo( address );
-
-        Mongo mongo = new Mongo("localhost");
+        ArrayList address = new ArrayList();
+        address.add( new ServerAddress( "184.73.204.235" , 27017 ) );
+        address.add( new ServerAddress( "107.22.253.110" , 27017 ) );
+        Mongo mongo = new Mongo( address );
 
         System.out.println("Mongo version:" + mongo.getVersion());
         System.out.println("Mongo addresses:" + mongo.getAllAddress());
