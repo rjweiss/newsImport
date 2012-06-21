@@ -29,7 +29,8 @@ public class TribParser extends Parser {
         article.setMediaType("newspaper");
         article.setContentSource(source);
         article.setFileName(file.getAbsolutePath());
-
+	
+	System.out.println("First step.");
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         domFactory.setNamespaceAware(true); // never forget this!
         domFactory.setValidating(false);
@@ -98,7 +99,7 @@ public class TribParser extends Parser {
             e.printStackTrace(System.err);
             return null;
         }
-
+	System.out.println("Finished.");
         return article;
     }
 

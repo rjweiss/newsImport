@@ -65,7 +65,8 @@ public class Importer {
                         article = new NytParser().parse(file, source);
                     }
                     else{
-                        article = new TribParser().parse(file, source);
+                        System.out.println("here.");
+			article = new TribParser().parse(file, source);
                     }
                 }
                 catch (Exception e) {
