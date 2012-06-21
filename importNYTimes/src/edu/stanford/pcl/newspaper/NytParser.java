@@ -114,17 +114,9 @@ public class NytParser extends Parser {
             }
         }
         // TODO:  Exception handling.
-        catch (XPathExpressionException e) {
-            e.printStackTrace();
-        }
-        catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        catch (SAXException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
+        catch (Exception e) {
+            e.printStackTrace(System.err);
+	    return null;
         }
 
         return article;

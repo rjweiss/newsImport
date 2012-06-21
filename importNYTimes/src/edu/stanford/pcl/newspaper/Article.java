@@ -73,4 +73,16 @@ public class Article {
     public void setContentSource(String mediaType) {
         this.mediaSource = mediaType;
     }
+
+    public boolean isValid() {
+	boolean valid = true;
+	valid &= (pageNumber != null && !pageNumber.isEmpty());
+	valid &= (headline != null && !headline.isEmpty());
+	valid &= (text != null && !text.isEmpty());
+	valid &= (publicationDate!= null && !publicationDate.isEmpty());
+	valid &= (fileName != null && !fileName.isEmpty());
+	valid &= (mediaType != null && !mediaType.isEmpty());
+	valid &= (mediaSource != null && !mediaSource.isEmpty());
+	return valid;
+    }
 }

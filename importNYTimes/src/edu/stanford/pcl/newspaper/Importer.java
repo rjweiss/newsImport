@@ -5,6 +5,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
+import com.mongodb.WriteConcern;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -35,7 +36,7 @@ public class Importer {
     private static final String MONGO_DB_ARTICLES_COLLECTION = "articles";
     private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
 //    private static final String LUCENE_INDEX_DIRECTORY = "/Users/Rebecca/Documents/research/stanford/pcl/computationalNews/newsImport";
-    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "/rawdata/newspapers/nytimes/2000/01/01";
+    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "/rawdata/newspapers/nytimes";
 //    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "/Volumes/NEWSPAPER/nytimes/2001/01";
 
     public Importer(DBCollection collection, IndexWriter indexWriter) {
@@ -43,43 +44,38 @@ public class Importer {
         this.indexWriter = indexWriter;
     }
 
-    public void importAll(File path) {
+    public int[] importAll(File path) {
 
+	int imported = 0;
+	int skipped = 0;
         for (File file : path.listFiles()) {
             if (file.isDirectory()) {
                 // Recursively import sub-directories. and stuff
-                importAll(file);
+                int[] result = importAll(file);
+                System.out.println(file.getAbsolutePath() + " (" + result[0] + ", " + result[1] + ")");
             }
             else {
                 // TODO:  Only import XML files, and probably do some sanity checking.
-
-                System.out.println("Parsing " + file.getAbsolutePath() + "...");
+                //System.out.println("Parsing " + file.getAbsolutePath() + "...");
 
                 Article article;
 
                 try {
                     // TODO:  Instantiate the correct Parser subclass based on some hint.
                     article = new NytParser().parse(file);
-                    System.out.println("Actually parsing...");
                 }
                 catch (Exception e) {
                     // Parse failed, complain and skip.
-                    e.printStackTrace();
-                    return;
+                    e.printStackTrace(System.err);
+		    skipped++;
+		    continue;
                 }
 
-                if (article == null) {
+                if (article == null || !article.isValid()) {
                     // Parse failed, skip.
-                    System.out.println("Failed null check");
-                    return;
-                }
-                if (article.getFileName()=="" || article.getHeadline()=="" || article.getMediaSource()=="" ||
-                        article.getMediaType()=="" || article.getPageNumber()=="" ||
-                        article.getPublicationDate() =="" || article.getText()=="")
-                {
-                    System.out.println("Empty fields");
-                    return;
-
+                    System.err.println("Parse failed or article invalid: " + file.getAbsolutePath());
+		    skipped++;
+		    continue;
                 }
 
                 // Redundancy party party.
@@ -92,13 +88,11 @@ public class Importer {
                     mongoObject.put("fileName", article.getFileName());
                     mongoObject.put("mediaType", article.getMediaType());
                     mongoObject.put("mediaSource", article.getMediaSource());
-                    System.out.println("Mongo insertion...");
-                    collection.insert(mongoObject);
+                    collection.insert(mongoObject, WriteConcern.SAFE);
                 }
                 catch (Exception e) {
-                    // TODO:  Abort on insert failure (catch reasonable exceptions).
-                    e.printStackTrace();
-                    System.out.println("Mongo oops");
+                    e.printStackTrace(System.err);
+		    continue;
                 }
 
                 try {
@@ -110,38 +104,30 @@ public class Importer {
                     doc.add(new Field("fileName", article.getFileName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     doc.add(new Field("mediaType", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     doc.add(new Field("mediaSource", article.getMediaSource(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                    System.out.println("Lucene indexing...");
                     indexWriter.addDocument(doc);
                 }
                 catch (IOException e) {
                     // TODO:  Roll back insert failure (even if unlikely).
-                    e.printStackTrace();
-                    System.out.println("Lucene oops");
+                    e.printStackTrace(System.err);
                 }
             }
 
+            imported++;
         }
+
+        return new int[] {imported, skipped};
     }
 
 
     public static void main(String[] args) throws IOException {
         // Connect to MongoDB.
 
-        ArrayList address = new ArrayList();
-        address.add( new ServerAddress( "184.73.204.235" , 27017 ) );
-        address.add( new ServerAddress( "107.22.253.110" , 27017 ) );
-        Mongo mongo = new Mongo( address );
-
-        System.out.println("Mongo version:" + mongo.getVersion());
-        System.out.println("Mongo addresses:" + mongo.getAllAddress());
-        System.out.println("Mongo connector addresses:" + mongo.getServerAddressList());
-        System.out.println("Mongo database names:" + mongo.getDatabaseNames());
+        ArrayList<ServerAddress> address = new ArrayList<ServerAddress>();
+        address.add(new ServerAddress("184.73.204.235", 27017));
+        address.add(new ServerAddress("107.22.253.110", 27017));
+        Mongo mongo = new Mongo(address);
 
         DB db = mongo.getDB(MONGO_DB_NAME);
-        System.out.println(db.getCollectionNames());
-        System.out.println("here");
-        System.out.println(db.getLastError());
-        System.out.println("here again");
 
         // Create/Open Lucene index.
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
@@ -153,10 +139,11 @@ public class Importer {
         Importer importer = new Importer(db.getCollection(MONGO_DB_ARTICLES_COLLECTION), indexWriter);
         importer.importAll(new File(ARTICLE_IMPORT_ROOT_DIRECTORY));
 
-        System.out.println("Done.");
         // Clean up.
         indexWriter.close();
         mongo.close();
+
+        System.out.println("Done.");
     }
 
 }
