@@ -32,7 +32,7 @@ public class Importer {
     private DBCollection collection;
     private IndexWriter indexWriter;
 
-    private static final String MONGO_DB_NAME = "test";
+    private static final String MONGO_DB_NAME = "news";
     private static final String MONGO_DB_ARTICLES_COLLECTION = "articles";
     private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
 //    private static final String LUCENE_INDEX_DIRECTORY = "/Users/Rebecca/Documents/research/stanford/pcl/computationalNews/newsImport";
@@ -94,7 +94,8 @@ public class Importer {
                     mongoObject.put("mediaType", article.getMediaType());
                     mongoObject.put("mediaSource", article.getMediaSource());
                     collection.insert(mongoObject, WriteConcern.SAFE);
-                }
+               	    System.out.println("Mongo insertion...");
+		}
                 catch (Exception e) {
                     e.printStackTrace(System.err);
 		    continue;
@@ -110,6 +111,7 @@ public class Importer {
                     doc.add(new Field("mediaType", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     doc.add(new Field("mediaSource", article.getMediaSource(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     indexWriter.addDocument(doc);
+                    System.out.println("Lucene insertion...");
                 }
                 catch (IOException e) {
                     // TODO:  Roll back insert failure (even if unlikely).
@@ -131,8 +133,14 @@ public class Importer {
         address.add(new ServerAddress("184.73.204.235", 27017));
         address.add(new ServerAddress("107.22.253.110", 27017));
         Mongo mongo = new Mongo(address);
+	
+	System.out.println("Mongo addresses:" + mongo.getAllAddress());
+	System.out.println("Mongo connectors:" + mongo.getConnector());
+	System.out.println("Mongo version:" + mongo.getVersion());
 
         DB db = mongo.getDB(MONGO_DB_NAME);
+	
+	System.out.println("DB collection names :" + db.getCollectionNames());
 
         // Create/Open Lucene index.
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
@@ -142,8 +150,8 @@ public class Importer {
 
         // Recursively parse and import XML files...
         Importer importer = new Importer(db.getCollection(MONGO_DB_ARTICLES_COLLECTION), indexWriter);
-        //importer.importAll(new File("/rawdata/newspapers/nytimes"), "New York Times");
-        importer.importAll(new File("/rawdata/newspapers/bsun/2000/20000101/1092295/txt"), "Baltimore Sun");
+        // importer.importAll(new File("/rawdata/newspapers/nytimes"), "New York Times");
+        importer.importAll(new File("/rawdata/newspapers/bsun/2000"), "Baltimore Sun");
         //importer.importAll(new File("/rawdata/newspapers/chitrib"), "Chicago Tribune");
         //importer.importAll(new File("/rawdata/newspapers/latimes"), "Los Angeles Times");
         // Clean up.

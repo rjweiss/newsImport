@@ -30,7 +30,6 @@ public class TribParser extends Parser {
         article.setContentSource(source);
         article.setFileName(file.getAbsolutePath());
 	
-	System.out.println("First step.");
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         domFactory.setNamespaceAware(true); // never forget this!
         domFactory.setValidating(false);
@@ -54,7 +53,7 @@ public class TribParser extends Parser {
             result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
             try {
                 article.setPageNumber(result.item(0).getTextContent());
-            }
+	    }
             catch (Exception e) {
                 article.setPageNumber("");
             }
@@ -64,7 +63,7 @@ public class TribParser extends Parser {
             result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
             try {
                 article.setPublicationDate(result.item(0).getTextContent());
-            }
+	    }
             catch (Exception e) {
                 article.setPublicationDate("");
             }
@@ -75,7 +74,7 @@ public class TribParser extends Parser {
             result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
             try {
                 article.setHeadline(result.item(0).getTextContent());
-            }
+	    }
             catch (Exception e) {
                 article.setHeadline("");
             }
@@ -99,7 +98,6 @@ public class TribParser extends Parser {
             e.printStackTrace(System.err);
             return null;
         }
-	System.out.println("Finished.");
         return article;
     }
 
