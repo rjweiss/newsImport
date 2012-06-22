@@ -60,7 +60,7 @@ public class Importer {
 
                 System.out.println(extension);
 
-                if (extension == "xml") {
+                if (extension == ".xml") {
                     Article article;
 
                     try {
