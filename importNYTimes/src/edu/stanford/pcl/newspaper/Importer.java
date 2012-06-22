@@ -66,7 +66,7 @@ public class Importer {
                     }
                     else{
                         System.out.println("here.");
-			article = new TribParser().parse(file, source);
+			            article = new TribParser().parse(file, source);
                     }
                 }
                 catch (Exception e) {
@@ -96,7 +96,7 @@ public class Importer {
                     mongoObject.put("overLap", article.getOverLap());
                     mongoObject.put("status", article.getStatus());
                     collection.insert(mongoObject, WriteConcern.SAFE);
-               	    //System.out.println("Mongo insertion...");
+               	    System.out.println("Mongo insertion...");
 		}
                 catch (Exception e) {
                     e.printStackTrace(System.err);
@@ -115,7 +115,7 @@ public class Importer {
                     doc.add(new Field("overLap", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     doc.add(new Field("status", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     indexWriter.addDocument(doc);
-                    //System.out.println("Lucene insertion...");
+                    System.out.println("Lucene insertion...");
                 }
                 catch (IOException e) {
                     // TODO:  Roll back insert failure (even if unlikely).
@@ -144,7 +144,7 @@ public class Importer {
 
         DB db = mongo.getDB(MONGO_DB_NAME);
 	
-	    //System.out.println("DB collection names :" + db.getCollectionNames());
+	    System.out.println("DB collection names :" + db.getCollectionNames());
 
         // Create/Open Lucene index.
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
