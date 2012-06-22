@@ -56,11 +56,11 @@ public class Importer {
                 // TODO:  Only import XML files, and probably do some sanity checking.
                 //System.out.println("Parsing " + file.getAbsolutePath() + "...");
                 int dotPos = file.getName().lastIndexOf(".");
-                String extension = file.getName().substring(dotPos);
+                String extension = file.getName().substring(dotPos + 1);
 
-                System.out.println("/" + extension + "/");
+                System.out.println(extension);
 
-                if (extension == ".xml") {
+                if (extension == "xml") {
 
                     Article article;
 
