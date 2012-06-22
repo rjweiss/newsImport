@@ -16,6 +16,8 @@ public class Article {
     private String fileName;
     private String mediaType;
     private String mediaSource;
+    private String overLap;
+    private String status;
     // TODO:  File path!
 
     public String getPageNumber() {
@@ -70,8 +72,24 @@ public class Article {
         return mediaSource;
     }
 
-    public void setContentSource(String mediaType) {
+    public void setMediaSource(String mediaType) {
         this.mediaSource = mediaType;
+    }
+
+    public String getOverLap() {
+        return overLap;
+    }
+
+    public void setOverLap(String mediaType) {
+        this.overLap = overLap;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String mediaType) {
+        this.status = status;
     }
 
     public boolean isValid() {

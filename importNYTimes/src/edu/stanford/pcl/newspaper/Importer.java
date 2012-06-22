@@ -51,7 +51,7 @@ public class Importer {
             if (file.isDirectory()) {
                 // Recursively import sub-directories. and stuff
                 int[] result = importAll(file, source);
-                System.out.println(file.getAbsolutePath() + " (" + result[0] + ", " + result[1] + ")");
+                //System.out.println(file.getAbsolutePath() + " (" + result[0] + ", " + result[1] + ")");
             }
             else {
                 // TODO:  Only import XML files, and probably do some sanity checking.
@@ -93,8 +93,10 @@ public class Importer {
                     mongoObject.put("fileName", article.getFileName());
                     mongoObject.put("mediaType", article.getMediaType());
                     mongoObject.put("mediaSource", article.getMediaSource());
+                    mongoObject.put("overLap", article.getOverLap());
+                    mongoObject.put("status", article.getStatus());
                     collection.insert(mongoObject, WriteConcern.SAFE);
-               	    System.out.println("Mongo insertion...");
+               	    //System.out.println("Mongo insertion...");
 		}
                 catch (Exception e) {
                     e.printStackTrace(System.err);
@@ -110,8 +112,10 @@ public class Importer {
                     doc.add(new Field("fileName", article.getFileName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     doc.add(new Field("mediaType", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     doc.add(new Field("mediaSource", article.getMediaSource(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                    doc.add(new Field("overLap", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                    doc.add(new Field("status", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     indexWriter.addDocument(doc);
-                    System.out.println("Lucene insertion...");
+                    //System.out.println("Lucene insertion...");
                 }
                 catch (IOException e) {
                     // TODO:  Roll back insert failure (even if unlikely).
@@ -134,13 +138,13 @@ public class Importer {
         address.add(new ServerAddress("107.22.253.110", 27017));
         Mongo mongo = new Mongo(address);
 	
-	System.out.println("Mongo addresses:" + mongo.getAllAddress());
-	System.out.println("Mongo connectors:" + mongo.getConnector());
-	System.out.println("Mongo version:" + mongo.getVersion());
+	    //System.out.println("Mongo addresses:" + mongo.getAllAddress());
+	    //System.out.println("Mongo connectors:" + mongo.getConnector());
+	    //System.out.println("Mongo version:" + mongo.getVersion());
 
         DB db = mongo.getDB(MONGO_DB_NAME);
 	
-	System.out.println("DB collection names :" + db.getCollectionNames());
+	    //System.out.println("DB collection names :" + db.getCollectionNames());
 
         // Create/Open Lucene index.
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
