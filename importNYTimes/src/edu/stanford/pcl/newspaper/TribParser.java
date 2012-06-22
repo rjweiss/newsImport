@@ -62,7 +62,10 @@ public class TribParser extends Parser {
             expr = xpath.compile("//pcdt/pcdtn");
             result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
             try {
-                article.setPublicationDate(result.item(0).getTextContent());
+                int yearFour = Integer.parseInt(result.item(0).getTextContent().substring(0,3));
+                int monthTwo = Integer.parseInt(result.item(0).getTextContent().substring(4,5));
+                int dayTwo = Integer.parseInt(result.item(0).getTextContent().substring(6,7));
+                article.setPublicationDate(yearFour + "/" + monthTwo + "/" + dayTwo);
 	    }
             catch (Exception e) {
                 article.setPublicationDate("");
@@ -101,7 +104,7 @@ public class TribParser extends Parser {
 
             int yearFour = Integer.parseInt(article.getPublicationDate().substring(0,3));
 
-            int monthTwo = Integer.parseInt(article.getPublicationDate().substring(4,5));
+            int monthTwo = Integer.parseInt(article.getPublicationDate().substring(5,6));
 
             if (yearFour <2007 || (yearFour == 2007 && monthTwo <6)){
                 article.setOverLap("1");

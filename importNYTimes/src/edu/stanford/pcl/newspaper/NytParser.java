@@ -119,7 +119,7 @@ public class NytParser extends Parser {
 
             int yearFour = Integer.parseInt(article.getPublicationDate().substring(0,3));
 
-            int monthTwo = Integer.parseInt(article.getPublicationDate().substring(4,5));
+            int monthTwo = Integer.parseInt(article.getPublicationDate().substring(5,6));
 
             if (yearFour <2007 || (yearFour == 2007 && monthTwo <6)){
                 article.setOverLap("1");
