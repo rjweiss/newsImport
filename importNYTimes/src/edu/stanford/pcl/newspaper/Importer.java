@@ -61,8 +61,8 @@ public class Importer {
 
 
 
-                if (extension.equals("xml")) {
-                    System.out.println(extension);
+                if ("xml".equals(extension)) {
+                    //System.out.println(extension);
                     Article article;
 
                     try {
@@ -124,6 +124,7 @@ public class Importer {
                         e.printStackTrace(System.err);
                     }
                     imported++;
+                    System.out.println(imported);
                 }
             }
         }
