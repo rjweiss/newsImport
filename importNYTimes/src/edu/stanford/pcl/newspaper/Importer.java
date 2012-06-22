@@ -58,6 +58,8 @@ public class Importer {
                 int dotPos = file.getName().lastIndexOf(".");
                 String extension = file.getName().substring(dotPos);
 
+                System.out.println(extension);
+
                 if (extension == "xml") {
                     Article article;
 
