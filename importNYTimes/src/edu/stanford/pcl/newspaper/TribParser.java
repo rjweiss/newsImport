@@ -99,16 +99,9 @@ public class TribParser extends Parser {
             // set complete flag
 
 
-            char[] year = new char[4];
-            article.getPublicationDate().getChars(0,3,year,0);
+            int yearFour = Integer.parseInt(article.getPublicationDate().substring(0,3));
 
-            System.out.println(year.toString() + " " + article.getPublicationDate());
-
-            int yearFour = Integer.parseInt(year.toString());
-
-            char[] month =new char[2];
-            article.getPublicationDate().getChars(4,5,year,0);
-            int monthTwo = Integer.parseInt(month.toString());
+            int monthTwo = Integer.parseInt(article.getPublicationDate().substring(4,5));
 
             if (yearFour <2007 || (yearFour == 2007 && monthTwo <6)){
                 article.setOverLap("1");
