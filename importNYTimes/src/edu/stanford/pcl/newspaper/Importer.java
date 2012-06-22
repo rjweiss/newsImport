@@ -61,7 +61,7 @@ public class Importer {
 
 
 
-                if (extension == "xml") {
+                if (extension.equals("xml")) {
                     System.out.println(extension);
                     Article article;
 
@@ -125,13 +125,6 @@ public class Importer {
                     }
                     imported++;
                 }
-                else
-                {
-                    System.out.println("fuck java and its mama");
-
-                }
-
-
             }
         }
 
