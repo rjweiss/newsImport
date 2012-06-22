@@ -55,8 +55,9 @@ public class Importer {
             } else {
                 // TODO:  Only import XML files, and probably do some sanity checking.
                 //System.out.println("Parsing " + file.getAbsolutePath() + "...");
+                String extension=null;
                 int dotPos = file.getName().lastIndexOf(".");
-                String extension = file.getName().substring(dotPos + 1);
+                extension = file.getName().substring(dotPos + 1);
 
                 System.out.println(extension);
 
