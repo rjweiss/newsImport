@@ -124,7 +124,7 @@ public class Importer {
                         e.printStackTrace(System.err);
                     }
                     imported++;
-                    System.out.println(imported);
+                    System.out.println(source + ": " +imported);
                 }
             }
         }
