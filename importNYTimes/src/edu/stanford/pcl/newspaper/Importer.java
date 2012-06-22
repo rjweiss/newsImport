@@ -55,13 +55,14 @@ public class Importer {
             } else {
                 // TODO:  Only import XML files, and probably do some sanity checking.
                 //System.out.println("Parsing " + file.getAbsolutePath() + "...");
+                String extension=null;
                 int dotPos = file.getName().lastIndexOf(".");
-                String extension = file.getName().substring(dotPos);
+                extension = file.getName().substring(dotPos + 1);
 
 
 
-                if (extension == ".xml") {
-                    System.out.println(extension);
+                if ("xml".equals(extension)) {
+                    //System.out.println(extension);
                     Article article;
 
                     try {
@@ -123,9 +124,8 @@ public class Importer {
                         e.printStackTrace(System.err);
                     }
                     imported++;
+                    System.out.println(source + ": " +imported);
                 }
-
-
             }
         }
 
