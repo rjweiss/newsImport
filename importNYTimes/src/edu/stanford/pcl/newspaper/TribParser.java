@@ -27,7 +27,7 @@ public class TribParser extends Parser {
     public Article parse(File file, String source) {
         Article article = new Article();
         article.setMediaType("newspaper");
-        article.setContentSource(source);
+        article.setMediaSource(source);
         article.setFileName(file.getAbsolutePath());
 	
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
