@@ -80,7 +80,7 @@ public class Article {
         return overLap;
     }
 
-    public void setOverLap(String mediaType) {
+    public void setOverLap(String overLap) {
         this.overLap = overLap;
     }
 
@@ -88,7 +88,7 @@ public class Article {
         return status;
     }
 
-    public void setStatus(String mediaType) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
