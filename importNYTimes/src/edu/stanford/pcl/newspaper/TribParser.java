@@ -99,6 +99,9 @@ public class TribParser extends Parser {
             // set complete flag
             char[] year = new char[4];
             article.getPublicationDate().getChars(0,3,year,0);
+
+            System.out.println(year.toString());
+
             int yearFour = Integer.parseInt(new String(year));
 
             char[] month =new char[2];
