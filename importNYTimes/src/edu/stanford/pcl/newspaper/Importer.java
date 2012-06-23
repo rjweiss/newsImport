@@ -51,6 +51,7 @@ public class Importer {
             if (file.isDirectory()) {
                 // Recursively import sub-directories. and stuff
                 int[] result = importAll(file, source);
+                //System.out.println(source + ": " +imported);
                 //System.out.println(file.getAbsolutePath() + " (" + result[0] + ", " + result[1] + ")");
             } else {
                 // TODO:  Only import XML files, and probably do some sanity checking.
@@ -124,7 +125,7 @@ public class Importer {
                         e.printStackTrace(System.err);
                     }
                     imported++;
-                    System.out.println(source + ": " +imported);
+
                 }
             }
         }
@@ -157,8 +158,8 @@ public class Importer {
 
         // Recursively parse and import XML files...
         Importer importer = new Importer(db.getCollection(MONGO_DB_ARTICLES_COLLECTION), indexWriter);
-        importer.importAll(new File("/rawdata/newspapers/nytimes"), "New York Times");
-        //importer.importAll(new File("/rawdata/newspapers/bsun"), "Baltimore Sun");
+        //importer.importAll(new File("/rawdata/newspapers/nytimes"), "New York Times");
+        importer.importAll(new File("/rawdata/newspapers/bsun"), "Baltimore Sun");
         //importer.importAll(new File("/rawdata/newspapers/chitrib"), "Chicago Tribune");
         //importer.importAll(new File("/rawdata/newspapers/latimes"), "Los Angeles Times");
         // Clean up.
