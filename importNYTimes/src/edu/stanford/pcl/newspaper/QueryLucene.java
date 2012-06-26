@@ -5,7 +5,6 @@ import au.com.bytecode.opencsv.CSVWriter;
 import com.martiansoftware.jsap.*;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.IndexSearcher;
@@ -44,7 +43,7 @@ public class QueryLucene {
         writer.close();
     }
 
-    public Integer executeCountQuery(String[] searchTerms, String[] searchFields) throws IOException, ParseException {
+    public String executeCountQuery(String[] searchTerms, String[] searchFields) throws IOException, ParseException {
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
         Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
         IndexReader reader = IndexReader.open(index);
@@ -53,7 +52,7 @@ public class QueryLucene {
         TopScoreDocCollector collector = TopScoreDocCollector.create(0, true);
         searcher.search(query, collector);
 
-        int count = collector.getTotalHits();
+        String count = String.valueOf(collector.getTotalHits());
         searcher.close();
 
         return count;
@@ -85,7 +84,7 @@ public class QueryLucene {
         List<String[]> queries = CSVReader.readAll();
 
         for (String[] row : queries) {
-            ArrayList<Integer> resultRow = new ArrayList<Integer>();
+            ArrayList<String> resultRow = new ArrayList<String>();
             String rowName = row[0];
             for (String column : row) {
                 String source;
@@ -104,13 +103,10 @@ public class QueryLucene {
                     source = JSAPconfig.getString("source");
                     resultRow.add(ql.executeCountQuery(new String[] {column,source,"1"}, searchFields));
                 }
-
             }
             ql.results.get().put(rowName, resultRow);
         }
         ql.saveFile(JSAPconfig.getString("outputFile"));
-
-
     }
 
 }

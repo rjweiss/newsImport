@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="opencsv">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/opencsv" />
+      <root url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/opencsv" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/opencsv" recursive="false" />
+  </library>
+</component>
