@@ -49,7 +49,7 @@ public class QueryLucene {
         IndexReader reader = IndexReader.open(index);
         Query query = MultiFieldQueryParser.parse(Version.LUCENE_30, searchTerms,searchFields, analyzer);
         IndexSearcher searcher = new IndexSearcher(reader);
-        TopScoreDocCollector collector = TopScoreDocCollector.create(0, true);
+        TopScoreDocCollector collector = TopScoreDocCollector.create(1, true);
         searcher.search(query, collector);
 
         String count = String.valueOf(collector.getTotalHits());
