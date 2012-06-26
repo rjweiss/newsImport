@@ -79,8 +79,8 @@ public class QueryLucene {
         Boolean all = JSAPconfig.getString("source").equals("all");
 
         QueryLucene ql = new QueryLucene();
-        //CSVReader CSVReader = new CSVReader(new FileReader(JSAPconfig.getString("queryListFile")), '\t');
-        CSVReader CSVReader = new CSVReader(new FileReader("/Users/seanwestwood/Desktop/queryLucene.csv"), '\t');
+        CSVReader CSVReader = new CSVReader(new FileReader(JSAPconfig.getString("queryListFile")), '\t');
+        //CSVReader CSVReader = new CSVReader(new FileReader("/Users/seanwestwood/Desktop/queryLucene.csv"), '\t');
         List<String[]> queries = CSVReader.readAll();
 
         for (String[] row : queries) {
