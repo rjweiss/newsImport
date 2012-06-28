@@ -2,6 +2,7 @@ package edu.stanford.pcl.newspaper;
 
 import edu.stanford.nlp.classify.LinearClassifier;
 import edu.stanford.nlp.classify.LinearClassifierFactory;
+import edu.stanford.nlp.classify.NaiveBayesClassifier;
 import edu.stanford.nlp.ling.BasicDatum;
 import edu.stanford.nlp.ling.Datum;
 
@@ -18,7 +19,11 @@ public class NewsClassifier {
 
     protected static Datum<String, String> makeDocDatum(String doc) {
         List<String> features = new ArrayList<String>();
-        features.add(doc);
+        String[] words = doc.split("\\s+");
+        for (String word : words){
+            features.add(word);
+        }
+//        features.add(doc);
 //        String[] words = doc.split("\\s+");
 //        features.add(words);
         String label = new String(String.valueOf(doc.contains("Obama")));
@@ -68,6 +73,7 @@ public class NewsClassifier {
         factory.setSigma(10.0);
         // Build a classifier
         LinearClassifier<String,String> classifier = factory.trainClassifier(trainingData);
+//        NaiveBayesClassifier<String, String> classifier = factory.trainClassifier(trainingData);
 
         classifier.dump();
         // Test the classifier
