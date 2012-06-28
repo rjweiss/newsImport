@@ -1,24 +1,19 @@
 package edu.stanford.pcl.newspaper;
 
-import com.mongodb.ServerAddress;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
-import com.mongodb.WriteConcern;
-
+import com.mongodb.*;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.NumericField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
 
-import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by IntelliJ IDEA.
@@ -108,7 +103,11 @@ public class Importer {
 
                     try {
                         Document doc = new Document();
+
+                        //DateTools.dateToString(date, Resolution.SECOND)
+
                         doc.add(new Field("pageNumber", article.getPageNumber(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                        doc.add(new NumericField("publicationDate", Integer.getInteger(article.getPublicationDate())).setIntValue(Integer.parseInt(article.getPublicationDate())));
                         doc.add(new Field("publicationDate", article.getPublicationDate(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                         doc.add(new Field("headline", article.getHeadline(), Field.Store.YES, Field.Index.ANALYZED));
                         doc.add(new Field("text", article.getText(), Field.Store.YES, Field.Index.ANALYZED));
