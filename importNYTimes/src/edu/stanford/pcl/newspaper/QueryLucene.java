@@ -6,8 +6,9 @@ import com.martiansoftware.jsap.*;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
@@ -45,29 +46,36 @@ public class QueryLucene {
         writer.close();
     }
 
-    public String executeCountQuery(String[] searchTerms, String[] searchFields) throws IOException, ParseException {
+    public String executeCountQuery(String source, String terms, Integer startDate, Integer endDate) throws IOException, ParseException {
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
         Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
         IndexReader reader = IndexReader.open(index);
-        Query query = MultiFieldQueryParser.parse(Version.LUCENE_30, searchTerms, searchFields, analyzer);
 
-        Query termQuery = parser.parse(termQueryString);
+        Query sourceQuery = new TermQuery(new Term("mediaSource",source));
+        QueryParser queryParser = new QueryParser(Version.LUCENE_36,"text",analyzer);
+        Query textQuery = queryParser.parse(terms);
+        Query dateRangeQuery = NumericRangeQuery.newIntRange("publicationDate", startDate, endDate, true, true);
 
-        Query pageQueryRange = NumericRangeQuery.newIntRange("page_count", 10, 20, true, true);
-
-        Query query = termQuery.combine(new Query[]{termQuery, pageQueryRange});
+        BooleanQuery booleanQuery = new BooleanQuery();
+        booleanQuery.add(sourceQuery, BooleanClause.Occur.MUST);
+        booleanQuery.add(textQuery, BooleanClause.Occur.MUST);
+        booleanQuery.add(dateRangeQuery, BooleanClause.Occur.MUST);
 
         IndexSearcher searcher = new IndexSearcher(reader);
-        TopDocs topDocs = searcher.search(query, 1);
+        TopDocs topDocs = searcher.search(booleanQuery, 1);
         String hitCount = String.valueOf(topDocs.totalHits);
         searcher.close();
 
         return hitCount;
     }
 
-    public static ArrayList<String> createHeader(DateTime startDate, DateTime endDate) {
+    public static ArrayList<String> createHeader(Integer startDate, Integer endDate) {
+        DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy/MM/dd");
+        DateTime dtStartDate = dateFormat.parseDateTime(startDate.toString());
+        DateTime dtEndDate = dateFormat.parseDateTime(endDate.toString());
+
         ArrayList<String> resultHeader = new ArrayList<String>();
-        for (DateTime date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
+        for (DateTime date = dtStartDate; date.isBefore(dtEndDate); date = date.plusDays(1)) {
             resultHeader.add(date.toString());
         }
         return resultHeader;
@@ -86,9 +94,9 @@ public class QueryLucene {
                                 "Path and name for output"),
                         new FlaggedOption("searchInterval", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'i', "searchInterval",
                                 "Search interval (monthly, daily, yearly, all"),
-                        new FlaggedOption("startDate", JSAP.STRING_PARSER, "2000-01-01", JSAP.NOT_REQUIRED, 'b', "startDate",
+                        new FlaggedOption("startDate", JSAP.STRING_PARSER, "20000101", JSAP.NOT_REQUIRED, 'b', "startDate",
                                 "Start date"),
-                        new FlaggedOption("endDate", JSAP.STRING_PARSER, "2007-05-31", JSAP.NOT_REQUIRED, 'f', "endDate",
+                        new FlaggedOption("endDate", JSAP.STRING_PARSER, "20070531", JSAP.NOT_REQUIRED, 'f', "endDate",
                                 "End date"),
                         new QualifiedSwitch("type", JSAP.STRING_PARSER, "count", JSAP.NOT_REQUIRED, 't', "type",
                                 "Type of data output (queryCounts, dateRangeCounts, occurrenceList)").setList(true).setListSeparator(',')
@@ -98,9 +106,8 @@ public class QueryLucene {
         JSAPResult JSAPconfig = jsap.parse(args);
         if (jsap.messagePrinted()) System.exit(1);
         String type = JSAPconfig.getString("source");
-        DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy/MM/dd");
-        DateTime startDate = dateFormat.parseDateTime(JSAPconfig.getString("queryListFile"));
-        DateTime endDate = dateFormat.parseDateTime(JSAPconfig.getString("queryListFile"));
+        Integer startDate = Integer.parseInt(JSAPconfig.getString("startDate"));
+        Integer endDate = Integer.parseInt(JSAPconfig.getString("endDate"));
 
         QueryLucene ql = new QueryLucene();
         CSVReader CSVReader = new CSVReader(new FileReader(JSAPconfig.getString("queryListFile")), '\t');
@@ -113,7 +120,7 @@ public class QueryLucene {
         } else if ("occurrenceList".equals(JSAPconfig.getString("type"))) {
             //know this is wrong, but whatevs
             for (String[] row : queries) {
-                generateOccurenceList(startDate, endDate, row[0], JSAPconfig.getString("querySources"), ql);
+                generateOccurenceList(startDate, endDate, JSAPconfig.getString("querySources"), row[0], ql);
             }
         } else {
             System.exit(1);
@@ -121,39 +128,37 @@ public class QueryLucene {
         ql.saveFile(JSAPconfig.getString("outputFile"));
     }
 
-    public static void generateOccurenceList(DateTime startDate, DateTime endDate, String querySources, String query, QueryLucene ql) throws IOException, ParseException {
+    public static void generateOccurenceList(Integer startDate, Integer endDate, String querySources, String terms, QueryLucene ql) throws IOException, ParseException {
         if (querySources.equals("all")) {
-            /*   String[] searchFields = {"text", "mediaSource", "publicationDate"};
-String source;
-source = "New York Times";
-executeOccurenceQuery(ql, new String[]{query, source, "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields);
-source = "Los Angeles Times";
-resultRow.add(ql.executeCountQuery(new String[]{column, source, "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields));
-source = "Baltimore Sun";
-resultRow.add(ql.executeCountQuery(new String[]{column, source, "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields));
-source = "Chicago Tribune";
-resultRow.add(ql.executeCountQuery(new String[]{column, source, "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields));*/
             System.out.println("Not supported");
             System.exit(1);
         } else if (querySources.equals("aggregate")) {
-            String[] searchFields = {"text", "publicationDate"};
-            executeOccurenceQuery(ql, new String[]{query, "*", "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields);
+            executeOccurenceQuery(ql, "*", terms, startDate, endDate);
         } else {
-            String[] searchFields = {"text", "mediaSource", "publicationDate"};
-            executeOccurenceQuery(ql, new String[]{query, querySources, "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields);
+            executeOccurenceQuery(ql, querySources, terms, startDate, endDate);
         }
     }
 
-    public static void executeOccurenceQuery(QueryLucene ql, String[] searchTerms, String[] searchFields) throws IOException, ParseException {
+    public static void executeOccurenceQuery(QueryLucene ql, String source, String terms, Integer startDate, Integer endDate) throws IOException, ParseException {
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
         Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
         IndexReader reader = IndexReader.open(index);
-        Query query = MultiFieldQueryParser.parse(Version.LUCENE_30, searchTerms, searchFields, analyzer);
         IndexSearcher searcher = new IndexSearcher(reader);
-        TopDocs topDocs = searcher.search(query, 1);
+
+        Query sourceQuery = new TermQuery(new Term("mediaSource",source));
+        QueryParser queryParser = new QueryParser(Version.LUCENE_36,"text",analyzer);
+        Query textQuery = queryParser.parse(terms);
+        Query dateRangeQuery = NumericRangeQuery.newIntRange("publicationDate", startDate, endDate, true, true);
+
+        BooleanQuery booleanQuery = new BooleanQuery();
+        booleanQuery.add(sourceQuery, BooleanClause.Occur.MUST);
+        booleanQuery.add(textQuery, BooleanClause.Occur.MUST);
+        booleanQuery.add(dateRangeQuery, BooleanClause.Occur.MUST);
+
+        TopDocs topDocs = searcher.search(booleanQuery, 1);
         Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
 
-        TopDocs hits = searcher.search(query, topDocs.totalHits, sort);
+        TopDocs hits = searcher.search(booleanQuery, topDocs.totalHits, sort);
 
         int i = 0;
         for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
@@ -170,36 +175,34 @@ resultRow.add(ql.executeCountQuery(new String[]{column, source, "[" + startDate.
         }
     }
 
-    public static void generateQueryCounts(DateTime startDate, DateTime endDate, String querySources, QueryLucene ql, List<String[]> queries) throws IOException, ParseException {
+    public static void generateQueryCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries) throws IOException, ParseException {
         for (String[] row : queries) {
             ArrayList<String> resultRow = new ArrayList<String>();
             String rowName = row[0];
             resultRow.add(rowName);
+            String source;
             for (String column : row) {
                 if (querySources.equals("all")) {
-                    String[] searchFields = {"text", "mediaSource", "publicationDate"};
-                    String source;
                     source = "New York Times";
-                    resultRow.add(ql.executeCountQuery(new String[]{column, source, "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields));
+                    resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
                     source = "Los Angeles Times";
-                    resultRow.add(ql.executeCountQuery(new String[]{column, source, "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields));
+                    resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
                     source = "Baltimore Sun";
-                    resultRow.add(ql.executeCountQuery(new String[]{column, source, "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields));
+                    resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
                     source = "Chicago Tribune";
-                    resultRow.add(ql.executeCountQuery(new String[]{column, source, "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields));
+                    resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
                 } else if (querySources.equals("aggregate")) {
-                    String[] searchFields = {"text", "publicationDate"};
-                    resultRow.add(ql.executeCountQuery(new String[]{column, "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields));
+                    source = "*";
+                    resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
                 } else {
-                    String[] searchFields = {"text", "mediaSource", "publicationDate"};
-                    resultRow.add(ql.executeCountQuery(new String[]{column, querySources, "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields));
+                    resultRow.add(ql.executeCountQuery(querySources, column, startDate, endDate));
                 }
             }
             ql.results.get().put(rowName, resultRow);
         }
     }
 
-    public static void generateDateRangeCounts(DateTime startDate, DateTime endDate, String querySources, QueryLucene ql, List<String[]> queries) throws IOException, ParseException {
+    public static void generateDateRangeCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries) throws IOException, ParseException {
 
         ql.results.get().put("", createHeader(startDate, endDate));
         for (String[] row : queries) {
@@ -216,13 +219,17 @@ resultRow.add(ql.executeCountQuery(new String[]{column, source, "[" + startDate.
         }
     }
 
-    private static void issueDateRangeQueries(DateTime startDate, DateTime endDate, String source, String queryText, QueryLucene ql) throws IOException, ParseException {
+    private static void issueDateRangeQueries(Integer startDate, Integer endDate, String source, String queryText, QueryLucene ql) throws IOException, ParseException {
+        DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy/MM/dd");
+        DateTime dtStartDate = dateFormat.parseDateTime(startDate.toString());
+        DateTime dtEndDate = dateFormat.parseDateTime(endDate.toString());
+
         ArrayList<String> resultRow = new ArrayList<String>();
         String rowName;
-        String[] searchFields = {"text", "mediaSource", "publicationDate"};
+
         rowName = queryText + " " + source;
-        for (DateTime date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
-            resultRow.add(ql.executeCountQuery(new String[]{queryText, source, "[" + startDate.toString() + " to " + endDate.toString() + "]"}, searchFields));
+        for (DateTime date = dtStartDate; date.isBefore(dtEndDate); date = date.plusDays(1)) {
+            resultRow.add(ql.executeCountQuery(source, queryText, startDate, endDate));
         }
         ql.results.get().put(rowName, resultRow);
     }
