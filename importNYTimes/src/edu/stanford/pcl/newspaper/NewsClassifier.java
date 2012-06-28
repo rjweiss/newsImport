@@ -19,6 +19,7 @@ public class NewsClassifier {
 
     protected static Datum<String, String> makeDocDatum(String doc) {
         List<String> features = new ArrayList<String>();
+        //we could probably pass POS tags and NEs as features if we wanted
         String[] words = doc.split("\\s+");
         for (String word : words){
             features.add(word);
@@ -49,6 +50,7 @@ public class NewsClassifier {
         docs.add(doc5);
         docs.add(doc6);
         docs.add(doc7);
+        docs.add(doc1);
 
         Iterator iterator = docs.iterator();
 
