@@ -203,6 +203,7 @@ public class QueryLucene {
 
                 }
                 ql.results.get().put("header", resultHeader);
+                isHeader = false;
             }
 
             ArrayList<String> resultRow = new ArrayList<String>();
