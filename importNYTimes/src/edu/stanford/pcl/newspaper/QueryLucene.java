@@ -51,6 +51,11 @@ public class QueryLucene {
         Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
         IndexReader reader = IndexReader.open(index);
 
+        System.out.println(source);
+        System.out.println(terms);
+        System.out.println(startDate);
+        System.out.println(endDate);
+
         Query sourceQuery = new TermQuery(new Term("mediaSource",source));
         QueryParser queryParser = new QueryParser(Version.LUCENE_36,"text",analyzer);
         Query textQuery = queryParser.parse(terms);
