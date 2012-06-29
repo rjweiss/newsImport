@@ -10,13 +10,13 @@ CLASSPATH := $(subst $(eval) ,:,$(addprefix $(JARDIR)/,$(JARS)))
 
 SRCDIR := src
 
-MAINCLASS := edu/stanford/pcl/newspaper/Importer
+MAINCLASS := edu/stanford/pcl/newspaper/QueryLucene
 
 .PHONY: build run
 
 build:
 	javac -Xlint -cp $(CLASSPATH) -d out/ -sourcepath $(SRCDIR) $(SRCDIR)/$(MAINCLASS).java
 
-run:
+query:
 	java -cp out:$(CLASSPATH) $(MAINCLASS) ${ARGS}
 
