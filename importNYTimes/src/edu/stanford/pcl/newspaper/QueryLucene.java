@@ -184,6 +184,7 @@ public class QueryLucene {
             String rowName = row[0];
             resultRow.add(rowName);
             String source;
+            System.out.println(querySources);
             for (String column : row) {
                 if ("all".equals(querySources)) {
                     source = "New York Times";
