@@ -184,6 +184,7 @@ public class QueryLucene {
         for (String[] row : queries) {
             if (isHeader){
                 ArrayList<String> resultHeader = new ArrayList<String>();
+                resultHeader.add(null);
                 for (String column : row) {
                     if ("all".equals(querySources)) {
                         source = "New York Times";
@@ -202,7 +203,7 @@ public class QueryLucene {
                     }
 
                 }
-                ql.results.get().put("header", resultHeader);
+                ql.results.get().put("0", resultHeader);
                 isHeader = false;
             }
 
