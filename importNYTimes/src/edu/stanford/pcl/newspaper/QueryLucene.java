@@ -51,10 +51,10 @@ public class QueryLucene {
         Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
         IndexReader reader = IndexReader.open(index);
 
-        System.out.println(source);
+        /*System.out.println(source);
         System.out.println(terms);
         System.out.println(startDate);
-        System.out.println(endDate);
+        System.out.println(endDate);*/
 
         Query sourceQuery = new TermQuery(new Term("mediaSource",source));
         QueryParser queryParser = new QueryParser(Version.LUCENE_36,"text",analyzer);
@@ -178,6 +178,13 @@ public class QueryLucene {
         }
     }
 
+    public static String cleanColumnHeader(String columnHeader)
+    {
+        columnHeader = columnHeader.replace(" ","");
+        columnHeader = columnHeader.replace("+","");
+        return columnHeader;
+    }
+
     public static void generateQueryCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries) throws IOException, ParseException {
         Boolean isHeader = true;
         String source;
@@ -187,19 +194,20 @@ public class QueryLucene {
                 resultHeader.add(null);
                 for (String column : row) {
                     if ("all".equals(querySources)) {
-                        source = "New York Times";
-                        resultHeader.add((source + "." + column).replace(" ",""));
-                        source = "Los Angeles Times";
-                        resultHeader.add((source + "." + column).replace(" ",""));
-                        source = "Baltimore Sun";
-                        resultHeader.add((source + "." + column).replace(" ",""));
-                        source = "Chicago Tribune";
-                        resultHeader.add((source + "." + column).replace(" ",""));
+                        source = "NYT";
+                        resultHeader.add(cleanColumnHeader(column + "." + source));
+                        source = "LAT";
+                        resultHeader.add(cleanColumnHeader(column + "." + source));
+                        source = "BS";
+                        resultHeader.add(cleanColumnHeader(column + "." + source));
+                        source = "CT";
+                        resultHeader.add(cleanColumnHeader(column + "." + source));
+                        resultHeader.add(cleanColumnHeader("total." + column));
                     } else if ("aggregate".equals(querySources)) {
                         source = "all";
-                        resultHeader.add((source + "." + column).replace(" ",""));
+                        resultHeader.add(cleanColumnHeader(column + "." + source));
                     } else {
-                        resultHeader.add((querySources + "." + column).replace(" ",""));
+                        resultHeader.add(cleanColumnHeader(column + "." + querySources));
                     }
 
                 }
@@ -209,20 +217,26 @@ public class QueryLucene {
 
             ArrayList<String> resultRow = new ArrayList<String>();
 
-            String rowName = row[0];
+            String rowName = cleanColumnHeader(row[0]);
             resultRow.add(rowName);
 
             System.out.println(querySources);
             for (String column : row) {
                 if ("all".equals(querySources)) {
                     source = "New York Times";
-                    resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
+                    String NYTResult =  ql.executeCountQuery(source, column, startDate, endDate);
+                    resultRow.add(NYTResult);
                     source = "Los Angeles Times";
-                    resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
+                    String LATResult = ql.executeCountQuery(source, column, startDate, endDate);
+                    resultRow.add(LATResult);
                     source = "Baltimore Sun";
-                    resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
+                    String BSResult = ql.executeCountQuery(source, column, startDate, endDate);
+                    resultRow.add(BSResult);
                     source = "Chicago Tribune";
-                    resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
+                    String CTResult = ql.executeCountQuery(source, column, startDate, endDate);
+                    resultRow.add(CTResult);
+                    String total = Integer.toString(Integer.parseInt(NYTResult) + Integer.parseInt(LATResult) + Integer.parseInt(BSResult) + Integer.parseInt(CTResult));
+                    resultRow.add(total);
                 } else if ("aggregate".equals(querySources)) {
                     source = "*";
                     resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
@@ -259,7 +273,7 @@ public class QueryLucene {
         ArrayList<String> resultRow = new ArrayList<String>();
         String rowName;
 
-        rowName = queryText + " " + source;
+        rowName = cleanColumnHeader(queryText + "." + source);
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate); date = date.plusDays(1)) {
             resultRow.add(ql.executeCountQuery(source, queryText, startDate, endDate));
         }
