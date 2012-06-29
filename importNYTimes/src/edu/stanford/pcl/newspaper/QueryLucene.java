@@ -74,7 +74,7 @@ public class QueryLucene {
         return hitCount;
     }
 
-    public static ArrayList<String> createHeader(Integer startDate, Integer endDate) {
+    public static ArrayList<String> createDateRangeHeader(Integer startDate, Integer endDate) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy/MM/dd");
         DateTime dtStartDate = dateFormat.parseDateTime(startDate.toString());
         DateTime dtEndDate = dateFormat.parseDateTime(endDate.toString());
@@ -179,11 +179,37 @@ public class QueryLucene {
     }
 
     public static void generateQueryCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries) throws IOException, ParseException {
+        Boolean isHeader = true;
+        String source;
         for (String[] row : queries) {
+            if (isHeader){
+                ArrayList<String> resultHeader = new ArrayList<String>();
+                for (String column : row) {
+                    if ("all".equals(querySources)) {
+                        source = "New York Times";
+                        resultHeader.add((source + "." + column).replace(" ",""));
+                        source = "Los Angeles Times";
+                        resultHeader.add((source + "." + column).replace(" ",""));
+                        source = "Baltimore Sun";
+                        resultHeader.add((source + "." + column).replace(" ",""));
+                        source = "Chicago Tribune";
+                        resultHeader.add((source + "." + column).replace(" ",""));
+                    } else if ("aggregate".equals(querySources)) {
+                        source = "all";
+                        resultHeader.add((source + "." + column).replace(" ",""));
+                    } else {
+                        resultHeader.add((querySources + "." + column).replace(" ",""));
+                    }
+
+                }
+                ql.results.get().put("header", resultHeader);
+            }
+
             ArrayList<String> resultRow = new ArrayList<String>();
+
             String rowName = row[0];
             resultRow.add(rowName);
-            String source;
+
             System.out.println(querySources);
             for (String column : row) {
                 if ("all".equals(querySources)) {
@@ -208,7 +234,7 @@ public class QueryLucene {
 
     public static void generateDateRangeCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries) throws IOException, ParseException {
 
-        ql.results.get().put("", createHeader(startDate, endDate));
+        ql.results.get().put("", createDateRangeHeader(startDate, endDate));
         for (String[] row : queries) {
             if (querySources.equals("all")) {
                 issueDateRangeQueries(startDate, endDate, "*", row[0], ql);
