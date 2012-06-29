@@ -70,7 +70,8 @@ public class QueryLucene {
         TopDocs topDocs = searcher.search(booleanQuery, 1);
         String hitCount = String.valueOf(topDocs.totalHits);
         searcher.close();
-
+        reader.close();
+        analyzer.close();
         return hitCount;
     }
 
