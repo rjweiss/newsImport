@@ -103,7 +103,7 @@ public class Importer {
 
                     try {
                         Document doc = new Document();
-                        System.out.println(Integer.parseInt(article.getPublicationDate()));
+                        //System.out.println(Integer.parseInt(article.getPublicationDate()));
                         //DateTools.dateToString(date, Resolution.SECOND)
                         doc.add(new Field("pageNumber", article.getPageNumber(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                         doc.add(new NumericField("publicationDate", 8, Field.Store.YES, true).setIntValue(Integer.parseInt(article.getPublicationDate())));
