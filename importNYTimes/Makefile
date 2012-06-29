@@ -5,6 +5,7 @@ JARS := \
 	lucene/lucene-core-3.6.0.jar \
 	opencsv/opencsv-2.3.jar \
 	jsap/JSAP-2.1.jar \
+	stanford/corenlp/joda-time.jar \
 
 CLASSPATH := $(subst $(eval) ,:,$(addprefix $(JARDIR)/,$(JARS)))
 
