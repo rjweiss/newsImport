@@ -105,9 +105,6 @@ public class Importer {
                         Document doc = new Document();
 
                         //DateTools.dateToString(date, Resolution.SECOND)
-
-                        document.add(new NumericField(name).setIntValue(value));
-
                         doc.add(new Field("pageNumber", article.getPageNumber(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                         doc.add(new NumericField("publicationDate").setIntValue(Integer.getInteger(article.getPublicationDate())));
                         //doc.add(new Field("publicationDate", article.getPublicationDate(), Field.Store.YES, Field.Index.NOT_ANALYZED));
