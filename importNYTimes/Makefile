@@ -18,5 +18,5 @@ build:
 	javac -Xlint -cp $(CLASSPATH) -d out/ -sourcepath $(SRCDIR) $(SRCDIR)/$(MAINCLASS).java
 
 run:
-	java -cp out:$(CLASSPATH) $(MAINCLASS)
+	java -cp out:$(CLASSPATH) $(MAINCLASS) ${ARGS}
 

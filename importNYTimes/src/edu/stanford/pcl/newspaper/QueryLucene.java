@@ -92,8 +92,6 @@ public class QueryLucene {
                                 "Sources to query (source name, all, or aggregate)"),
                         new FlaggedOption("outputFile", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'o', "outputFile",
                                 "Path and name for output"),
-                        new FlaggedOption("searchInterval", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'i', "searchInterval",
-                                "Search interval (monthly, daily, yearly, all"),
                         new FlaggedOption("startDate", JSAP.STRING_PARSER, "20000101", JSAP.NOT_REQUIRED, 'b', "startDate",
                                 "Start date"),
                         new FlaggedOption("endDate", JSAP.STRING_PARSER, "20070531", JSAP.NOT_REQUIRED, 'f', "endDate",
