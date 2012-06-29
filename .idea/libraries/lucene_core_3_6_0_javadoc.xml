@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="lucene-core-3.6.0-javadoc">
+    <CLASSES />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/lucene/lucene-core-3.6.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

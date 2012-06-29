@@ -22,14 +22,13 @@ import java.io.File;
 public class TribParser extends Parser {
 
 
-
     // TODO:  Handle missing fields robustly.
     public Article parse(File file, String source) {
         Article article = new Article();
         article.setMediaType("newspaper");
         article.setMediaSource(source);
         article.setFileName(file.getAbsolutePath());
-	
+
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         domFactory.setNamespaceAware(true); // never forget this!
         domFactory.setValidating(false);
@@ -50,49 +49,45 @@ public class TribParser extends Parser {
 
             // Page Number
             expr = xpath.compile("//docdt/startpg");
-            result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
+            result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
             try {
                 article.setPageNumber(result.item(0).getTextContent());
-	    }
-            catch (Exception e) {
+            } catch (Exception e) {
                 article.setPageNumber("");
             }
 
             // Publication Date
             expr = xpath.compile("//pcdt/pcdtn");
-            result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
+            result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
             try {
-                String yearFour = result.item(0).getTextContent().substring(0,3);
-                String monthTwo = result.item(0).getTextContent().substring(4,5);
-                String dayTwo = result.item(0).getTextContent().substring(6,7);
-                article.setPublicationDate(yearFour + monthTwo + dayTwo);
-	    }
-            catch (Exception e) {
+//                String yearFour = result.item(0).getTextContent().substring(0,3);
+//                String monthTwo = result.item(0).getTextContent().substring(4,5);
+//                String dayTwo = result.item(0).getTextContent().substring(6,7);
+                article.setPublicationDate(result.item(0).getTextContent());
+            } catch (Exception e) {
                 article.setPublicationDate("");
             }
 
 
             // Headline
             expr = xpath.compile("//docdt/doctitle");
-            result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
+            result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
             try {
                 article.setHeadline(result.item(0).getTextContent());
-	    }
-            catch (Exception e) {
+            } catch (Exception e) {
                 article.setHeadline("");
             }
 
             // Text
             StringBuilder sb = new StringBuilder();
             expr = xpath.compile("//txtdt/text/paragraph/text()");
-            result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
+            result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
             for (int i = 0; i < result.getLength(); i++) {
                 sb.append(result.item(i).getTextContent()).append(" ");
             }
             try {
                 article.setText(sb.toString());
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 article.setText("");
             }
 
@@ -102,14 +97,13 @@ public class TribParser extends Parser {
             // set complete flag
 
 
-            int yearFour = Integer.parseInt(article.getPublicationDate().substring(0,3));
+            int yearFour = Integer.parseInt(article.getPublicationDate().substring(0, 3));
 
-            int monthTwo = Integer.parseInt(article.getPublicationDate().substring(4,5));
+            int monthTwo = Integer.parseInt(article.getPublicationDate().substring(4, 5));
 
-            if (yearFour <2007 || (yearFour == 2007 && monthTwo <6)){
+            if (yearFour < 2007 || (yearFour == 2007 && monthTwo < 6)) {
                 article.setOverLap("1");
-            }
-            else{
+            } else {
                 article.setOverLap("0");
             }
 

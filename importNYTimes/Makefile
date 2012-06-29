@@ -10,7 +10,7 @@ CLASSPATH := $(subst $(eval) ,:,$(addprefix $(JARDIR)/,$(JARS)))
 
 SRCDIR := src
 
-MAINCLASS := edu/stanford/pcl/newspaper/QueryLucene
+MAINCLASS := edu/stanford/pcl/newspaper/Importer
 
 .PHONY: build run
 
@@ -18,5 +18,5 @@ build:
 	javac -Xlint -cp $(CLASSPATH) -d out/ -sourcepath $(SRCDIR) $(SRCDIR)/$(MAINCLASS).java
 
 run:
-	java -cp out:$(CLASSPATH) $(MAINCLASS) -q /home/ec2-user/queryLucene.csv -s all -o /home/ec2-user/luceneResults.csv 2>err.out
+	java -cp out:$(CLASSPATH) $(MAINCLASS)
 
