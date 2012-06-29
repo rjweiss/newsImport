@@ -93,7 +93,7 @@ public class QueryLucene {
                 new Parameter[]{
                         new FlaggedOption("queryListFile", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'q', "queryListFile",
                                 "List of queries to run"),
-                        new FlaggedOption("source", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 's', "querySources",
+                        new FlaggedOption("querySources", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 's', "querySources",
                                 "Sources to query (source name, all, or aggregate)"),
                         new FlaggedOption("outputFile", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'o', "outputFile",
                                 "Path and name for output"),
