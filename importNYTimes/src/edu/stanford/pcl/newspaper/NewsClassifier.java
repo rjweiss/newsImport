@@ -2,17 +2,23 @@ package edu.stanford.pcl.newspaper;
 
 import edu.stanford.nlp.classify.LinearClassifier;
 import edu.stanford.nlp.classify.LinearClassifierFactory;
-import edu.stanford.nlp.classify.NaiveBayesClassifier;
 import edu.stanford.nlp.ling.BasicDatum;
+import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.Datum;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.StanfordCoreNLP;
+import edu.stanford.nlp.util.CoreMap;
 
+//import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 
-public class NewsClassifier {
+//implement serializable to dump the trained classifier (eventually)
+public class NewsClassifier { //implements Serializable {
 
     private NewsClassifier() {
     }
@@ -20,13 +26,33 @@ public class NewsClassifier {
     protected static Datum<String, String> makeDocDatum(String doc) {
         List<String> features = new ArrayList<String>();
         //we could probably pass POS tags and NEs as features if we wanted
-        String[] words = doc.split("\\s+");
-        for (String word : words){
-            features.add(word);
+        Properties p = new Properties();
+        p.put("annotators", "tokenize, ssplit, pos");
+        StanfordCoreNLP pipeline = new StanfordCoreNLP(p);
+
+        Annotation document = new Annotation(doc);
+        pipeline.annotate(document);
+
+        List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
+        for (CoreMap sentence : sentences) {
+            List<CoreLabel> tokens = sentence.get(CoreAnnotations.TokensAnnotation.class);
+            for (CoreLabel token : tokens) {
+                String currentLabel = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+                String currentText = token.get(CoreAnnotations.TextAnnotation.class);
+                System.out.println(currentText + "(" + currentLabel + ")");
+                features.add(currentLabel + "=" + currentText);
+            }
         }
+
+//        String[] words = doc.split("\\s+");
+//        for (String word : words){
+//            features.add(word);
+//        }
 //        features.add(doc);
 //        String[] words = doc.split("\\s+");
 //        features.add(words);
+
+        //just because I don't have actual labels
         String label = new String(String.valueOf(doc.contains("Obama")));
         return new BasicDatum<String, String>(features, label);
     }
@@ -50,7 +76,6 @@ public class NewsClassifier {
         docs.add(doc5);
         docs.add(doc6);
         docs.add(doc7);
-        docs.add(doc1);
 
         Iterator iterator = docs.iterator();
 
