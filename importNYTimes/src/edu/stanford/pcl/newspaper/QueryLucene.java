@@ -180,7 +180,7 @@ public class QueryLucene {
             resultRow.add(rowName);
             String source;
             for (String column : row) {
-                if (querySources.equals("all")) {
+                if ("all".equals(querySources)) {
                     source = "New York Times";
                     resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
                     source = "Los Angeles Times";
@@ -189,7 +189,7 @@ public class QueryLucene {
                     resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
                     source = "Chicago Tribune";
                     resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
-                } else if (querySources.equals("aggregate")) {
+                } else if ("aggregate".equals(querySources)) {
                     source = "*";
                     resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
                 } else {
