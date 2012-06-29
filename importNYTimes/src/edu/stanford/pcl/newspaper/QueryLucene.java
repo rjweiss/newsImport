@@ -96,7 +96,7 @@ public class QueryLucene {
                                 "Start date"),
                         new FlaggedOption("endDate", JSAP.STRING_PARSER, "20070531", JSAP.NOT_REQUIRED, 'f', "endDate",
                                 "End date"),
-                        new QualifiedSwitch("type", JSAP.STRING_PARSER, "count", JSAP.NOT_REQUIRED, 't', "type",
+                        new FlaggedOption("type", JSAP.STRING_PARSER, "count", JSAP.REQUIRED, 't', "type",
                                 "Type of data output (queryCounts, dateRangeCounts, occurrenceList)").setList(true).setListSeparator(',')
                 }
        );
