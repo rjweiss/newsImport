@@ -2,7 +2,7 @@ package edu.stanford.pcl.newspaper;
 
 import edu.stanford.nlp.classify.LinearClassifier;
 import edu.stanford.nlp.classify.LinearClassifierFactory;
-import edu.stanford.nlp.classify.NaiveBayesClassifier;
+//import edu.stanford.nlp.classify.NaiveBayesClassifier;
 import edu.stanford.nlp.ling.BasicDatum;
 import edu.stanford.nlp.ling.Datum;
 
