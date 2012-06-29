@@ -25,9 +25,10 @@ public class NewsClassifier { //implements Serializable {
 
     protected static Datum<String, String> makeDocDatum(String doc) {
         List<String> features = new ArrayList<String>();
+
         //we could probably pass POS tags and NEs as features if we wanted
         Properties p = new Properties();
-        p.put("annotators", "tokenize, ssplit, pos");
+        p.put("annotators", "tokenize, ssplit, pos, lemma, ner");
         StanfordCoreNLP pipeline = new StanfordCoreNLP(p);
 
         Annotation document = new Annotation(doc);
@@ -37,20 +38,16 @@ public class NewsClassifier { //implements Serializable {
         for (CoreMap sentence : sentences) {
             List<CoreLabel> tokens = sentence.get(CoreAnnotations.TokensAnnotation.class);
             for (CoreLabel token : tokens) {
-                String currentLabel = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+                String currentPOS = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
                 String currentText = token.get(CoreAnnotations.TextAnnotation.class);
-                System.out.println(currentText + "(" + currentLabel + ")");
-                features.add(currentLabel + "=" + currentText);
+                String currentEntity = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
+                if ("NNP".equals(currentPOS) && !currentEntity.equals("O")) {
+                    features.add(currentPOS + "+" + currentEntity + "=" + currentText);
+                } else {
+                    features.add(currentPOS + "=" + currentText);
+                }
             }
         }
-
-//        String[] words = doc.split("\\s+");
-//        for (String word : words){
-//            features.add(word);
-//        }
-//        features.add(doc);
-//        String[] words = doc.split("\\s+");
-//        features.add(words);
 
         //just because I don't have actual labels
         String label = new String(String.valueOf(doc.contains("Obama")));
@@ -68,6 +65,9 @@ public class NewsClassifier { //implements Serializable {
         String doc5 = "Romney is a communist";
         String doc6 = "Obama believes in angels";
         String doc7 = "Romney believes in angels";
+        String doc8 = "Obama pretended to believe in angels so that he'd win the election";
+        String doc9 = "Romney pretended to believe in angels so that he'll win the election";
+        String doc10 = "Romney is a Democrat";
 
         docs.add(doc1);
         docs.add(doc2);
@@ -76,6 +76,9 @@ public class NewsClassifier { //implements Serializable {
         docs.add(doc5);
         docs.add(doc6);
         docs.add(doc7);
+        docs.add(doc8);
+        docs.add(doc9);
+        docs.add(doc10);
 
         Iterator iterator = docs.iterator();
 
