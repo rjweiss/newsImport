@@ -187,7 +187,7 @@ public class QueryLucene {
         for (String[] row : queries) {
             if (isHeader){
                 ArrayList<String> resultHeader = new ArrayList<String>();
-                resultHeader.add(null);
+
                 for (String column : row) {
                     if ("all".equals(querySources)) {
                         source = "NYT";
@@ -251,7 +251,7 @@ public class QueryLucene {
             if (querySources.equals("all")) {
                 issueDateRangeQueries(startDate, endDate, "*", row[0], ql);
             } else if (querySources.equals("aggregate")) {
-                issueDateRangeQueries(startDate, endDate, "New York times", row[0], ql);
+                issueDateRangeQueries(startDate, endDate, "New York Times", row[0], ql);
                 issueDateRangeQueries(startDate, endDate, "Los Angeles Times", row[0], ql);
                 issueDateRangeQueries(startDate, endDate, "Baltimore Sun", row[0], ql);
                 issueDateRangeQueries(startDate, endDate, "Chicago Tribune", row[0], ql);
