@@ -21,7 +21,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 public class QueryLucene {
@@ -51,8 +54,8 @@ public class QueryLucene {
         System.out.println(startDate);
         System.out.println(endDate);*/
 
-        Query sourceQuery = new TermQuery(new Term("mediaSource",source));
-        QueryParser queryParser = new QueryParser(Version.LUCENE_36,"text",analyzer);
+        Query sourceQuery = new TermQuery(new Term("mediaSource", source));
+        QueryParser queryParser = new QueryParser(Version.LUCENE_36, "text", analyzer);
         Query textQuery = queryParser.parse(terms);
         Query dateRangeQuery = NumericRangeQuery.newIntRange("publicationDate", startDate, endDate, true, true);
 
@@ -100,7 +103,7 @@ public class QueryLucene {
                         new FlaggedOption("type", JSAP.STRING_PARSER, "count", JSAP.REQUIRED, 't', "type",
                                 "Type of data output (queryCounts, dateRangeCounts, occurrenceList)").setList(true).setListSeparator(',')
                 }
-       );
+        );
 
         JSAPResult JSAPconfig = jsap.parse(args);
         if (jsap.messagePrinted()) System.exit(1);
@@ -144,8 +147,8 @@ public class QueryLucene {
         IndexReader reader = IndexReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
 
-        Query sourceQuery = new TermQuery(new Term("mediaSource",source));
-        QueryParser queryParser = new QueryParser(Version.LUCENE_36,"text",analyzer);
+        Query sourceQuery = new TermQuery(new Term("mediaSource", source));
+        QueryParser queryParser = new QueryParser(Version.LUCENE_36, "text", analyzer);
         Query textQuery = queryParser.parse(terms);
         Query dateRangeQuery = NumericRangeQuery.newIntRange("publicationDate", startDate, endDate, true, true);
 
@@ -174,10 +177,9 @@ public class QueryLucene {
         }
     }
 
-    public static String cleanLabel(String label)
-    {
-        label = label.replace(" ","");
-        label = label.replace("+","");
+    public static String cleanLabel(String label) {
+        label = label.replace(" ", "");
+        label = label.replace("+", "");
         return label;
     }
 
@@ -185,10 +187,12 @@ public class QueryLucene {
         Boolean isHeader = true;
         String source;
         for (String[] row : queries) {
-            if (isHeader){
-                ArrayList<String> resultHeader = new ArrayList<String>();
 
-                for (String column : row) {
+            ArrayList<String> resultRow = new ArrayList<String>();
+            //System.out.println(querySources);
+            for (String column : row) {
+                if (isHeader) {
+                    ArrayList<String> resultHeader = new ArrayList<String>();
                     if ("all".equals(querySources)) {
                         source = "NYT";
                         resultHeader.add(cleanLabel(column + "." + source));
@@ -198,7 +202,7 @@ public class QueryLucene {
                         resultHeader.add(cleanLabel(column + "." + source));
                         source = "CT";
                         resultHeader.add(cleanLabel(column + "." + source));
-                        resultHeader.add(cleanLabel("total." + column));
+                        resultHeader.add(cleanLabel(column + ".total"));
                     } else if ("aggregate".equals(querySources)) {
                         source = "all";
                         resultHeader.add(cleanLabel(column + "." + source));
@@ -206,38 +210,32 @@ public class QueryLucene {
                         resultHeader.add(cleanLabel(column + "." + querySources));
                     }
 
-                }
-                ql.results.put("0", resultHeader);
-                isHeader = false;
-            }
-
-            ArrayList<String> resultRow = new ArrayList<String>();
-
-            String rowName = cleanLabel(row[0]);
-            resultRow.add(rowName);
-
-            //System.out.println(querySources);
-            for (String column : row) {
-                if ("all".equals(querySources)) {
-                    source = "New York Times";
-                    String NYTResult =  ql.executeCountQuery(source, column, startDate, endDate);
-                    resultRow.add(NYTResult);
-                    source = "Los Angeles Times";
-                    String LATResult = ql.executeCountQuery(source, column, startDate, endDate);
-                    resultRow.add(LATResult);
-                    source = "Baltimore Sun";
-                    String BSResult = ql.executeCountQuery(source, column, startDate, endDate);
-                    resultRow.add(BSResult);
-                    source = "Chicago Tribune";
-                    String CTResult = ql.executeCountQuery(source, column, startDate, endDate);
-                    resultRow.add(CTResult);
-                    String total = Integer.toString(Integer.parseInt(NYTResult) + Integer.parseInt(LATResult) + Integer.parseInt(BSResult) + Integer.parseInt(CTResult));
-                    resultRow.add(total);
-                } else if ("aggregate".equals(querySources)) {
-                    source = "*";
-                    resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
+                    ql.results.put("0", resultHeader);
+                    isHeader = false;
                 } else {
-                    resultRow.add(ql.executeCountQuery(querySources, column, startDate, endDate));
+                    String rowName = cleanLabel(row[0]);
+                    resultRow.add(rowName);
+                    if ("all".equals(querySources)) {
+                        source = "New York Times";
+                        String NYTResult = ql.executeCountQuery(source, column, startDate, endDate);
+                        resultRow.add(NYTResult);
+                        source = "Los Angeles Times";
+                        String LATResult = ql.executeCountQuery(source, column, startDate, endDate);
+                        resultRow.add(LATResult);
+                        source = "Baltimore Sun";
+                        String BSResult = ql.executeCountQuery(source, column, startDate, endDate);
+                        resultRow.add(BSResult);
+                        source = "Chicago Tribune";
+                        String CTResult = ql.executeCountQuery(source, column, startDate, endDate);
+                        resultRow.add(CTResult);
+                        String total = Integer.toString(Integer.parseInt(NYTResult) + Integer.parseInt(LATResult) + Integer.parseInt(BSResult) + Integer.parseInt(CTResult));
+                        resultRow.add(total);
+                    } else if ("aggregate".equals(querySources)) {
+                        source = "*";
+                        resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
+                    } else {
+                        resultRow.add(ql.executeCountQuery(querySources, column, startDate, endDate));
+                    }
                 }
             }
             ql.results.put(rowName, resultRow);
