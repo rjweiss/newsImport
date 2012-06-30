@@ -26,15 +26,10 @@ import java.util.Map.Entry;
 
 public class QueryLucene {
     private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
-    private ThreadLocal<Map<String, ArrayList>> results = new ThreadLocal<Map<String, ArrayList>>() {
-        @Override
-        protected Map<String, ArrayList> initialValue() {
-            return new HashMap<String, ArrayList>();
-        }
-    };
+    LinkedHashMap<String, ArrayList> results = new LinkedHashMap<String, ArrayList>();
 
     public void saveFile(String outputFile) throws IOException {
-        Iterator<Entry<String, ArrayList>> iterator = results.get().entrySet().iterator();
+        Iterator<Entry<String, ArrayList>> iterator = results.entrySet().iterator();
         CSVWriter writer = new CSVWriter(new FileWriter(outputFile), '\t');
 
         while (iterator.hasNext()) {
@@ -174,16 +169,16 @@ public class QueryLucene {
             resultRow.add(doc.get("filename"));
             resultRow.add(doc.get("headline"));
 
-            ql.results.get().put(String.valueOf(i), resultRow);
+            ql.results.put(String.valueOf(i), resultRow);
             i++;
         }
     }
 
-    public static String cleanColumnHeader(String columnHeader)
+    public static String cleanLabel(String label)
     {
-        columnHeader = columnHeader.replace(" ","");
-        columnHeader = columnHeader.replace("+","");
-        return columnHeader;
+        label = label.replace(" ","");
+        label = label.replace("+","");
+        return label;
     }
 
     public static void generateQueryCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries) throws IOException, ParseException {
@@ -196,32 +191,32 @@ public class QueryLucene {
                 for (String column : row) {
                     if ("all".equals(querySources)) {
                         source = "NYT";
-                        resultHeader.add(cleanColumnHeader(column + "." + source));
+                        resultHeader.add(cleanLabel(column + "." + source));
                         source = "LAT";
-                        resultHeader.add(cleanColumnHeader(column + "." + source));
+                        resultHeader.add(cleanLabel(column + "." + source));
                         source = "BS";
-                        resultHeader.add(cleanColumnHeader(column + "." + source));
+                        resultHeader.add(cleanLabel(column + "." + source));
                         source = "CT";
-                        resultHeader.add(cleanColumnHeader(column + "." + source));
-                        resultHeader.add(cleanColumnHeader("total." + column));
+                        resultHeader.add(cleanLabel(column + "." + source));
+                        resultHeader.add(cleanLabel("total." + column));
                     } else if ("aggregate".equals(querySources)) {
                         source = "all";
-                        resultHeader.add(cleanColumnHeader(column + "." + source));
+                        resultHeader.add(cleanLabel(column + "." + source));
                     } else {
-                        resultHeader.add(cleanColumnHeader(column + "." + querySources));
+                        resultHeader.add(cleanLabel(column + "." + querySources));
                     }
 
                 }
-                ql.results.get().put("0", resultHeader);
+                ql.results.put("0", resultHeader);
                 isHeader = false;
             }
 
             ArrayList<String> resultRow = new ArrayList<String>();
 
-            String rowName = cleanColumnHeader(row[0]);
+            String rowName = cleanLabel(row[0]);
             resultRow.add(rowName);
 
-            System.out.println(querySources);
+            //System.out.println(querySources);
             for (String column : row) {
                 if ("all".equals(querySources)) {
                     source = "New York Times";
@@ -245,13 +240,13 @@ public class QueryLucene {
                     resultRow.add(ql.executeCountQuery(querySources, column, startDate, endDate));
                 }
             }
-            ql.results.get().put(rowName, resultRow);
+            ql.results.put(rowName, resultRow);
         }
     }
 
     public static void generateDateRangeCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries) throws IOException, ParseException {
 
-        ql.results.get().put("", createDateRangeHeader(startDate, endDate));
+        ql.results.put("", createDateRangeHeader(startDate, endDate));
         for (String[] row : queries) {
             if (querySources.equals("all")) {
                 issueDateRangeQueries(startDate, endDate, "*", row[0], ql);
@@ -274,10 +269,10 @@ public class QueryLucene {
         ArrayList<String> resultRow = new ArrayList<String>();
         String rowName;
 
-        rowName = cleanColumnHeader(queryText + "." + source);
+        rowName = cleanLabel(queryText + "." + source);
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate); date = date.plusDays(1)) {
             resultRow.add(ql.executeCountQuery(source, queryText, startDate, endDate));
         }
-        ql.results.get().put(rowName, resultRow);
+        ql.results.put(rowName, resultRow);
     }
 }
