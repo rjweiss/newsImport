@@ -189,7 +189,7 @@ public class QueryLucene {
         for (String[] row : queries) {
             if (isHeader) {
                 ArrayList<String> resultHeader = new ArrayList<String>();
-
+                resultHeader.add(null);
                 for (String column : row) {
                     if ("all".equals(querySources)) {
                         source = "NYT";
