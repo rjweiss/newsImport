@@ -77,7 +77,7 @@ public class QueryLucene {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy/MM/dd");
         String year = date.substring(0,4);
         String month = date.substring(4,6);
-        String day = date.substring(7,8);
+        String day = date.substring(6,8);
         System.out.println(year);
         DateTime formattedDate = dateFormat.parseDateTime((year + "-" + month + "-" +day));
         return formattedDate;
