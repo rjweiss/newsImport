@@ -90,7 +90,7 @@ public class QueryLucene {
         ArrayList<String> resultHeader = new ArrayList<String>();
         resultHeader.add(null);
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate); date = date.plusDays(1)) {
-            resultHeader.add(date.toString());
+            resultHeader.add(date.toString("yyyy-MM-dd"));
         }
         return resultHeader;
     }
@@ -292,8 +292,7 @@ public class QueryLucene {
 
             Integer queryDate = Integer.parseInt(date.toString("yyyyMMdd"));
             System.out.println(queryDate);
-            //String queryDate = Integer.toString(date.getYear()) + Integer.toString(date.getMonthOfYear()) + Integer.toString(date.getDayOfMonth());
-            resultRow.add(ql.executeCountQuery(source, queryText, startDate, endDate));
+            resultRow.add(ql.executeCountQuery(source, queryText, queryDate, queryDate));
 
         }
         ql.results.put(rowName, resultRow);
