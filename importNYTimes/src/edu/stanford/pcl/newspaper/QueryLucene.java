@@ -75,7 +75,7 @@ public class QueryLucene {
 
     public static DateTime convertIntDateToDate(String date){
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy/MM/dd");
-        String year = date.substring(0,3);
+        String year = date.substring(0,4);
         String month = date.substring(4,5);
         String day = date.substring(6,7);
         System.out.println(year);
