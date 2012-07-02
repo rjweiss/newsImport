@@ -169,7 +169,7 @@ public class QueryLucene {
 
         IndexSearcher searcher = new IndexSearcher(reader);
         TopDocs topDocs = searcher.search(booleanQuery, 1);
-.
+
         Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
         System.out.println(topDocs.totalHits);
         TopDocs hits = searcher.search(booleanQuery, topDocs.totalHits, sort);
