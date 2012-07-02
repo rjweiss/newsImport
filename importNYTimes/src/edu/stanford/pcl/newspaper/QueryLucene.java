@@ -78,7 +78,8 @@ public class QueryLucene {
         String year = date.substring(0,3);
         String month = date.substring(4,5);
         String day = date.substring(6,7);
-        DateTime formattedDate = dateFormat.parseDateTime((year + "/" + month + "/" +day));
+        System.out.println(year);
+        DateTime formattedDate = dateFormat.parseDateTime((year + "-" + month + "-" +day));
         return formattedDate;
     }
 
