@@ -252,12 +252,13 @@ public class QueryLucene {
         ql.results.put("", createDateRangeHeader(startDate, endDate));
         for (String[] row : queries) {
             if (querySources.equals("all")) {
-                issueDateRangeQueries(startDate, endDate, "*", row[0], ql);
-            } else if (querySources.equals("aggregate")) {
                 issueDateRangeQueries(startDate, endDate, "New York Times", row[0], ql);
                 issueDateRangeQueries(startDate, endDate, "Los Angeles Times", row[0], ql);
                 issueDateRangeQueries(startDate, endDate, "Baltimore Sun", row[0], ql);
                 issueDateRangeQueries(startDate, endDate, "Chicago Tribune", row[0], ql);
+
+            } else if (querySources.equals("aggregate")) {
+                issueDateRangeQueries(startDate, endDate, "*", row[0], ql);
             } else {
                 issueDateRangeQueries(startDate, endDate, querySources, row[0], ql);
             }
@@ -272,7 +273,8 @@ public class QueryLucene {
         ArrayList<String> resultRow = new ArrayList<String>();
         String rowName;
 
-        rowName = cleanLabel(queryText + "." + source);
+        rowName = cleanLabel(source + "." + queryText);
+        resultRow.add(rowName);
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate); date = date.plusDays(1)) {
             resultRow.add(ql.executeCountQuery(source, queryText, startDate, endDate));
         }
