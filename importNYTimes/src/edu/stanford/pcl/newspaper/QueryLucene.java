@@ -144,7 +144,7 @@ public class QueryLucene {
             System.out.println("Not supported");
             System.exit(1);
         } else if (querySources.equals("aggregate")) {
-            executeOccurenceQuery(ql, "\"New York Times\" or \"Los Angeles Times\" or \"Baltimore Sun\" or\"Chicago Tribune\"", terms, startDate, endDate);
+            executeOccurenceQuery(ql, "\"New York Times\" or \"Los Angeles Times\" or \"Baltimore Sun\" or \"Chicago Tribune\"", terms, startDate, endDate);
         } else {
             executeOccurenceQuery(ql, querySources, terms, startDate, endDate);
         }
@@ -253,7 +253,7 @@ public class QueryLucene {
                         String total = Integer.toString(Integer.parseInt(NYTResult) + Integer.parseInt(LATResult) + Integer.parseInt(BSResult) + Integer.parseInt(CTResult));
                         resultRow.add(total);
                     } else if ("aggregate".equals(querySources)) {
-                        source = "\"New York Times\" or \"Los Angeles Times\" or \"Baltimore Sun\" or\"Chicago Tribune\"";
+                        source = "\"New York Times\" or \"Los Angeles Times\" or \"Baltimore Sun\" or \"Chicago Tribune\"";
                         resultRow.add(ql.executeCountQuery(source, column, startDate, endDate));
                     } else {
                         resultRow.add(ql.executeCountQuery(querySources, column, startDate, endDate));
@@ -275,7 +275,7 @@ public class QueryLucene {
                 issueDateRangeQueries(startDate, endDate, "Chicago Tribune", row[0], ql);
 
             } else if (querySources.equals("aggregate")) {
-                issueDateRangeQueries(startDate, endDate, "\"New York Times\" or \"Los Angeles Times\" or \"Baltimore Sun\" or\"Chicago Tribune\"", row[0], ql);
+                issueDateRangeQueries(startDate, endDate, "\"New York Times\" or \"Los Angeles Times\" or \"Baltimore Sun\" or \"Chicago Tribune\"", row[0], ql);
             } else {
                 issueDateRangeQueries(startDate, endDate, querySources, row[0], ql);
             }
