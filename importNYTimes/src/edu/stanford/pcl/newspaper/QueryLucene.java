@@ -163,12 +163,13 @@ public class QueryLucene {
         Query dateRangeQuery = NumericRangeQuery.newIntRange("publicationDate", startDate, endDate, true, true);
 
         BooleanQuery booleanQuery = new BooleanQuery();
-        booleanQuery.add(sourceQuery, BooleanClause.Occur.MUST);
+        booleanQuery.add(sourceQuery, BooleanClause.Occur.SHOULD);
         booleanQuery.add(textQuery, BooleanClause.Occur.MUST);
         booleanQuery.add(dateRangeQuery, BooleanClause.Occur.MUST);
 
         IndexSearcher searcher = new IndexSearcher(reader);
         TopDocs topDocs = searcher.search(booleanQuery, 1);
+.
         Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
         System.out.println(topDocs.totalHits);
         TopDocs hits = searcher.search(booleanQuery, topDocs.totalHits, sort);
