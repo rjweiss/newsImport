@@ -141,6 +141,8 @@ public class QueryLucene {
     }
 
     public static void generateOccurenceList(Integer startDate, Integer endDate, String querySources, String terms, QueryLucene ql) throws IOException, ParseException {
+
+        System.out.println(terms);
         if (querySources.equals("all")) {
             System.out.println("Not supported");
             System.exit(1);
