@@ -277,9 +277,8 @@ public class QueryLucene {
     }
 
     private static void issueDateRangeQueries(Integer startDate, Integer endDate, String source, String queryText, QueryLucene ql) throws IOException, ParseException {
-        DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy/MM/dd");
-        DateTime dtStartDate = dateFormat.parseDateTime(startDate.toString());
-        DateTime dtEndDate = dateFormat.parseDateTime(endDate.toString());
+        DateTime dtStartDate = convertIntDateToDate(startDate.toString());
+        DateTime dtEndDate = convertIntDateToDate(endDate.toString());
 
         ArrayList<String> resultRow = new ArrayList<String>();
         String rowName;
