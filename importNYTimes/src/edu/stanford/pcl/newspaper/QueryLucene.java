@@ -144,7 +144,7 @@ public class QueryLucene {
             System.out.println("Not supported");
             System.exit(1);
         } else if (querySources.equals("aggregate")) {
-            executeOccurenceQuery(ql, "\"New York Times\" or \"Los Angeles Times\" or \"Baltimore Sun\" or \"Chicago Tribune\"", terms, startDate, endDate);
+            executeOccurenceQuery(ql, "\"New York Times\" OR \"Los Angeles Times\" OR \"Baltimore Sun\" OR \"Chicago Tribune\"", terms, startDate, endDate);
         } else {
             executeOccurenceQuery(ql, querySources, terms, startDate, endDate);
         }
