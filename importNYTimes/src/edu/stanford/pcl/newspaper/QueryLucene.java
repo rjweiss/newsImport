@@ -289,10 +289,12 @@ public class QueryLucene {
         rowName = cleanLabel(source + "." + queryText);
         resultRow.add(rowName);
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate); date = date.plusDays(1)) {
-            System.out.println(date);
+
+            Integer queryDate = Integer.parseInt(date.toString("yyyyMMdd"));
+            System.out.println(queryDate);
+            //String queryDate = Integer.toString(date.getYear()) + Integer.toString(date.getMonthOfYear()) + Integer.toString(date.getDayOfMonth());
             resultRow.add(ql.executeCountQuery(source, queryText, startDate, endDate));
-            startDate++;
-            endDate++;
+
         }
         ql.results.put(rowName, resultRow);
     }
