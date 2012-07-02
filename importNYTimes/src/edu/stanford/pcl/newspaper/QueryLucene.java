@@ -79,17 +79,16 @@ public class QueryLucene {
         String month = date.substring(4,6);
         String day = date.substring(6,8);
         String fullDate = year + "-" + month + "-" +day;
-        System.out.println(year);
         DateTime formattedDate = dateFormat.parseDateTime(fullDate);
         return formattedDate;
     }
 
     public static ArrayList<String> createDateRangeHeader(Integer startDate, Integer endDate) {
-
         DateTime dtStartDate = convertIntDateToDate(startDate.toString());
         DateTime dtEndDate = convertIntDateToDate(endDate.toString());
 
         ArrayList<String> resultHeader = new ArrayList<String>();
+        resultHeader.add(null);
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate); date = date.plusDays(1)) {
             resultHeader.add(date.toString());
         }
@@ -186,6 +185,9 @@ public class QueryLucene {
             ql.results.put(String.valueOf(i), resultRow);
             i++;
         }
+        searcher.close();
+        reader.close();
+        analyzer.close();
     }
 
     public static String cleanLabel(String label) {
@@ -286,6 +288,7 @@ public class QueryLucene {
         rowName = cleanLabel(source + "." + queryText);
         resultRow.add(rowName);
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate); date = date.plusDays(1)) {
+            System.out.println(date);
             resultRow.add(ql.executeCountQuery(source, queryText, startDate, endDate));
         }
         ql.results.put(rowName, resultRow);
