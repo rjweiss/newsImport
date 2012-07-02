@@ -27,9 +27,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+// Notes:
+// 1) Dates are treated as integers because of Lucene's limited type system
+// 2) Aggregate queries are not tested and should be used with extreme caution
+
 public class QueryLucene {
     private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
     LinkedHashMap<String, ArrayList> results = new LinkedHashMap<String, ArrayList>();
+
+
 
     public void saveFile(String outputFile) throws IOException {
         Iterator<Entry<String, ArrayList>> iterator = results.entrySet().iterator();
@@ -184,7 +190,7 @@ public class QueryLucene {
             resultRow.add(String.valueOf(i));
             resultRow.add(doc.get("publicationDate"));
             resultRow.add(doc.get("mediaSource"));
-            resultRow.add(doc.get("filename"));
+            resultRow.add(doc.get("fileName"));
             resultRow.add(doc.get("headline"));
 
             ql.results.put(String.valueOf(i), resultRow);
