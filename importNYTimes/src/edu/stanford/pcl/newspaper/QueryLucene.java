@@ -284,12 +284,15 @@ public class QueryLucene {
 
         ArrayList<String> resultRow = new ArrayList<String>();
         String rowName;
+        endDate = startDate;
 
         rowName = cleanLabel(source + "." + queryText);
         resultRow.add(rowName);
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate); date = date.plusDays(1)) {
             System.out.println(date);
             resultRow.add(ql.executeCountQuery(source, queryText, startDate, endDate));
+            startDate++;
+            endDate++;
         }
         ql.results.put(rowName, resultRow);
     }
