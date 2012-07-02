@@ -73,10 +73,19 @@ public class QueryLucene {
         return hitCount;
     }
 
-    public static ArrayList<String> createDateRangeHeader(Integer startDate, Integer endDate) {
+    public static DateTime convertIntDateToDate(String date){
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy/MM/dd");
-        DateTime dtStartDate = dateFormat.parseDateTime(startDate.toString());
-        DateTime dtEndDate = dateFormat.parseDateTime(endDate.toString());
+        String year = date.substring(0,3);
+        String month = date.substring(4,5);
+        String day = date.substring(6,7);
+        DateTime formattedDate = dateFormat.parseDateTime((year + "/" + month + "/" +day));
+        return formattedDate;
+    }
+
+    public static ArrayList<String> createDateRangeHeader(Integer startDate, Integer endDate) {
+
+        DateTime dtStartDate = convertIntDateToDate(startDate.toString());
+        DateTime dtEndDate = convertIntDateToDate(endDate.toString());
 
         ArrayList<String> resultHeader = new ArrayList<String>();
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate); date = date.plusDays(1)) {
