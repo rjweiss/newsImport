@@ -142,7 +142,7 @@ public class QueryLucene {
 
     public static void generateOccurenceList(Integer startDate, Integer endDate, String querySources, String terms, QueryLucene ql) throws IOException, ParseException {
 
-        System.out.println(terms);
+
         if (querySources.equals("all")) {
             System.out.println("Not supported");
             System.exit(1);
@@ -171,7 +171,7 @@ public class QueryLucene {
 
         TopDocs topDocs = searcher.search(booleanQuery, 1);
         Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
-
+        System.out.println(topDocs.totalHits);
         TopDocs hits = searcher.search(booleanQuery, topDocs.totalHits, sort);
 
         int i = 0;
