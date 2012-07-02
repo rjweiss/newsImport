@@ -154,12 +154,8 @@ public class QueryLucene {
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
         Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
         IndexReader reader = IndexReader.open(index);
-        IndexSearcher searcher = new IndexSearcher(reader);
 
-        System.out.println(source);
-        System.out.println(terms);
-        System.out.println(startDate);
-        System.out.println(endDate);
+
 
         Query sourceQuery = new TermQuery(new Term("mediaSource", source));
         QueryParser queryParser = new QueryParser(Version.LUCENE_36, "text", analyzer);
@@ -171,6 +167,7 @@ public class QueryLucene {
         booleanQuery.add(textQuery, BooleanClause.Occur.MUST);
         booleanQuery.add(dateRangeQuery, BooleanClause.Occur.MUST);
 
+        IndexSearcher searcher = new IndexSearcher(reader);
         TopDocs topDocs = searcher.search(booleanQuery, 1);
         Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
         System.out.println(topDocs.totalHits);
