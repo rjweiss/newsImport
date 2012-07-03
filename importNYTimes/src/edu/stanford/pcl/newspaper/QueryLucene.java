@@ -87,6 +87,11 @@ public class QueryLucene {
         return sourceList;
     }
 
+    public static void loadSourceList() throws IOException{
+        CSVReader CSVReader = new CSVReader(new FileReader("sourceList.txt"), '\t');
+        mediaSourceList = (ArrayList<String>) CSVReader.readAll();
+    }
+
     public String executeCountQuery(String source, String terms, Integer startDate, Integer endDate) throws IOException, ParseException {
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
         Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
@@ -305,8 +310,5 @@ public class QueryLucene {
         ql.saveFile(JSAPconfig.getString("outputFile"));
     }
 
-    public static void loadSourceList() throws IOException{
-        CSVReader CSVReader = new CSVReader(new FileReader("sourceList.txt"), '\t');
-        mediaSourceList = (ArrayList<String>) CSVReader.readAll();
-    }
+
 }
