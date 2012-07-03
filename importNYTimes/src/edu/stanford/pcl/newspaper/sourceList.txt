@@ -1,0 +1,4 @@
+New York Times
+Los Angeles Times
+Baltimore Sun
+Chicago Tribune
