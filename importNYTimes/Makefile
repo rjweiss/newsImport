@@ -21,6 +21,5 @@ build:
 import:
     java -cp out:$(CLASSPATH) $(MAINCLASS)
 
-query:
-	java -cp out:$(CLASSPATH) $(MAINCLASS) ${ARGS}
+
 
