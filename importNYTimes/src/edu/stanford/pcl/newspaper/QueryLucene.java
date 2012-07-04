@@ -84,8 +84,8 @@ public class QueryLucene {
         return sourceList;
     }
 
-    public static void loadSourceList() throws IOException{
-        CSVReader CSVReader = new CSVReader(new FileReader("./sourceList.txt"), '\t');
+    public static void loadSourceList(String file) throws IOException{
+        CSVReader CSVReader = new CSVReader(new FileReader(file), '\t');
 
         List<String[]> sources = CSVReader.readAll();
         for (String[] source : sources) {
@@ -277,14 +277,14 @@ public class QueryLucene {
                                 "Start date (yyyyMMdd)"),
                         new FlaggedOption("endDate", JSAP.STRING_PARSER, "20070531", JSAP.NOT_REQUIRED, 'f', "endDate",
                                 "End date (yyyyMMdd)"),
-                        new FlaggedOption("sourceList", JSAP.STRING_PARSER, "sourceList.txt", JSAP.NOT_REQUIRED, 'l', "sourceList",
+                        new FlaggedOption("sourceList", JSAP.STRING_PARSER, "/home/ec2-user/sourceList.txt", JSAP.NOT_REQUIRED, 'l', "sourceList",
                                 "Source List File Location"),
                         new FlaggedOption("type", JSAP.STRING_PARSER, "count", JSAP.REQUIRED, 't', "type",
                                 "Type of data output (queryCounts, dateRangeCounts, occurrenceList)").setList(true).setListSeparator(',')
                 }
         );
 
-        loadSourceList();
+        loadSourceList(JSAPconfig.getString("sourceList"));
 
         JSAPResult JSAPconfig = jsap.parse(args);
         if (jsap.messagePrinted()) System.exit(1);
