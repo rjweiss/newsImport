@@ -11,9 +11,7 @@ CLASSPATH := $(subst $(eval) ,:,$(addprefix $(JARDIR)/,$(JARS)))
 
 SRCDIR := src
 
-MAINCLASS := edu/stanford/pcl/newspaper/QueryLucene
-
-MAINIMPORTCLASS := edu/stanford/pcl/newspaper/Importer
+MAINCLASS := edu/stanford/pcl/newspaper/Importer
 
 .PHONY: build run
 
@@ -21,7 +19,7 @@ build:
 	javac -Xlint -cp $(CLASSPATH) -d out/ -sourcepath $(SRCDIR) $(SRCDIR)/$(MAINCLASS).java
 
 import:
-    java -cp out:$(CLASSPATH) $(MAINIMPORTCLASS)
+    java -cp out:$(CLASSPATH) $(MAINCLASS)
 
 query:
 	java -cp out:$(CLASSPATH) $(MAINCLASS) ${ARGS}
