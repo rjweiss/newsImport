@@ -85,7 +85,7 @@ public class QueryLucene {
     }
 
     public static void loadSourceList() throws IOException{
-        CSVReader CSVReader = new CSVReader(new FileReader("sourceList.txt"), '\t');
+        CSVReader CSVReader = new CSVReader(new FileReader("./sourceList.txt"), '\t');
 
         List<String[]> sources = CSVReader.readAll();
         for (String[] source : sources) {
