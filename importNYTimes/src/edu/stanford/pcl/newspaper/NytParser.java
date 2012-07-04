@@ -83,7 +83,21 @@ public class NytParser extends Parser {
             // TODO: Use a real date object.
             try {
                 //DateTools.dateToString(date, DateTools.Resolution.SECOND);
-                article.setPublicationDate(attributes.get("_articlePublicationYear") + attributes.get("_articlePublicationMonth") + attributes.get("_articlePublicationDayOfMonth") );
+                String month;
+                String day;
+                if (attributes.get("_articlePublicationMonth").length() <2) {
+                    month = "0" + attributes.get("_articlePublicationMonth");
+                }
+                else {
+                    month = attributes.get("_articlePublicationMonth");
+                }
+                if (attributes.get("_articlePublicationDayOfMonth").length() <2) {
+                    day = "0" + attributes.get("_articlePublicationDayOfMonth");
+                }
+                else {
+                    day = attributes.get("_articlePublicationDayOfMonth");
+                }
+                article.setPublicationDate(attributes.get("_articlePublicationYear") + month + day );
             }
             catch (Exception e) {
                 article.setPublicationDate("");

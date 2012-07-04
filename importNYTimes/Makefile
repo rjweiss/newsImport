@@ -13,11 +13,15 @@ SRCDIR := src
 
 MAINCLASS := edu/stanford/pcl/newspaper/QueryLucene
 
+MAINIMPORTCLASS := edu/stanford/pcl/newspaper/Importer
+
 .PHONY: build run
 
 build:
 	javac -Xlint -cp $(CLASSPATH) -d out/ -sourcepath $(SRCDIR) $(SRCDIR)/$(MAINCLASS).java
 
+import:
+
 query:
-	java -cp out:$(CLASSPATH) $(MAINCLASS) ${ARGS}
+	java -cp out:$(CLASSPATH) $(MAINIMPORTCLASS) ${ARGS}
 
