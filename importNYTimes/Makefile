@@ -18,8 +18,8 @@ MAINCLASS := edu/stanford/pcl/newspaper/Importer
 build:
 	javac -Xlint -cp $(CLASSPATH) -d out/ -sourcepath $(SRCDIR) $(SRCDIR)/$(MAINCLASS).java
 
-import:
-    java -cp out:$(CLASSPATH) $(MAINCLASS)
+run:
+	java -cp out:$(CLASSPATH) $(MAINCLASS) 2>err.out
 
 
 
