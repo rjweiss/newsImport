@@ -21,7 +21,8 @@ build:
 	javac -Xlint -cp $(CLASSPATH) -d out/ -sourcepath $(SRCDIR) $(SRCDIR)/$(MAINCLASS).java
 
 import:
-    java -cp out:$(CLASSPATH) $(MAINIMPORTCLASS) ${ARGS}
+    java -cp out:$(CLASSPATH) $(MAINIMPORTCLASS)
+
 query:
 	java -cp out:$(CLASSPATH) $(MAINCLASS) ${ARGS}
 
