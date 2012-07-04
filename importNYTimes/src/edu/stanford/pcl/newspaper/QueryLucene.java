@@ -284,10 +284,11 @@ public class QueryLucene {
                 }
         );
 
-        loadSourceList(JSAPconfig.getString("sourceList"));
+
 
         JSAPResult JSAPconfig = jsap.parse(args);
         if (jsap.messagePrinted()) System.exit(1);
+        loadSourceList(JSAPconfig.getString("sourceList"));
         String type = JSAPconfig.getString("source");
         Integer startDate = Integer.parseInt(JSAPconfig.getString("startDate"));
         Integer endDate = Integer.parseInt(JSAPconfig.getString("endDate"));
