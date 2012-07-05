@@ -11,7 +11,7 @@ CLASSPATH := $(subst $(eval) ,:,$(addprefix $(JARDIR)/,$(JARS)))
 
 SRCDIR := src
 
-MAINCLASS := edu/stanford/pcl/newspaper/Importer
+MAINCLASS := edu/stanford/pcl/newspaper/QueryLucene
 
 .PHONY: build run
 
@@ -21,5 +21,6 @@ build:
 run:
 	java -cp out:$(CLASSPATH) $(MAINCLASS) 2>err.out
 
-
+query:
+	java -cp out:$(CLASSPATH) $(MAINCLASS) ${ARGS}
 
