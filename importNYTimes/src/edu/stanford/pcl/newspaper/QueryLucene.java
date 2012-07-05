@@ -89,6 +89,7 @@ public class QueryLucene {
 
         List<String[]> sources = CSVReader.readAll();
         for (String[] source : sources) {
+            System.out.println(source.toString());
             mediaSourceList.add(source.toString());
         }
     }
