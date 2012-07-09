@@ -3,6 +3,7 @@ package edu.stanford.pcl.newspaper;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -35,8 +36,6 @@ public class WeltScrapper {
         DateTime dtStartDate = dateFormat.parseDateTime("2000-01-01");
         DateTime dtEndDate = dateFormat.parseDateTime("2012-07-08");
 
-
-
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate.plusDays(1)); date = date.plusDays(1)) {
             System.out.println(date.toString("d-M-yyyy"));
             getNewsArticleList(date);
@@ -48,7 +47,7 @@ public class WeltScrapper {
         String URL = "http://www.welt.de/nachrichtenarchiv/print-nachrichten-vom-" + date.toString("d-M-yyyy") + ".html?tabPane=ZEITUNG";
 
 
-        Document document = Jsoup.connect(URL).get();
+        Document document = Jsoup.connect(URL).timeout(12000).get();
 
         Elements links =  document.select("a[name=_ch_R_printArchive_]");
         Integer articleNumber=0;
@@ -69,7 +68,7 @@ public class WeltScrapper {
     }
 
     public static void processFile(String URL, DateTime date, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
-        Document document = Jsoup.connect(URL).get();
+        Document document = Jsoup.connect(URL).timeout(12000).get();
 
 
         String title = document.select("h1").text();
@@ -87,9 +86,14 @@ public class WeltScrapper {
         try {
             out.write(result);
         }
-        finally {
-            out.close();
+        catch (Exception e)
+        {
+            System.out.println("No text for article: " + title);
         }
+
+
+            out.close();
+
     }
 
     public static String createXMLDoc(String title, DateTime date, String paragraphs) throws ParserConfigurationException, TransformerException {
@@ -117,12 +121,18 @@ public class WeltScrapper {
         trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         trans.setOutputProperty(OutputKeys.INDENT, "yes");
 
+        String xmlString =null;
+        try{
         StringWriter sw = new StringWriter();
         StreamResult result = new StreamResult(sw);
         DOMSource source = new DOMSource(doc);
         trans.transform(source, result);
-        String xmlString = sw.toString();
-
+        xmlString = sw.toString();
+        }
+        catch (Exception e)
+        {
+            xmlString = null;
+        }
         //System.out.println(xmlString);
         return xmlString;
     }
