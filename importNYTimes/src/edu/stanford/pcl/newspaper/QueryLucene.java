@@ -69,8 +69,9 @@ public class QueryLucene {
     }
 
     public static String cleanLabel(String label) {
-        label = label.replace(" ", "");
+        label = label.replace(" ", ".");
         label = label.replace("+", "");
+        label = label.replace("\"", "");
         return label;
     }
 
@@ -129,7 +130,7 @@ public class QueryLucene {
         for (String[] row : queries) {
             if (isHeader) {
                 ArrayList<String> resultHeader = new ArrayList<String>();
-                resultHeader.add(null);
+                //resultHeader.add(null);
                 for (String column : row) {
                     if ("all".equals(querySources)) {
                         for(String source : mediaSourceList)
