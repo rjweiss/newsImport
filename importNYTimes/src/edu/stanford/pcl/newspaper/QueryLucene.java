@@ -159,8 +159,9 @@ public class QueryLucene {
                         Integer total = 0;
                         for(String source : mediaSourceList)
                         {
-                            String result = ql.executeCountQuery(source, column, startDate, endDate);
                             System.out.println(column);
+                            String result = ql.executeCountQuery(source, column, startDate, endDate);
+
                             resultRow.add(result);
                             total += Integer.parseInt(result);
                         }
