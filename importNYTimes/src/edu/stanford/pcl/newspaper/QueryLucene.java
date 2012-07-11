@@ -292,7 +292,7 @@ public class QueryLucene {
         analyzer.close();
 
         if(terms.length()>80) {
-            String cname = terms.substring(0,terms.lastIndexOf("(")+1);
+            String cname = terms.substring(0,terms.lastIndexOf("(")-5);
             terms = cname + "-conflict";
         }
 
