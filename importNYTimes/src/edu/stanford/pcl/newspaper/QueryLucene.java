@@ -21,7 +21,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 // Notes:
@@ -47,12 +50,12 @@ public class QueryLucene {
         writer.close();
     }
 
-    public static DateTime convertIntDateToDate(String date){
+    public static DateTime convertIntDateToDate(String date) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
-        String year = date.substring(0,4);
-        String month = date.substring(4,6);
-        String day = date.substring(6,8);
-        String fullDate = year + "-" + month + "-" +day;
+        String year = date.substring(0, 4);
+        String month = date.substring(4, 6);
+        String day = date.substring(6, 8);
+        String fullDate = year + "-" + month + "-" + day;
         return dateFormat.parseDateTime(fullDate);
     }
 
@@ -75,24 +78,23 @@ public class QueryLucene {
         return label;
     }
 
-    public static String sourceList(){
+    public static String sourceList() {
         String sourceList = null;
-        for(String source : mediaSourceList)
-        {
+        for (String source : mediaSourceList) {
             sourceList += "\"" + source + "\" OR";
         }
-        sourceList = sourceList.substring(0, sourceList.length()-3);
+        sourceList = sourceList.substring(0, sourceList.length() - 3);
         return sourceList;
     }
 
-    public static void loadSourceList(String file) throws IOException{
+    public static void loadSourceList(String file) throws IOException {
         CSVReader CSVReader = new CSVReader(new FileReader(file), '\t');
 
         List<String[]> sources = CSVReader.readAll();
         for (String[] sourceRow : sources) {
             for (String source : sourceRow) {
-            System.out.println(source);
-            mediaSourceList.add(source);
+                System.out.println(source);
+                mediaSourceList.add(source);
             }
         }
     }
@@ -115,7 +117,7 @@ public class QueryLucene {
         IndexSearcher searcher = new IndexSearcher(reader);
 
         TotalHitCountCollector collector = new TotalHitCountCollector();
-        searcher.search(booleanQuery,collector);
+        searcher.search(booleanQuery, collector);
 
         String hitCount = String.valueOf(collector.getTotalHits());
         searcher.close();
@@ -124,7 +126,7 @@ public class QueryLucene {
         return hitCount;
     }
 
-    public static void generateQueryCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries,String outFile) throws IOException, ParseException {
+    public static void generateQueryCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries, String outFile) throws IOException, ParseException {
         Boolean isHeader = true;
 
         for (String[] row : queries) {
@@ -133,8 +135,7 @@ public class QueryLucene {
                 //resultHeader.add(null);
                 for (String column : row) {
                     if ("all".equals(querySources)) {
-                        for(String source : mediaSourceList)
-                        {
+                        for (String source : mediaSourceList) {
                             resultHeader.add(cleanLabel(column + "." + source));
                         }
                         resultHeader.add(cleanLabel(column + ".total"));
@@ -158,17 +159,16 @@ public class QueryLucene {
 
                     if ("all".equals(querySources)) {
                         Integer total = 0;
-                        for(String source : mediaSourceList)
-                        {
+                        for (String source : mediaSourceList) {
                             System.out.println(column);
                             String result = ql.executeCountQuery(source, column, startDate, endDate);
 
                             resultRow.add(result);
                             total += Integer.parseInt(result);
                         }
-                         resultRow.add(Integer.toString(total));
+                        resultRow.add(Integer.toString(total));
                     } else if ("aggregate".equals(querySources)) {
-                         resultRow.add(ql.executeCountQuery(sourceList(), column, startDate, endDate));
+                        resultRow.add(ql.executeCountQuery(sourceList(), column, startDate, endDate));
                     } else {
                         resultRow.add(ql.executeCountQuery(querySources, column, startDate, endDate));
                     }
@@ -180,19 +180,17 @@ public class QueryLucene {
     }
 
 
-
-    public static void generateDateRangeCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries,String outFile) throws IOException, ParseException {
+    public static void generateDateRangeCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries, String outFile) throws IOException, ParseException {
 
         ql.results.put("", createDateRangeHeader(startDate, endDate));
         for (String[] row : queries) {
             if (querySources.equals("all")) {
-                for(String source : mediaSourceList)
-                {
+                for (String source : mediaSourceList) {
                     issueDateRangeQueries(startDate, endDate, source, row[0], ql);
                 }
 
             } else if (querySources.equals("aggregate")) {
-                issueDateRangeQueries(startDate, endDate,  sourceList(), row[0], ql);
+                issueDateRangeQueries(startDate, endDate, sourceList(), row[0], ql);
             } else {
                 issueDateRangeQueries(startDate, endDate, querySources, row[0], ql);
             }
@@ -221,8 +219,7 @@ public class QueryLucene {
 
     public static void generateOccurenceList(Integer startDate, Integer endDate, String querySources, String terms, QueryLucene ql, String outFilePath) throws IOException, ParseException {
         if (querySources.equals("all")) {
-            for(String source : mediaSourceList)
-            {
+            for (String source : mediaSourceList) {
                 executeOccurenceQuery(ql, source, terms, startDate, endDate, outFilePath);
             }
         } else if (querySources.equals("aggregate")) {
@@ -232,7 +229,7 @@ public class QueryLucene {
         }
     }
 
-    public static void executeOccurenceQuery(QueryLucene ql, String source, String terms, Integer startDate, Integer endDate,String outFilePath) throws IOException, ParseException {
+    public static void executeOccurenceQuery(QueryLucene ql, String source, String terms, Integer startDate, Integer endDate, String outFilePath) throws IOException, ParseException {
         ql.results.clear();
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
         Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
@@ -250,30 +247,26 @@ public class QueryLucene {
 
         IndexSearcher searcher = new IndexSearcher(reader);
         TotalHitCountCollector collector = new TotalHitCountCollector();
-        searcher.search(booleanQuery,collector);
+        searcher.search(booleanQuery, collector);
 
         Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
-        if(collector.getTotalHits() >0)
-        {
-        TopDocs topDocs = searcher.search(booleanQuery, collector.getTotalHits(), sort);
+        if (collector.getTotalHits() > 0) {
+            TopDocs topDocs = searcher.search(booleanQuery, collector.getTotalHits(), sort);
 
-        int i = 0;
-        for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
-            ArrayList<String> resultRow = new ArrayList<String>();
-            Document doc = searcher.doc(scoreDoc.doc);
-            resultRow.add(String.valueOf(i));
-            resultRow.add(doc.get("publicationDate"));
-            resultRow.add(doc.get("mediaSource"));
-            resultRow.add(doc.get("fileName"));
-            resultRow.add(doc.get("headline"));
-            resultRow.add(doc.get("pageNumber"));
-            System.out.println(i);
-
-            ql.results.put(String.valueOf(i), resultRow);
-            i++;
-        }
-        }
-        else{
+            int i = 0;
+            for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+                ArrayList<String> resultRow = new ArrayList<String>();
+                Document doc = searcher.doc(scoreDoc.doc);
+                resultRow.add(String.valueOf(i));
+                resultRow.add(doc.get("publicationDate"));
+                resultRow.add(doc.get("mediaSource"));
+                resultRow.add(doc.get("fileName"));
+                resultRow.add(doc.get("headline"));
+                resultRow.add(doc.get("pageNumber"));
+                ql.results.put(String.valueOf(i), resultRow);
+                i++;
+            }
+        } else {
             ArrayList<String> resultRow = new ArrayList<String>();
             resultRow.add("0");
             ql.results.put("0", resultRow);
@@ -302,7 +295,7 @@ public class QueryLucene {
                                 "Start date (yyyyMMdd)"),
                         new FlaggedOption("endDate", JSAP.STRING_PARSER, "20070531", JSAP.NOT_REQUIRED, 'f', "endDate",
                                 "End date (yyyyMMdd)"),
-                        new FlaggedOption("outFilePath", JSAP.STRING_PARSER, "/home/ec2-user/occurrence/", JSAP.NOT_REQUIRED, 'p', "outFilePath",
+                        new FlaggedOption("outputFilePath", JSAP.STRING_PARSER, "/home/ec2-user/occurrence/", JSAP.NOT_REQUIRED, 'p', "outFilePath",
                                 "Out file path (occurrence only)"),
                         new FlaggedOption("sourceList", JSAP.STRING_PARSER, "/home/ec2-user/sourceList.txt", JSAP.NOT_REQUIRED, 'l', "sourceList",
                                 "Source List File Location"),
@@ -330,7 +323,7 @@ public class QueryLucene {
             //know this is wrong, but whatevs
             for (String[] rows : queries) {
                 for (String column : rows) {
-                generateOccurenceList(startDate, endDate, JSAPconfig.getString("querySources"), column, ql, JSAPconfig.getString("outputFilePath"));
+                    generateOccurenceList(startDate, endDate, JSAPconfig.getString("querySources"), column, ql, JSAPconfig.getString("outputFilePath"));
                 }
             }
         } else {
