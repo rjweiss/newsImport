@@ -290,7 +290,7 @@ public class QueryLucene {
         searcher.close();
         reader.close();
         analyzer.close();
-        String file = outFilePath + cleanLabel(source) + "-" + cleanLabel(terms) + ".txt";
+        String file = outFilePath + cleanLabel(terms) + "-" + cleanLabel(source) + ".txt";
         System.out.println(file);
         ql.saveFile(file);
     }
