@@ -290,6 +290,10 @@ public class QueryLucene {
         searcher.close();
         reader.close();
         analyzer.close();
+
+        if(terms.length()>100)
+            terms = "conflict";
+
         String file = outFilePath + cleanLabel(terms) + "-" + cleanLabel(source) + ".txt";
         System.out.println(file);
         ql.saveFile(file);
