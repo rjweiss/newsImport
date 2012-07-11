@@ -267,6 +267,7 @@ public class QueryLucene {
             resultRow.add(doc.get("fileName"));
             resultRow.add(doc.get("headline"));
             resultRow.add(doc.get("pageNumber"));
+            System.out.println(i);
 
             ql.results.put(String.valueOf(i), resultRow);
             i++;
@@ -281,7 +282,9 @@ public class QueryLucene {
         searcher.close();
         reader.close();
         analyzer.close();
-        ql.saveFile(outFilePath + cleanLabel(source) + "-" + cleanLabel(terms) + ".txt");
+        String file = outFilePath + cleanLabel(source) + "-" + cleanLabel(terms) + ".txt";
+        System.out.println(file);
+        ql.saveFile(file);
     }
 
     public static void main(String[] args) throws IOException, ParseException, JSAPException, java.text.ParseException {
