@@ -284,6 +284,7 @@ public class QueryLucene {
             resultRow.add("0");
             resultRow.add("0");
             resultRow.add("0");
+            resultRow.add("0");
             ql.results.put("0", resultRow);
         }
 
