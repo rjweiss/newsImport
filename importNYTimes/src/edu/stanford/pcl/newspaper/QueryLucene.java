@@ -291,8 +291,10 @@ public class QueryLucene {
         reader.close();
         analyzer.close();
 
-        if(terms.length()>80)
-            terms = "conflict";
+        if(terms.length()>80) {
+            String cname = terms.substring(0,terms.lastIndexOf("(")+1);
+            terms = cname + "-conflict";
+        }
 
         String file = outFilePath + cleanLabel(terms) + "-" + cleanLabel(source) + ".txt";
         System.out.println(file);
