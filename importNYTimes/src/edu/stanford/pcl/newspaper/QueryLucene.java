@@ -253,6 +253,8 @@ public class QueryLucene {
         searcher.search(booleanQuery,collector);
 
         Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
+        if(collector.getTotalHits() >0)
+        {
         TopDocs topDocs = searcher.search(booleanQuery, collector.getTotalHits(), sort);
 
         int i = 0;
@@ -269,6 +271,13 @@ public class QueryLucene {
             ql.results.put(String.valueOf(i), resultRow);
             i++;
         }
+        }
+        else{
+            ArrayList<String> resultRow = new ArrayList<String>();
+            resultRow.add("0");
+            ql.results.put("0", resultRow);
+        }
+
         searcher.close();
         reader.close();
         analyzer.close();
