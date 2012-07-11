@@ -69,7 +69,7 @@ public class QueryLucene {
     }
 
     public static String cleanLabel(String label) {
-        label = label.replace(" ", ".");
+        label = label.replace(" ", "-");
         label = label.replace("+", "");
         label = label.replace("\"", "");
         return label;
@@ -91,8 +91,8 @@ public class QueryLucene {
         List<String[]> sources = CSVReader.readAll();
         for (String[] sourceRow : sources) {
             for (String source : sourceRow) {
-            System.out.println(source.toString());
-            mediaSourceList.add(source.toString());
+            System.out.println(source);
+            mediaSourceList.add(source);
             }
         }
     }
@@ -124,7 +124,7 @@ public class QueryLucene {
         return hitCount;
     }
 
-    public static void generateQueryCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries) throws IOException, ParseException {
+    public static void generateQueryCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries,String outFile) throws IOException, ParseException {
         Boolean isHeader = true;
 
         for (String[] row : queries) {
@@ -176,11 +176,12 @@ public class QueryLucene {
                 ql.results.put(rowName, resultRow);
             }
         }
+        ql.saveFile(outFile);
     }
 
 
 
-    public static void generateDateRangeCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries) throws IOException, ParseException {
+    public static void generateDateRangeCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries,String outFile) throws IOException, ParseException {
 
         ql.results.put("", createDateRangeHeader(startDate, endDate));
         for (String[] row : queries) {
@@ -196,6 +197,7 @@ public class QueryLucene {
                 issueDateRangeQueries(startDate, endDate, querySources, row[0], ql);
             }
         }
+        ql.saveFile(outFile);
     }
 
     private static void issueDateRangeQueries(Integer startDate, Integer endDate, String source, String queryText, QueryLucene ql) throws IOException, ParseException {
@@ -208,7 +210,7 @@ public class QueryLucene {
 
         rowName = cleanLabel(source + "." + queryText);
         resultRow.add(rowName);
-        for (DateTime date = dtStartDate; date.isBefore(dtEndDate); date = date.plusDays(1)) {
+        for (DateTime date = dtStartDate; date.isBefore(dtEndDate.plusDays(1)); date = date.plusDays(1)) {
 
             Integer queryDate = Integer.parseInt(date.toString("yyyyMMdd"));
             System.out.println(queryDate);
@@ -217,18 +219,21 @@ public class QueryLucene {
         ql.results.put(rowName, resultRow);
     }
 
-    public static void generateOccurenceList(Integer startDate, Integer endDate, String querySources, String terms, QueryLucene ql) throws IOException, ParseException {
+    public static void generateOccurenceList(Integer startDate, Integer endDate, String querySources, String terms, QueryLucene ql, String outFilePath) throws IOException, ParseException {
         if (querySources.equals("all")) {
-            System.out.println("Not supported");
-            System.exit(1);
+            for(String source : mediaSourceList)
+            {
+                executeOccurenceQuery(ql, source, terms, startDate, endDate, outFilePath);
+            }
         } else if (querySources.equals("aggregate")) {
-            executeOccurenceQuery(ql, sourceList(), terms, startDate, endDate);
+            executeOccurenceQuery(ql, sourceList(), terms, startDate, endDate, outFilePath);
         } else {
-            executeOccurenceQuery(ql, querySources, terms, startDate, endDate);
+            executeOccurenceQuery(ql, querySources, terms, startDate, endDate, outFilePath);
         }
     }
 
-    public static void executeOccurenceQuery(QueryLucene ql, String source, String terms, Integer startDate, Integer endDate) throws IOException, ParseException {
+    public static void executeOccurenceQuery(QueryLucene ql, String source, String terms, Integer startDate, Integer endDate,String outFilePath) throws IOException, ParseException {
+        ql.results.clear();
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
         Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
         IndexReader reader = IndexReader.open(index);
@@ -259,6 +264,7 @@ public class QueryLucene {
             resultRow.add(doc.get("mediaSource"));
             resultRow.add(doc.get("fileName"));
             resultRow.add(doc.get("headline"));
+            resultRow.add(doc.get("pageNumber"));
 
             ql.results.put(String.valueOf(i), resultRow);
             i++;
@@ -266,6 +272,7 @@ public class QueryLucene {
         searcher.close();
         reader.close();
         analyzer.close();
+        ql.saveFile(outFilePath + cleanLabel(source) + "-" + cleanLabel(terms) + ".txt");
     }
 
     public static void main(String[] args) throws IOException, ParseException, JSAPException, java.text.ParseException {
@@ -277,20 +284,20 @@ public class QueryLucene {
                                 "List of queries to run"),
                         new FlaggedOption("querySources", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 's', "querySources",
                                 "Sources to query (source name, all, or aggregate)"),
-                        new FlaggedOption("outputFile", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'o', "outputFile",
+                        new FlaggedOption("outputFile", JSAP.STRING_PARSER, "", JSAP.NOT_REQUIRED, 'o', "outputFile",
                                 "Path and name for output"),
                         new FlaggedOption("startDate", JSAP.STRING_PARSER, "20000101", JSAP.NOT_REQUIRED, 'b', "startDate",
                                 "Start date (yyyyMMdd)"),
                         new FlaggedOption("endDate", JSAP.STRING_PARSER, "20070531", JSAP.NOT_REQUIRED, 'f', "endDate",
                                 "End date (yyyyMMdd)"),
+                        new FlaggedOption("outFilePath", JSAP.STRING_PARSER, "/home/ec2-user/occurrence/", JSAP.NOT_REQUIRED, 'p', "outFilePath",
+                                "Out file path (occurrence only)"),
                         new FlaggedOption("sourceList", JSAP.STRING_PARSER, "/home/ec2-user/sourceList.txt", JSAP.NOT_REQUIRED, 'l', "sourceList",
                                 "Source List File Location"),
                         new FlaggedOption("type", JSAP.STRING_PARSER, "count", JSAP.REQUIRED, 't', "type",
                                 "Type of data output (queryCounts, dateRangeCounts, occurrenceList)").setList(true).setListSeparator(',')
                 }
         );
-
-
 
         JSAPResult JSAPconfig = jsap.parse(args);
         if (jsap.messagePrinted()) System.exit(1);
@@ -304,19 +311,18 @@ public class QueryLucene {
         List<String[]> queries = CSVReader.readAll();
 
         if ("queryCounts".equals(JSAPconfig.getString("type"))) {
-            generateQueryCounts(startDate, endDate, JSAPconfig.getString("querySources"), ql, queries);
+            generateQueryCounts(startDate, endDate, JSAPconfig.getString("querySources"), ql, queries, JSAPconfig.getString("outputFile"));
         } else if ("dateRangeCounts".equals(JSAPconfig.getString("type"))) {
-            generateDateRangeCounts(startDate, endDate, JSAPconfig.getString("querySources"), ql, queries);
+            generateDateRangeCounts(startDate, endDate, JSAPconfig.getString("querySources"), ql, queries, JSAPconfig.getString("outputFile"));
         } else if ("occurrenceList".equals(JSAPconfig.getString("type"))) {
             //know this is wrong, but whatevs
-            for (String[] row : queries) {
-                generateOccurenceList(startDate, endDate, JSAPconfig.getString("querySources"), row[0], ql);
+            for (String[] rows : queries) {
+                for (String column : rows) {
+                generateOccurenceList(startDate, endDate, JSAPconfig.getString("querySources"), column, ql, JSAPconfig.getString("outputFilePath"));
+                }
             }
         } else {
             System.exit(1);
         }
-        ql.saveFile(JSAPconfig.getString("outputFile"));
     }
-
-
 }

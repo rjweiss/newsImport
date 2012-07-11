@@ -33,7 +33,7 @@ public class WeltScrapper {
     public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-        DateTime dtStartDate = dateFormat.parseDateTime("2000-01-01");
+        DateTime dtStartDate = dateFormat.parseDateTime("2004-09-10");
         DateTime dtEndDate = dateFormat.parseDateTime("2012-07-08");
 
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate.plusDays(1)); date = date.plusDays(1)) {
