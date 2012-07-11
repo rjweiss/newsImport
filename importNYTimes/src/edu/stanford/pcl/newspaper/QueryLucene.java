@@ -250,6 +250,17 @@ public class QueryLucene {
         searcher.search(booleanQuery, collector);
 
         Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
+
+        ArrayList<String> headerRow = new ArrayList<String>();
+        headerRow.add("id");
+        headerRow.add("publicationDate");
+        headerRow.add("mediaSource");
+        headerRow.add("fileName");
+        headerRow.add("headline");
+        headerRow.add("pageNumber");
+        ql.results.put("header", headerRow);
+
+
         if (collector.getTotalHits() > 0) {
             TopDocs topDocs = searcher.search(booleanQuery, collector.getTotalHits(), sort);
 
@@ -268,6 +279,10 @@ public class QueryLucene {
             }
         } else {
             ArrayList<String> resultRow = new ArrayList<String>();
+            resultRow.add("0");
+            resultRow.add("0");
+            resultRow.add("0");
+            resultRow.add("0");
             resultRow.add("0");
             ql.results.put("0", resultRow);
         }
