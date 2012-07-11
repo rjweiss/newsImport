@@ -291,7 +291,7 @@ public class QueryLucene {
         reader.close();
         analyzer.close();
 
-        if(terms.length()>100)
+        if(terms.length()>80)
             terms = "conflict";
 
         String file = outFilePath + cleanLabel(terms) + "-" + cleanLabel(source) + ".txt";
