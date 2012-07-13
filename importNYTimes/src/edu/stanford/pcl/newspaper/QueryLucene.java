@@ -119,6 +119,10 @@ public class QueryLucene {
         TotalHitCountCollector collector = new TotalHitCountCollector();
         searcher.search(booleanQuery, collector);
 
+        System.out.println("start: " + startDate);
+        System.out.println("end: " + endDate);
+        System.out.println("total: " + collector.getTotalHits());
+
         String hitCount = String.valueOf(collector.getTotalHits());
         searcher.close();
         reader.close();
@@ -248,9 +252,7 @@ public class QueryLucene {
         TotalHitCountCollector collector = new TotalHitCountCollector();
         searcher.search(booleanQuery, collector);
 
-        System.out.println("start: " + startDate);
-        System.out.println("end: " + endDate);
-        System.out.println("total: " + collector.getTotalHits());
+
         Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
 
         ArrayList<String> headerRow = new ArrayList<String>();
