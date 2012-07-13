@@ -241,6 +241,8 @@ public class QueryLucene {
         Query sourceQuery = new TermQuery(new Term("mediaSource", source));
         QueryParser queryParser = new QueryParser(Version.LUCENE_36, "text", analyzer);
         Query textQuery = queryParser.parse(terms);
+
+
         Query dateRangeQuery = NumericRangeQuery.newIntRange("publicationDate", startDate, endDate, true, true);
 
         BooleanQuery booleanQuery = new BooleanQuery();
@@ -257,7 +259,7 @@ public class QueryLucene {
         System.out.println("end: " + endDate);
         System.out.println("total: " + collector.getTotalHits());
 
-        //Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
+        Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
 
         ArrayList<String> headerRow = new ArrayList<String>();
         headerRow.add("id");
@@ -270,7 +272,7 @@ public class QueryLucene {
 
 
         if (collector.getTotalHits() > 0) {
-            TopDocs topDocs = searcher.search(booleanQuery, collector.getTotalHits());//, sort);
+            TopDocs topDocs = searcher.search(booleanQuery, collector.getTotalHits(), sort);
 
             int i = 0;
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
@@ -321,9 +323,9 @@ public class QueryLucene {
                                 "Sources to query (source name, all, or aggregate)"),
                         new FlaggedOption("outputFile", JSAP.STRING_PARSER, "", JSAP.NOT_REQUIRED, 'o', "outputFile",
                                 "Path and name for output"),
-                        new FlaggedOption("startDate", JSAP.STRING_PARSER, "20000101", JSAP.NOT_REQUIRED, 'b', "startDate",
+                        new FlaggedOption("startDate", JSAP.STRING_PARSER, "20020202", JSAP.NOT_REQUIRED, 'b', "startDate",
                                 "Start date (yyyyMMdd)"),
-                        new FlaggedOption("endDate", JSAP.STRING_PARSER, "20070531", JSAP.NOT_REQUIRED, 'f', "endDate",
+                        new FlaggedOption("endDate", JSAP.STRING_PARSER, "20020202", JSAP.NOT_REQUIRED, 'f', "endDate",
                                 "End date (yyyyMMdd)"),
                         new FlaggedOption("outputFilePath", JSAP.STRING_PARSER, "/home/ec2-user/occurrence/", JSAP.NOT_REQUIRED, 'p', "outFilePath",
                                 "Out file path (occurrence only)"),
