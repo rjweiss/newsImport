@@ -252,7 +252,9 @@ public class QueryLucene {
         IndexSearcher indexSearcherCount = new IndexSearcher(reader);
         IndexSearcher indexSearcherEntries = new IndexSearcher(reader);
         TotalHitCountCollector collector = new TotalHitCountCollector();
-        indexSearcherCount.search(booleanQuery, collector);
+       // indexSearcherCount.search(booleanQuery, collector);
+        TopDocs topDocsCount = indexSearcherEntries.search(booleanQuery, 1);
+
 
 
         System.out.println("start: " + startDate);
@@ -270,9 +272,9 @@ public class QueryLucene {
         headerRow.add("pageNumber");
         ql.results.put("header", headerRow);
 
+        if (topDocsCount.totalHits > 0) {
 
-        if (collector.getTotalHits() > 0) {
-            TopDocs topDocs = indexSearcherEntries.search(booleanQuery, collector.getTotalHits(), sort);
+            TopDocs topDocs = indexSearcherEntries.search(booleanQuery, topDocsCount.totalHits, sort);
 
             int i = 0;
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
