@@ -271,7 +271,7 @@ public class QueryLucene {
 
 
         if (collector.getTotalHits() > 0) {
-            TopDocs topDocs = searcher.search(booleanQuery, collector.getTotalHits(), sort);
+            TopDocs topDocs = searcher.search(booleanQuery, 1000000, sort);
 
             int i = 0;
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
