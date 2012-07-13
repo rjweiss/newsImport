@@ -253,6 +253,10 @@ public class QueryLucene {
         searcher.search(booleanQuery, collector);
 
 
+        System.out.println("start: " + startDate);
+        System.out.println("end: " + endDate);
+        System.out.println("total: " + collector.getTotalHits());
+
         Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
 
         ArrayList<String> headerRow = new ArrayList<String>();
