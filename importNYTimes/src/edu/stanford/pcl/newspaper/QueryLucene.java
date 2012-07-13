@@ -259,7 +259,7 @@ public class QueryLucene {
 
         System.out.println("start: " + startDate);
         System.out.println("end: " + endDate);
-        System.out.println("total: " + collector.getTotalHits());
+        System.out.println("total: " + topDocsCount.totalHits);
 
         Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
 
