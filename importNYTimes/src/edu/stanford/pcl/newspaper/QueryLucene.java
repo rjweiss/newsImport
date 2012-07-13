@@ -257,7 +257,7 @@ public class QueryLucene {
         System.out.println("end: " + endDate);
         System.out.println("total: " + collector.getTotalHits());
 
-        Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
+        //Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
 
         ArrayList<String> headerRow = new ArrayList<String>();
         headerRow.add("id");
@@ -270,7 +270,7 @@ public class QueryLucene {
 
 
         if (collector.getTotalHits() > 0) {
-            TopDocs topDocs = searcher.search(booleanQuery, collector.getTotalHits(), sort);
+            TopDocs topDocs = searcher.search(booleanQuery, collector.getTotalHits());//, sort);
 
             int i = 0;
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
