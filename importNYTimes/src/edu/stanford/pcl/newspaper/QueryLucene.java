@@ -249,9 +249,10 @@ public class QueryLucene {
         booleanQuery.add(textQuery, BooleanClause.Occur.MUST);
         booleanQuery.add(dateRangeQuery, BooleanClause.Occur.MUST);
 
-        IndexSearcher searcher = new IndexSearcher(reader);
+        IndexSearcher indexSearcherCount = new IndexSearcher(reader);
+        IndexSearcher indexSearcherEntries = new IndexSearcher(reader);
         TotalHitCountCollector collector = new TotalHitCountCollector();
-        searcher.search(booleanQuery, collector);
+        indexSearcherCount.search(booleanQuery, collector);
 
 
         System.out.println("start: " + startDate);
@@ -271,12 +272,12 @@ public class QueryLucene {
 
 
         if (collector.getTotalHits() > 0) {
-            TopDocs topDocs = searcher.search(booleanQuery, 1000000, sort);
+            TopDocs topDocs = indexSearcherEntries.search(booleanQuery, collector.getTotalHits(), sort);
 
             int i = 0;
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
                 ArrayList<String> resultRow = new ArrayList<String>();
-                Document doc = searcher.doc(scoreDoc.doc);
+                Document doc = indexSearcherEntries.doc(scoreDoc.doc);
                 resultRow.add(String.valueOf(i));
                 resultRow.add(doc.get("publicationDate"));
                 resultRow.add(doc.get("mediaSource"));
@@ -296,8 +297,8 @@ public class QueryLucene {
             resultRow.add("0");
             ql.results.put("0", resultRow);
         }
-
-        searcher.close();
+        indexSearcherCount.close();
+        indexSearcherEntries.close();
         reader.close();
         analyzer.close();
 
