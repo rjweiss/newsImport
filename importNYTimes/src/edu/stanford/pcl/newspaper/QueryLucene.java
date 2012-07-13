@@ -179,7 +179,6 @@ public class QueryLucene {
         ql.saveFile(outFile);
     }
 
-
     public static void generateDateRangeCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries, String outFile) throws IOException, ParseException {
 
         ql.results.put("", createDateRangeHeader(startDate, endDate));
@@ -249,6 +248,9 @@ public class QueryLucene {
         TotalHitCountCollector collector = new TotalHitCountCollector();
         searcher.search(booleanQuery, collector);
 
+        System.out.println("start: " + startDate);
+        System.out.println("end: " + endDate);
+        System.out.println("total: " + collector.getTotalHits());
         Sort sort = new Sort(new SortField("publicationDate", SortField.INT));
 
         ArrayList<String> headerRow = new ArrayList<String>();
