@@ -242,7 +242,6 @@ public class QueryLucene {
         QueryParser queryParser = new QueryParser(Version.LUCENE_36, "text", analyzer);
         Query textQuery = queryParser.parse(terms);
 
-
         Query dateRangeQuery = NumericRangeQuery.newIntRange("publicationDate", startDate, endDate, true, true);
 
         BooleanQuery booleanQuery = new BooleanQuery();
@@ -323,9 +322,9 @@ public class QueryLucene {
                                 "Sources to query (source name, all, or aggregate)"),
                         new FlaggedOption("outputFile", JSAP.STRING_PARSER, "", JSAP.NOT_REQUIRED, 'o', "outputFile",
                                 "Path and name for output"),
-                        new FlaggedOption("startDate", JSAP.STRING_PARSER, "20020202", JSAP.NOT_REQUIRED, 'b', "startDate",
+                        new FlaggedOption("startDate", JSAP.STRING_PARSER, "20020101", JSAP.NOT_REQUIRED, 'b', "startDate",
                                 "Start date (yyyyMMdd)"),
-                        new FlaggedOption("endDate", JSAP.STRING_PARSER, "20020202", JSAP.NOT_REQUIRED, 'f', "endDate",
+                        new FlaggedOption("endDate", JSAP.STRING_PARSER, "20040101", JSAP.NOT_REQUIRED, 'f', "endDate",
                                 "End date (yyyyMMdd)"),
                         new FlaggedOption("outputFilePath", JSAP.STRING_PARSER, "/home/ec2-user/occurrence/", JSAP.NOT_REQUIRED, 'p', "outFilePath",
                                 "Out file path (occurrence only)"),
