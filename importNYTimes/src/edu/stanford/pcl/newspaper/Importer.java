@@ -67,7 +67,7 @@ public class Importer {
                     Article article;
 
                     try {
-                        if (source == "New York Times") {
+                        if (source.equals("New York Times")) {
                             article = new NytParser().parse(file, source);
                         } else {
                             article = new TribParser().parse(file, source);
@@ -113,10 +113,8 @@ public class Importer {
                         //DateTools.dateToString(date, Resolution.SECOND)
                         doc.add(new Field("pageNumber", article.getPageNumber(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 
-                        System.out.println(article.getPublicationDate().toString("yyyyMMdd"));
-
                         doc.add(new NumericField("publicationDate", 8, Field.Store.YES, true).setIntValue(Integer.parseInt(article.getPublicationDate().toString("yyyyMMdd"))));
-                        doc.add(new Field("publicationDateText", article.getPublicationDate().toString("yyyyMMdd"), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                        doc.add(new Field("publicationDateString", article.getPublicationDate().toString("yyyyMMdd"), Field.Store.YES, Field.Index.NOT_ANALYZED));
                         doc.add(new Field("headline", article.getHeadline(), Field.Store.YES, Field.Index.ANALYZED));
                         doc.add(new Field("text", article.getText(), Field.Store.YES, Field.Index.ANALYZED));
                         doc.add(new Field("fileName", article.getFileName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
@@ -136,10 +134,8 @@ public class Importer {
                 }
             }
         }
-
         return new int[]{imported, skipped};
     }
-
 
     public static void main(String[] args) throws IOException {
         // Connect to MongoDB.
