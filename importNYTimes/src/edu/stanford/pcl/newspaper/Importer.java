@@ -162,7 +162,7 @@ public class Importer {
 
         // Recursively parse and import XML files...
         Importer importer = new Importer(db.getCollection(MONGO_DB_ARTICLES_COLLECTION), indexWriter);
-        //importer.importAll(new File("/rawdata/newspapers/nytimes"), "New York Times");
+        importer.importAll(new File("/rawdata/newspapers/nytimes"), "New York Times");
         importer.importAll(new File("/rawdata/newspapers/chitrib"), "Chicago Tribune");
         importer.importAll(new File("/rawdata/newspapers/latimes"), "Los Angeles Times");
 
