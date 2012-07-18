@@ -71,6 +71,7 @@ public class TribParser extends Parser {
                 System.out.println(article.getPublicationDate());
             } catch (Exception e) {
                 article.setPublicationDate(null);
+                System.out.println(article.getPublicationDate());
             }
 
 
@@ -100,13 +101,17 @@ public class TribParser extends Parser {
             article.setStatus("0");
 
             // set complete flag
-         int yearFour = Integer.parseInt(article.getPublicationDate().toString("yyyy"));
-         int monthTwo = Integer.parseInt(article.getPublicationDate().toString("MM"));
+            try {
+                int yearFour = Integer.parseInt(article.getPublicationDate().toString("yyyy"));
+                int monthTwo = Integer.parseInt(article.getPublicationDate().toString("MM"));
 
-            if (yearFour < 2007 || (yearFour == 2007 && monthTwo < 6)) {
-                article.setOverLap("1");
-            } else {
-                article.setOverLap("0");
+                if (yearFour < 2007 || (yearFour == 2007 && monthTwo < 6)) {
+                    article.setOverLap("1");
+                } else {
+                    article.setOverLap("0");
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
 
         }
