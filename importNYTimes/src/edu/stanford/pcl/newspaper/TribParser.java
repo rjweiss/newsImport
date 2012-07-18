@@ -68,6 +68,7 @@ public class TribParser extends Parser {
 //                String dayTwo = result.item(0).getTextContent().substring(6,7);
                 DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
                 article.setPublicationDate(dateFormat.parseDateTime(result.item(0).getTextContent()));
+                System.out.println(article.getPublicationDate());
             } catch (Exception e) {
                 article.setPublicationDate(null);
             }
@@ -99,7 +100,7 @@ public class TribParser extends Parser {
             article.setStatus("0");
 
             // set complete flag
-            int yearFour = Integer.parseInt(article.getPublicationDate().toString("yyyy"));
+         int yearFour = Integer.parseInt(article.getPublicationDate().toString("yyyy"));
          int monthTwo = Integer.parseInt(article.getPublicationDate().toString("MM"));
 
             if (yearFour < 2007 || (yearFour == 2007 && monthTwo < 6)) {
