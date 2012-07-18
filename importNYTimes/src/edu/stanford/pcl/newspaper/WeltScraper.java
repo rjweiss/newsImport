@@ -20,7 +20,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 //http://www.welt.de/nachrichtenarchiv/print-nachrichten-vom-1-1-2000.html?tabPane=ZEITUNG
-public class WeltScrapper {
+public class WeltScraper {
     public static DateTime convertIntDateToDate(String date){
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
         String year = date.substring(0,4);

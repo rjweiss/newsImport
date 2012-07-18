@@ -1,5 +1,7 @@
 package edu.stanford.pcl.newspaper;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -28,6 +30,7 @@ public class TribParser extends Parser {
         article.setMediaType("newspaper");
         article.setMediaSource(source);
         article.setFileName(file.getAbsolutePath());
+        article.setLanguage("en");
 
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         domFactory.setNamespaceAware(true); // never forget this!
@@ -63,9 +66,10 @@ public class TribParser extends Parser {
 //                String yearFour = result.item(0).getTextContent().substring(0,3);
 //                String monthTwo = result.item(0).getTextContent().substring(4,5);
 //                String dayTwo = result.item(0).getTextContent().substring(6,7);
-                article.setPublicationDate(result.item(0).getTextContent());
+                DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
+                article.setPublicationDate(dateFormat.parseDateTime(result.item(0).getTextContent()));
             } catch (Exception e) {
-                article.setPublicationDate("");
+                article.setPublicationDate(null);
             }
 
 
@@ -95,11 +99,8 @@ public class TribParser extends Parser {
             article.setStatus("0");
 
             // set complete flag
-
-
-            int yearFour = Integer.parseInt(article.getPublicationDate().substring(0, 3));
-
-            int monthTwo = Integer.parseInt(article.getPublicationDate().substring(4, 5));
+            int yearFour = Integer.parseInt(article.getPublicationDate().toString("yyyy"));
+         int monthTwo = Integer.parseInt(article.getPublicationDate().toString("MM"));
 
             if (yearFour < 2007 || (yearFour == 2007 && monthTwo < 6)) {
                 article.setOverLap("1");

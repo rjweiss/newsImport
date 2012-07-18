@@ -10,6 +10,9 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +41,8 @@ public class Importer {
         this.indexWriter = indexWriter;
     }
 
+
+
     public int[] importAll(File path, String source) {
 
         int imported = 0;
@@ -62,7 +67,6 @@ public class Importer {
                     Article article;
 
                     try {
-                        // TODO:  Instantiate the correct Parser subclass based on some hint.
                         if (source == "New York Times") {
                             article = new NytParser().parse(file, source);
                         } else {
@@ -82,11 +86,11 @@ public class Importer {
                         continue;
                     }
 
-                    // Redundancy party party.
                     try {
+
                         BasicDBObject mongoObject = new BasicDBObject();
                         mongoObject.put("pageNumber", article.getPageNumber());
-                        mongoObject.put("publicationDate", article.getPublicationDate());
+                        mongoObject.put("publicationDate", article.getPublicationDate().toDate());
                         mongoObject.put("headline", article.getHeadline());
                         mongoObject.put("text", article.getText());
                         mongoObject.put("fileName", article.getFileName());
@@ -94,6 +98,8 @@ public class Importer {
                         mongoObject.put("mediaSource", article.getMediaSource());
                         mongoObject.put("overLap", article.getOverLap());
                         mongoObject.put("status", article.getStatus());
+                        mongoObject.put("language", article.getStatus());
+
                         collection.insert(mongoObject, WriteConcern.SAFE);
                         //System.out.println("Mongo insertion...");
                     } catch (Exception e) {
@@ -106,8 +112,8 @@ public class Importer {
                         //System.out.println(Integer.parseInt(article.getPublicationDate()));
                         //DateTools.dateToString(date, Resolution.SECOND)
                         doc.add(new Field("pageNumber", article.getPageNumber(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        doc.add(new NumericField("publicationDate", 8, Field.Store.YES, true).setIntValue(Integer.parseInt(article.getPublicationDate())));
-                        //doc.add(new Field("publicationDate", article.getPublicationDate(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                        doc.add(new NumericField("publicationDate", 8, Field.Store.YES, true).setIntValue(Integer.parseInt(article.getPublicationDate().toString("yyyy-MM-dd"))));
+                        doc.add(new Field("publicationDateText", article.getPublicationDate().toString("yyyy-MM-dd"), Field.Store.YES, Field.Index.NOT_ANALYZED));
                         doc.add(new Field("headline", article.getHeadline(), Field.Store.YES, Field.Index.ANALYZED));
                         doc.add(new Field("text", article.getText(), Field.Store.YES, Field.Index.ANALYZED));
                         doc.add(new Field("fileName", article.getFileName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
@@ -115,6 +121,7 @@ public class Importer {
                         doc.add(new Field("mediaSource", article.getMediaSource(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                         doc.add(new Field("overLap", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                         doc.add(new Field("status", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                        doc.add(new Field("language", article.getLanguage(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                         indexWriter.addDocument(doc);
                         //System.out.println("Lucene insertion...");
                     } catch (IOException e) {
@@ -144,7 +151,7 @@ public class Importer {
         //System.out.println("Mongo version:" + mongo.getVersion());
 
         DB db = mongo.getDB(MONGO_DB_NAME);
-
+        db.getCollection(MONGO_DB_ARTICLES_COLLECTION).createIndex(new BasicDBObject("fileName", 1));
         //System.out.println("DB collection names :" + db.getCollectionNames());
 
         // Create/Open Lucene index.

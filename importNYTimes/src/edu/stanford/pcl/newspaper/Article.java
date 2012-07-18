@@ -1,24 +1,18 @@
 package edu.stanford.pcl.newspaper;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Rebecca
- * Date: 6/19/12
- * Time: 12:33 AM
- * To change this template use File | Settings | File Templates.
- */
-// TODO:  Is this needed?
+import org.joda.time.DateTime;
+
 public class Article {
-    private String pageNumber;  // TODO: Make this a number!
+    private String pageNumber;
     private String headline;
     private String text;
-    private String publicationDate;  // TODO: Make this a date!
+    private DateTime publicationDate;
     private String fileName;
     private String mediaType;
     private String mediaSource;
     private String overLap;
     private String status;
-    // TODO:  File path!
+    private String language;
 
     public String getPageNumber() {
         return pageNumber;
@@ -44,11 +38,11 @@ public class Article {
         this.text = text;
     }
 
-    public String getPublicationDate() {
+    public DateTime getPublicationDate() {
         return publicationDate;
     }
 
-    public void setPublicationDate(String publicationDate) {
+    public void setPublicationDate(DateTime publicationDate) {
         this.publicationDate = publicationDate;
     }
 
@@ -92,12 +86,20 @@ public class Article {
         this.status = status;
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
     public boolean isValid() {
 	boolean valid = true;
 	valid &= (pageNumber != null && !pageNumber.isEmpty());
 	valid &= (headline != null && !headline.isEmpty());
 	valid &= (text != null && !text.isEmpty());
-	valid &= (publicationDate!= null && !publicationDate.isEmpty());
+	valid &= (publicationDate!= null);
 	valid &= (fileName != null && !fileName.isEmpty());
 	valid &= (mediaType != null && !mediaType.isEmpty());
 	valid &= (mediaSource != null && !mediaSource.isEmpty());

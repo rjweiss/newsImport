@@ -1,5 +1,7 @@
 package edu.stanford.pcl.newspaper;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -43,7 +45,7 @@ public class NytParser extends Parser {
         article.setMediaType("newspaper");
         article.setMediaSource(source);
         article.setFileName(file.getAbsolutePath());
-
+        article.setLanguage("en");
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         domFactory.setNamespaceAware(true); // never forget this!
         domFactory.setValidating(false);
@@ -97,10 +99,11 @@ public class NytParser extends Parser {
                 else {
                     day = attributes.get("_articlePublicationDayOfMonth");
                 }
-                article.setPublicationDate(attributes.get("_articlePublicationYear") + month + day );
+                DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
+                article.setPublicationDate(dateFormat.parseDateTime(attributes.get("_articlePublicationYear") + "-" + month + "-" + day ));
             }
             catch (Exception e) {
-                article.setPublicationDate("");
+                article.setPublicationDate(null);
             }
 
             // Headline
@@ -131,10 +134,9 @@ public class NytParser extends Parser {
             article.setStatus("0");
 
             // set complete flag
+            int yearFour = Integer.parseInt(article.getPublicationDate().toString("yyyy"));
+            int monthTwo = Integer.parseInt(article.getPublicationDate().toString("MM"));
 
-            int yearFour = Integer.parseInt(article.getPublicationDate().substring(0,4));
-
-            int monthTwo = Integer.parseInt(article.getPublicationDate().substring(4,6));
 
             if (yearFour <2007 || (yearFour == 2007 && monthTwo <6)){
                 article.setOverLap("1");
