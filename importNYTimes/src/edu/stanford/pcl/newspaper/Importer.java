@@ -81,7 +81,7 @@ public class Importer {
 
                     if (article == null || !article.isValid()) {
                         // Parse failed, skip.
-                        System.out.println(article.getPublicationDate());
+
                         System.err.println("Parse failed or article invalid: " + file.getAbsolutePath());
                         skipped++;
                         continue;
