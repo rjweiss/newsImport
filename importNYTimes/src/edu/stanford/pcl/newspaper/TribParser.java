@@ -111,7 +111,7 @@ public class TribParser extends Parser {
                     article.setOverLap("0");
                 }
             } catch (NumberFormatException e) {
-                e.printStackTrace();  .
+                e.printStackTrace();
             }
 
         }
