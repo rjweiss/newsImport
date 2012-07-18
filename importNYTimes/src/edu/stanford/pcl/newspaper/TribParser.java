@@ -66,7 +66,7 @@ public class TribParser extends Parser {
 //                String yearFour = result.item(0).getTextContent().substring(0,3);
 //                String monthTwo = result.item(0).getTextContent().substring(4,5);
 //                String dayTwo = result.item(0).getTextContent().substring(6,7);
-                DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
+                DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyyMMdd");
                 System.out.println(result.item(0).getTextContent() );
                 article.setPublicationDate(dateFormat.parseDateTime(result.item(0).getTextContent()));
                 System.out.println(article.getPublicationDate());
