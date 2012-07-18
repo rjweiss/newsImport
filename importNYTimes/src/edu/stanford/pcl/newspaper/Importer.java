@@ -115,8 +115,8 @@ public class Importer {
 
                         System.out.println(article.getPublicationDate().toString("yyyy-MM-dd"));
 
-                        doc.add(new NumericField("publicationDate", 8, Field.Store.YES, true).setIntValue(Integer.parseInt(article.getPublicationDate().toString("yyyy-MM-dd"))));
-                        doc.add(new Field("publicationDateText", article.getPublicationDate().toString("yyyy-MM-dd"), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                        doc.add(new NumericField("publicationDate", 8, Field.Store.YES, true).setIntValue(Integer.parseInt(article.getPublicationDate().toString("yyyyMMdd"))));
+                        doc.add(new Field("publicationDateText", article.getPublicationDate().toString("yyyyMMdd"), Field.Store.YES, Field.Index.NOT_ANALYZED));
                         doc.add(new Field("headline", article.getHeadline(), Field.Store.YES, Field.Index.ANALYZED));
                         doc.add(new Field("text", article.getText(), Field.Store.YES, Field.Index.ANALYZED));
                         doc.add(new Field("fileName", article.getFileName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
