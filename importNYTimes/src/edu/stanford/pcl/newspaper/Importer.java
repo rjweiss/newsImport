@@ -112,6 +112,9 @@ public class Importer {
                         //System.out.println(Integer.parseInt(article.getPublicationDate()));
                         //DateTools.dateToString(date, Resolution.SECOND)
                         doc.add(new Field("pageNumber", article.getPageNumber(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+
+                        System.out.println(article.getPublicationDate().toString("yyyy-MM-dd"));
+
                         doc.add(new NumericField("publicationDate", 8, Field.Store.YES, true).setIntValue(Integer.parseInt(article.getPublicationDate().toString("yyyy-MM-dd"))));
                         doc.add(new Field("publicationDateText", article.getPublicationDate().toString("yyyy-MM-dd"), Field.Store.YES, Field.Index.NOT_ANALYZED));
                         doc.add(new Field("headline", article.getHeadline(), Field.Store.YES, Field.Index.ANALYZED));
