@@ -21,7 +21,6 @@ import java.util.Properties;
 
 public class NewspaperProject {
     public static void main(String[] args) throws Exception {
-
 //        Mongo m = new Mongo();
 //        DB db = m.getDB("test");
 //        DBCollection articles = db.getCollection("articles");

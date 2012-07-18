@@ -67,7 +67,7 @@ public class Importer {
                     Article article;
 
                     try {
-                        if (source.equals("New York Times")) {
+                        if ("New York Times".equals(source)) {
                             article = new NytParser().parse(file, source);
                         } else {
                             article = new TribParser().parse(file, source);
@@ -81,6 +81,7 @@ public class Importer {
 
                     if (article == null || !article.isValid()) {
                         // Parse failed, skip.
+                        System.out.println(article.getPublicationDate());
                         System.err.println("Parse failed or article invalid: " + file.getAbsolutePath());
                         skipped++;
                         continue;
@@ -161,7 +162,7 @@ public class Importer {
 
         // Recursively parse and import XML files...
         Importer importer = new Importer(db.getCollection(MONGO_DB_ARTICLES_COLLECTION), indexWriter);
-        importer.importAll(new File("/rawdata/newspapers/nytimes"), "New York Times");
+        //importer.importAll(new File("/rawdata/newspapers/nytimes"), "New York Times");
         importer.importAll(new File("/rawdata/newspapers/chitrib"), "Chicago Tribune");
         importer.importAll(new File("/rawdata/newspapers/latimes"), "Los Angeles Times");
 
