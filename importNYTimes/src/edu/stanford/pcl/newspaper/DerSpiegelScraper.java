@@ -19,13 +19,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: seanwestwood
- * Date: 7/17/12
- * Time: 6:07 PM
- * To change this template use File | Settings | File Templates.
- */
 public class DerSpiegelScraper {
     public static DateTime convertIntDateToDate(String date) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
@@ -75,11 +68,9 @@ public class DerSpiegelScraper {
     }
 
     public static void processFile(String URL, String year, String issue, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
-        Document document = Jsoup.connect(URL).get();
-
+        Document document = Jsoup.connect(URL).timeout(4000).get();
 
         String title = document.select("#spArticleColumn h2").text();
-
 
         //System.out.println("title: " +title);
         Elements paragraphs = document.select(".artikel p");
@@ -91,7 +82,6 @@ public class DerSpiegelScraper {
         String result = createXMLDoc(title, year, issue, paragraphText);
         String fileName = "/Users/seanwestwood/Desktop/derspiegel/" + year + "-" + issue + "-" + articleNumber.toString() + ".xml";
 
-
         Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
         try {
             out.write(result);
@@ -99,9 +89,7 @@ public class DerSpiegelScraper {
             System.out.println("No text for article: " + title);
         }
 
-
         out.close();
-
     }
 
     public static String createXMLDoc(String title, String year, String issue, String paragraphs) throws ParserConfigurationException, TransformerException {
