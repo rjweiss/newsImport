@@ -27,24 +27,22 @@ import java.io.*;
  * To change this template use File | Settings | File Templates.
  */
 public class DerSpiegelScraper {
-    public static DateTime convertIntDateToDate(String date){
+    public static DateTime convertIntDateToDate(String date) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
-        String year = date.substring(0,4);
-        String month = date.substring(4,6);
-        String day = date.substring(6,8);
-        String fullDate = year + "-" + month + "-" +day;
+        String year = date.substring(0, 4);
+        String month = date.substring(4, 6);
+        String day = date.substring(6, 8);
+        String fullDate = year + "-" + month + "-" + day;
         return dateFormat.parseDateTime(fullDate);
     }
 
     public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException {
-        int year=2000;
-        int issue=1;
-        for(year=2010;year<=2011;year++)
-        {
-            for(issue=1;issue<=55;issue++)
-            {
+        int year = 2000;
+        int issue = 1;
+        for (year = 2010; year <= 2011; year++) {
+            for (issue = 1; issue <= 55; issue++) {
 
-                 getNewsArticleList(Integer.toString(year),Integer.toString(issue));
+                getNewsArticleList(Integer.toString(year), Integer.toString(issue));
                 System.out.println(year + "-" + issue);
             }
         }
@@ -52,26 +50,27 @@ public class DerSpiegelScraper {
     }
 
     public static void getNewsArticleList(String year, String issue) throws IOException, TransformerException, ParserConfigurationException {
-        String URL = "http://www.spiegel.de/spiegel/print/index-" + year + "-" + issue + ".html";
+        try {
+            String URL = "http://www.spiegel.de/spiegel/print/index-" + year + "-" + issue + ".html";
 
-        Document document = Jsoup.connect(URL).timeout(12000).get();
+            Document document = Jsoup.connect(URL).timeout(12000).get();
 
-        Elements links =  document.select("#spHeftInhalt a");
-        Integer articleNumber=0;
-        String lastURL =null;
-        for (Element link : links) {
+            Elements links = document.select("#spHeftInhalt a");
+            Integer articleNumber = 0;
+            String lastURL = null;
+            for (Element link : links) {
 
-            String linkHref = "http://www.spiegel.de" + link.attr("href");
-            if (!linkHref.equals(lastURL))
-            {
+                String linkHref = "http://www.spiegel.de" + link.attr("href");
+                if (!linkHref.equals(lastURL)) {
 
-                //System.out.println("link: " + linkHref);
-                processFile(linkHref,year, issue,articleNumber);
-                lastURL = linkHref;
-                articleNumber++;
+                    //System.out.println("link: " + linkHref);
+                    processFile(linkHref, year, issue, articleNumber);
+                    lastURL = linkHref;
+                    articleNumber++;
+                }
             }
+        } catch (Exception e) {
         }
-
 
     }
 
@@ -79,7 +78,7 @@ public class DerSpiegelScraper {
         Document document = Jsoup.connect(URL).get();
 
 
-        String title= document.select("#spArticleColumn h2").text();
+        String title = document.select("#spArticleColumn h2").text();
 
 
         //System.out.println("title: " +title);
@@ -89,17 +88,14 @@ public class DerSpiegelScraper {
             paragraphText += paragraph.text();
         }
 
-        String result = createXMLDoc(title,year,issue,paragraphText);
+        String result = createXMLDoc(title, year, issue, paragraphText);
         String fileName = "/Users/seanwestwood/Desktop/derspiegel/" + year + "-" + issue + "-" + articleNumber.toString() + ".xml";
-
 
 
         Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
         try {
             out.write(result);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("No text for article: " + title);
         }
 
@@ -108,7 +104,7 @@ public class DerSpiegelScraper {
 
     }
 
-    public static String createXMLDoc(String title,  String year, String issue, String paragraphs) throws ParserConfigurationException, TransformerException {
+    public static String createXMLDoc(String title, String year, String issue, String paragraphs) throws ParserConfigurationException, TransformerException {
         DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
         org.w3c.dom.Document doc = docBuilder.newDocument();
@@ -116,7 +112,7 @@ public class DerSpiegelScraper {
         org.w3c.dom.Element article = doc.createElement("article");
         doc.appendChild(article);
 
-        org.w3c.dom.Element publicationDate= doc.createElement("publicationDate");
+        org.w3c.dom.Element publicationDate = doc.createElement("publicationDate");
         article.appendChild(publicationDate);
         publicationDate.appendChild(doc.createTextNode(year + "-" + issue));
 
@@ -133,16 +129,14 @@ public class DerSpiegelScraper {
         trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         trans.setOutputProperty(OutputKeys.INDENT, "yes");
 
-        String xmlString =null;
-        try{
+        String xmlString = null;
+        try {
             StringWriter sw = new StringWriter();
             StreamResult result = new StreamResult(sw);
             DOMSource source = new DOMSource(doc);
             trans.transform(source, result);
             xmlString = sw.toString();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             xmlString = null;
         }
         //System.out.println(xmlString);
