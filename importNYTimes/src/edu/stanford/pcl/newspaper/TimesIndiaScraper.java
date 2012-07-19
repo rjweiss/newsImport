@@ -40,7 +40,7 @@ public class TimesIndiaScraper {
     public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-        DateTime dtStartDate = dateFormat.parseDateTime("2001-01-01");
+        DateTime dtStartDate = dateFormat.parseDateTime("2001-01-18");
         DateTime dtEndDate = dateFormat.parseDateTime("2012-07-08");
 
         Integer starttime = 36892;
@@ -57,7 +57,7 @@ public class TimesIndiaScraper {
         String URL = "http://timesofindia.indiatimes.com/" +date.toString("yyyy") +"/" + date.toString("M") + "/" + date.toString("d") + "/archivelist/year-" + date.toString("yyyy") + ",month-" + date.toString("M") + ",starttime-" + starttime + ".cms";
 
         System.out.println(URL);
-        Document document = Jsoup.connect(URL).timeout(12000).get();
+        Document document = Jsoup.connect(URL).timeout(30000).get();
 
         Elements links =  document.select("div[style=font-family:arial ;font-size:12;font-weight:bold; color: #006699] a");
         Integer articleNumber=0;
@@ -103,11 +103,11 @@ public class TimesIndiaScraper {
             out.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+           // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+           // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (TransformerException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+           // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
     }
