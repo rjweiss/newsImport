@@ -1,15 +1,15 @@
 <component name="libraryTable">
   <library name="corenlp">
     <CLASSES>
-      <root url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp" />
-      <root url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp" />
+      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/stanford/corenlp/xom.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09-models.jar!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
-      <root url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp" />
-      <root url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp" />
+      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09-sources.jar!/" />
     </SOURCES>
-    <jarDirectory url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp" recursive="false" />
-    <jarDirectory url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp" recursive="false" type="SOURCES" />
   </library>
 </component>

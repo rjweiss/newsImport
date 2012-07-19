@@ -1,11 +1,9 @@
 <component name="libraryTable">
   <library name="jsap">
     <CLASSES>
-      <root url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/jsap" />
-      <root url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/jsap" />
+      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/jsap/JSAP-2.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
-    <jarDirectory url="file://$USER_HOME$/Dropbox/stanfordBigData/lib/jsap" recursive="false" />
   </library>
 </component>

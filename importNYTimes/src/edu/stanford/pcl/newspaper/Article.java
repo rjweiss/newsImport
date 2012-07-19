@@ -94,6 +94,9 @@ public class Article {
         this.language = language;
     }
 
+    //create method clearArticle()
+    //second levels: add get/set for annotations<A<A<S>>, features<A<S>>, labels<A<S>>
+
     public boolean isValid() {
 	boolean valid = true;
 	valid &= (pageNumber != null && !pageNumber.isEmpty());

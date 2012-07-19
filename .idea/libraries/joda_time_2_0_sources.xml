@@ -1,17 +1,11 @@
 <component name="libraryTable">
   <library name="joda-time-2.0-sources">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp/joda-time.jar!/" />
-      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09.jar!/" />
-      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp/xom.jar!/" />
-      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09-models.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/stanford/corenlp/joda-time.jar!/" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09-javadoc.jar!/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES>
-      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp/joda-time-2.0-sources.jar!/" />
-      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/stanford/corenlp/joda-time-2.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
