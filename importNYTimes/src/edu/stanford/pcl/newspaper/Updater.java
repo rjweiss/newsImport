@@ -84,12 +84,12 @@ public class Updater {
         BasicDBObject query = new BasicDBObject();
         BasicDBObject mongoUpdate = new BasicDBObject();
 
-        try {
-              mongoUpdate.put
+       // try {
+       //       mongoUpdate.put
 
-            update.put(String.valueOf(iterator.next()), new BasicDBObject("testKey", "testValue"));
-            collection.update(query, new BasicDBObject("$set", update), true, true);
-        }
+       //     update.put(String.valueOf(iterator.next()), new BasicDBObject("testKey", "testValue"));
+       //     collection.update(query, new BasicDBObject("$set", update), true, true);
+       // }
     }
 
     private static void addFields(ArrayList<String> fieldNames, DBCollection collection) {

@@ -1,10 +1,10 @@
 <component name="libraryTable">
   <library name="lucene">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/lucene/lucene-core-3.6.0.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/lucene/lucene-core-3.6.0.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/lucene/lucene-core-3.6.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/lucene/lucene-core-3.6.0-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES />
   </library>

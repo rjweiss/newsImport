@@ -1,15 +1,18 @@
 <component name="libraryTable">
   <library name="corenlp">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09.jar!/" />
-      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/stanford/corenlp/xom.jar!/" />
-      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09-models.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/ner/stanford-ner-2012-04-07.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp/xom.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/ner/stanford-ner.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp/joda-time.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/classifier/stanford-classifier-2012-05-22.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/classifier/stanford-classifier.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/stanford/classifier/stanford-classifier-javadoc-2012-05-22.zip!/javadoc" />
     </JAVADOC>
-    <SOURCES>
-      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/stanford/corenlp/stanford-corenlp-2012-04-09-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

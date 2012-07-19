@@ -1,10 +1,10 @@
 <component name="libraryTable">
   <library name="jsoup">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/jsoup/jsoup-1.6.3.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/jsoup/jsoup-1.6.3.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/Dropbox/research/stanfordBigData/lib/jsoup/jsoup-1.6.3-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Dropbox/stanfordBigData/lib/jsoup/jsoup-1.6.3-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES />
   </library>

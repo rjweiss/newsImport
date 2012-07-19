@@ -74,13 +74,13 @@ public class DerSpiegelScraper {
 
         //System.out.println("title: " +title);
         Elements paragraphs = document.select(".artikel p");
-        String paragraphText = "";
-        for (Element paragraph : paragraphs) {
-            paragraphText += paragraph.text();
-        }
+        String paragraphText = paragraphs.text();
+       // for (Element paragraph : paragraphs) {
+       //     paragraphText += paragraph.text();
+       // }
 
         String result = createXMLDoc(title, year, issue, paragraphText);
-        String fileName = "/Users/seanwestwood/Desktop/derspiegel/" + year + "-" + issue + "-" + articleNumber.toString() + ".xml";
+        String fileName = "/rawdata/newspapers/derspiegel/" + year + "-" + issue + "-" + articleNumber.toString() + ".xml";
 
         Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
         try {

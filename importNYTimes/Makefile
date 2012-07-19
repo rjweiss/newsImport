@@ -11,7 +11,7 @@ CLASSPATH := $(subst $(eval) ,:,$(addprefix $(JARDIR)/,$(JARS)))
 
 SRCDIR := src
 
-MAINCLASS := edu/stanford/pcl/newspaper/Importer
+MAINCLASS := edu/stanford/pcl/newspaper/DerSpiegelScraper
 
 .PHONY: build run
 
