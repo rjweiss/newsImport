@@ -2,6 +2,9 @@ package edu.stanford.pcl.newspaper;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Article {
     private String pageNumber;
     private String headline;
@@ -13,6 +16,9 @@ public class Article {
     private String overLap;
     private String status;
     private String language;
+    private HashMap<String, ArrayList<String>> annotations;
+    private ArrayList<String> features;
+    private ArrayList<String> labels;
 
     public String getPageNumber() {
         return pageNumber;
@@ -94,7 +100,52 @@ public class Article {
         this.language = language;
     }
 
-    //create method clearArticle()
+    public boolean clearFields() {
+        try {
+            this.setFileName(null);
+            this.setLanguage(null);
+            this.setHeadline(null);
+            this.setMediaSource(null);
+            this.setMediaType(null);
+            this.setOverLap(null);
+            this.setPageNumber(null);
+            this.setPublicationDate(null);
+            this.setStatus(null);
+            this.setText(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Can't clear article");
+            return false;
+        }
+        return true;
+    }
+
+
+    public void setAnnotations(HashMap<String, ArrayList<String>> annotations) {
+        this.annotations = annotations;
+    }
+
+    public HashMap<String, ArrayList<String>> getAnnotations() {
+        return annotations;
+    }
+
+    public void setFeatures(ArrayList<String> features){
+        this.features = features;
+    }
+
+    public ArrayList<String> getFeatures() {
+        return features;
+    }
+
+    public void setLabels (ArrayList<String> labels) {
+        this.labels = labels;
+    }
+
+    public ArrayList<String> getLabels() {
+        return labels;
+
+    }
+
     //second levels: add get/set for annotations<A<A<S>>, features<A<S>>, labels<A<S>>
 
     public boolean isValid() {

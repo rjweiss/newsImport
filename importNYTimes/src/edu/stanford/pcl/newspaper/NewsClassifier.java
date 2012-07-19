@@ -25,7 +25,7 @@ public class NewsClassifier {
     private NewsClassifier() {
         Properties p = new Properties();
 //        p.put("annotators", "tokenize, ssplit, pos, lemma, ner");
-//        p.put("annotators", "tokenize, ssplit");
+        p.put("annotators", "tokenize, ssplit");
         pipeline = new StanfordCoreNLP(p);
     }
 
@@ -65,22 +65,21 @@ public class NewsClassifier {
         DB db = mongo.getDB("news");
         DBCollection articles = db.getCollection("articles");
         BasicDBObject query = new BasicDBObject();
-//        query.put("mediaType", "Chicago Tribune");
         DBCursor cursor = articles.find(query);
         ArrayList<Datum<String, String>> trainingData = new ArrayList<Datum<String, String>>();
 
 //        int trainMax = 1000;
         int n = 1;
-        int m = 1;
-        ArrayList nyt = new ArrayList();
-        ArrayList ct = new ArrayList();
-        ArrayList bs = new ArrayList();
-        ArrayList lat = new ArrayList();
+//        int m = 1;
+//        ArrayList nyt = new ArrayList();
+//        ArrayList ct = new ArrayList();
+//        ArrayList bs = new ArrayList();
+//        ArrayList lat = new ArrayList();
         while (cursor.hasNext()) {
             DBObject obj = cursor.next();
             String currentHeadline = obj.get("headline").toString();
             String currentSource = obj.get("mediaSource").toString();
-            Datum datum = makeDocDatum(currentHeadline, currentSource);
+//            Datum datum = makeDocDatum(currentHeadline, currentSource);
 //            Datum datum = null;
 //            if (currentSource.equals("New York Times") && nyt.size() < 250) {
 //                nyt.add(makeDocDatum(currentHeadline, currentSource));
@@ -94,7 +93,7 @@ public class NewsClassifier {
 //            else if (currentSource.equals("Los Angeles Times") && lat.size() < 250) {
 //                lat.add(makeDocDatum(currentHeadline, currentSource));
 //            }
-            trainingData.add(datum);
+            trainingData.add(makeDocDatum(currentHeadline, currentSource));
             System.out.println("Training " + (n++));
         }
 //        trainingData.addAll(nyt);
@@ -120,7 +119,9 @@ public class NewsClassifier {
 
         ArrayList<Datum<String, String>> testData = new ArrayList<Datum<String, String>>();
 
-        int numSamples = trainingData.size() / 10;
+        //should sample from same time period, e.g. train on first 3 weeks, test on last week, then cross validate
+
+        int numSamples = trainingData.size() / 25;
         Random rand = new Random(System.currentTimeMillis());
         for (int i = 0; i < numSamples; i++) {
             int sampleIndex = rand.nextInt(trainingData.size());

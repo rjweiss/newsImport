@@ -41,13 +41,26 @@ public class Updater {
         }
     }
 
+        private static ArrayList<DBObject> getQueryResults(DBCollection collection, BasicDBObject query) {
+        ArrayList<DBObject> queryResults = new ArrayList<DBObject>();
+        DBCursor cursor = collection.find(query).batchSize(10);
+        while (cursor.hasNext()) {
+            cursor.next();
+            DBObject obj = cursor.curr();
+            queryResults.add(obj);
+        }
+        return (queryResults);
+    }
     private static boolean collectResults(DBCollection collection, BasicDBObject query, String processType) {
         Article article = new Article();
         DBCursor cursor = collection.find(query).batchSize(10);
         while (cursor.hasNext()) {
             cursor.next();
             DBObject obj = cursor.curr();
-//            article.clear()
+
+            article.clearFields();
+            
+            //write method that takes DBObject and converts to Article
             article.setHeadline((String) obj.get("headline"));
             article.setPageNumber((String) obj.get("pageNumber"));
             article.setText((String) obj.get("text"));
@@ -59,37 +72,55 @@ public class Updater {
             article.setPublicationDate((DateTime) obj.get("publicationDate"));
             article.setStatus((String) obj.get("status"));
 
-
-
-            //write method that takes DBObject and converts to Article
-            //Process
-            //Update
+            //Process Types
+            //
 
         }
-        return(false);
+        return (false);
     }
 
-    private static ArrayList<DBObject> getQueryResults(DBCollection collection, BasicDBObject query) {
-        ArrayList<DBObject> queryResults = new ArrayList<DBObject>();
-        DBCursor cursor = collection.find(query).batchSize(10);
-        while (cursor.hasNext()) {
-            cursor.next();
-            DBObject obj = cursor.curr();
-            queryResults.add(obj);
-        }
-        return (queryResults);
-    }
 
-    private static void updateArticle(Article article, DBCollection collection) {
+
+    //brokeass
+    private static void updateMongoDocument(Article article, DBCollection collection, HashMap<String, String> newData, String newFieldToSet) {
         BasicDBObject query = new BasicDBObject();
-        BasicDBObject mongoUpdate = new BasicDBObject();
+        BasicDBObject mongoObject = new BasicDBObject();
 
-       // try {
-       //       mongoUpdate.put
+        try {
+            mongoObject.put("pageNumber", article.getPageNumber());
+            mongoObject.put("publicationDate", article.getPublicationDate().toDate());
+            mongoObject.put("headline", article.getHeadline());
+            mongoObject.put("text", article.getText());
+            mongoObject.put("fileName", article.getFileName());
+            mongoObject.put("mediaType", article.getMediaType());
+            mongoObject.put("mediaSource", article.getMediaSource());
+            mongoObject.put("overLap", article.getOverLap());
+            mongoObject.put("status", article.getStatus());
+            mongoObject.put("language", article.getStatus());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Field update failed");
+            System.exit(1);
+        }
 
-       //     update.put(String.valueOf(iterator.next()), new BasicDBObject("testKey", "testValue"));
-       //     collection.update(query, new BasicDBObject("$set", update), true, true);
-       // }
+
+        //shouldn't this be a switch based on article field case?
+        try {
+            BasicDBObject obj = new BasicDBObject();
+            obj.put(newFieldToSet, newData);
+            mongoObject.put(newFieldToSet, obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Field upsert failed");
+            System.exit(1);
+        }
+
+        try {
+            collection.update(query, new BasicDBObject("$push", mongoObject), true, true); //check those true flags
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Mongo update failed");
+        }
     }
 
     private static void addFields(ArrayList<String> fieldNames, DBCollection collection) {
