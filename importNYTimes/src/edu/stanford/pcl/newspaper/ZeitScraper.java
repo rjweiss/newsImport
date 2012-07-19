@@ -19,7 +19,14 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
-public class DerSpiegelScraper {
+/**
+ * Created with IntelliJ IDEA.
+ * User: seanwestwood
+ * Date: 7/18/12
+ * Time: 5:31 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class ZeitScraper {
     public static DateTime convertIntDateToDate(String date) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
         String year = date.substring(0, 4);
@@ -34,26 +41,30 @@ public class DerSpiegelScraper {
         int issue = 1;
         for (year = 2000; year <= 2011; year++) {
             for (issue = 1; issue <= 55; issue++) {
+                String twoDigitIssue =  Integer.toString(issue);
+                if (twoDigitIssue.length() <2) {
+                    twoDigitIssue = "0" + twoDigitIssue;
+                }
 
-                getNewsArticleList(Integer.toString(year), Integer.toString(issue));
-                System.out.println(year + "-" + issue);
+                getNewsArticleList(Integer.toString(year), twoDigitIssue);
+                System.out.println(year + "-" + twoDigitIssue);
             }
         }
 
     }
 
     public static void getNewsArticleList(String year, String issue) throws IOException, TransformerException, ParserConfigurationException {
-        try {
-            String URL = "http://www.spiegel.de/spiegel/print/index-" + year + "-" + issue + ".html";
-
+        //try {
+            String URL = "http://www.zeit.de/" + year + "/" + issue + "/index";
+        System.out.println(URL);
             Document document = Jsoup.connect(URL).timeout(12000).get();
 
-            Elements links = document.select("#spHeftInhalt a");
+            Elements links = document.select("#main a");
             Integer articleNumber = 0;
             String lastURL = null;
             for (Element link : links) {
 
-                String linkHref = "http://www.spiegel.de" + link.attr("href");
+                String linkHref = link.attr("href");
                 if (!linkHref.equals(lastURL)) {
 
                     //System.out.println("link: " + linkHref);
@@ -62,26 +73,26 @@ public class DerSpiegelScraper {
                     articleNumber++;
                 }
             }
-        } catch (Exception e) {
-        }
+        //} catch (Exception e) {
+        //}
 
     }
 
     public static void processFile(String URL, String year, String issue, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
         Document document = Jsoup.connect(URL).timeout(4000).get();
 
-        String title = document.select("#spArticleColumn h2").text();
+        String title = document.select(".articleheader").text();
 
         //System.out.println("title: " +title);
-        Elements paragraphs = document.select(".artikel p");
+        Elements paragraphs = document.select("#main p[class!=excerpt]");
         String paragraphText = "";
         for (Element paragraph : paragraphs) {
             paragraphText += paragraph.text();
         }
 
         String result = createXMLDoc(title, year, issue, paragraphText);
-        String fileName = "/Users/seanwestwood/Desktop/derspiegel/" + year + "-" + issue + "-" + articleNumber.toString() + ".xml";
-
+        String fileName = "/Users/seanwestwood/Desktop/zeit/" + year + "-" + issue + "-" + articleNumber.toString() + ".xml";
+        //System.out.println("text: " +paragraphText);
         Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
         try {
             out.write(result);
