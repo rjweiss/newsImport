@@ -17,6 +17,7 @@ public class Updater {
     private static Mongo m;
     private static DB db;
 
+
     public Updater(DBCollection collection, IndexWriter indexWriter) {
     }
 
@@ -56,10 +57,10 @@ public class Updater {
 
             //Process Types
             if (processType.equals("annotations")) {
-                article.addFeature("Annotations", annotator.getAnnotations(article.getText()));
+                article.addFeature("annotations", annotator.getAnnotations(article.getText()));
                 updateMongo(article, collection);
             } else if (processType.equals("labels")) {
-                article.addFeature("Labels", annotator.getAnnotations(article.getText()));
+                article.addFeature("labels", annotator.getAnnotations(article.getText()));
             }
         }
         return (false);
@@ -70,7 +71,8 @@ public class Updater {
 
         try {
             //toMongoObject() needs to account for newly created fields.
-            collection.update(query, new BasicDBObject("$push", article.toMongoObject()), true, true); //check those true flags
+
+//            collection.update(query, new BasicDBObject("$push", article.toMongoObject(mongoObject)), true, true); //check those true flags
         } catch (Exception e) {
             e.printStackTrace();
         }

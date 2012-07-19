@@ -114,6 +114,7 @@ public class Article {
         this.features.put(featureName, value);
     }
 
+    //needed?
     public void setAnnotations(Annotation annotation) {
         this.annotations = annotation;
     }
@@ -140,7 +141,7 @@ public class Article {
 
     }
 
-    public DBObject toMongoObject() {
+    public DBObject toMongoObject(BasicDBObject mongoObject) {
         DBObject obj = new BasicDBObject();
 
         obj.put("pageNumber", this.getPageNumber());
@@ -153,6 +154,10 @@ public class Article {
         obj.put("overLap", this.getOverLap());
         obj.put("status", this.getStatus());
         obj.put("language", this.getStatus());
+
+        if(obj.containsField("annotations")){
+            obj.put("annotations", this.getAnnotations());
+        }
 
         return obj;
     }
