@@ -10,21 +10,10 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
-/**
- * Created by IntelliJ IDEA.
- * User: Rebecca
- * Date: 6/18/12
- * Time: 11:45 PM
- * To change this template use File | Settings | File Templates.
- */
 
 public class Importer {
     private DBCollection collection;
@@ -40,8 +29,6 @@ public class Importer {
         this.collection = collection;
         this.indexWriter = indexWriter;
     }
-
-
 
     public int[] importAll(File path, String source) {
 
@@ -59,8 +46,6 @@ public class Importer {
                 String extension=null;
                 int dotPos = file.getName().lastIndexOf(".");
                 extension = file.getName().substring(dotPos + 1);
-
-
 
                 if ("xml".equals(extension)) {
                     //System.out.println(extension);
@@ -90,16 +75,18 @@ public class Importer {
                     try {
 
                         BasicDBObject mongoObject = new BasicDBObject();
-                        mongoObject.put("pageNumber", article.getPageNumber());
-                        mongoObject.put("publicationDate", article.getPublicationDate().toDate());
-                        mongoObject.put("headline", article.getHeadline());
-                        mongoObject.put("text", article.getText());
-                        mongoObject.put("fileName", article.getFileName());
-                        mongoObject.put("mediaType", article.getMediaType());
-                        mongoObject.put("mediaSource", article.getMediaSource());
-                        mongoObject.put("overLap", article.getOverLap());
-                        mongoObject.put("status", article.getStatus());
-                        mongoObject.put("language", article.getStatus());
+                        article.toMongoObject(mongoObject);
+
+//                        mongoObject.put("pageNumber", article.getPageNumber());
+//                        mongoObject.put("publicationDate", article.getPublicationDate().toDate());
+//                        mongoObject.put("headline", article.getHeadline());
+//                        mongoObject.put("text", article.getText());
+//                        mongoObject.put("fileName", article.getFileName());
+//                        mongoObject.put("mediaType", article.getMediaType());
+//                        mongoObject.put("mediaSource", article.getMediaSource());
+//                        mongoObject.put("overLap", article.getOverLap());
+//                        mongoObject.put("status", article.getStatus());
+//                        mongoObject.put("language", article.getStatus());
 
                         collection.insert(mongoObject, WriteConcern.SAFE);
                         //System.out.println("Mongo insertion...");

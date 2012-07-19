@@ -47,7 +47,7 @@ public class Updater {
     private static boolean collectAndUpdateResults(DBCollection collection, BasicDBObject query, String processType) {
         Article article;
         DBCursor cursor = collection.find(query).batchSize(10);
-        AnnotationExtractor annotator = new AnnotationExtractor();
+        AnnotationExtractor annotator = new AnnotationExtractor("tokenize, ssplit, pos, lemma, ner");
 
         while (cursor.hasNext()) {
             cursor.next();

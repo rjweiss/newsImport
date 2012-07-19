@@ -9,10 +9,10 @@ public class AnnotationExtractor {
 
     private StanfordCoreNLP pipeline;
 
-    public AnnotationExtractor() {
+    public AnnotationExtractor(String annotationsWanted) {
 
         Properties p = new Properties();
-        p.put("annotators", "tokenize, ssplit, pos, lemma, ner");
+        p.put("annotators", annotationsWanted);
         pipeline = new StanfordCoreNLP(p);
     }
 
