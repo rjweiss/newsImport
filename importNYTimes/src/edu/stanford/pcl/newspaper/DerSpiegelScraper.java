@@ -68,7 +68,7 @@ public class DerSpiegelScraper {
     }
 
     public static void processFile(String URL, String year, String issue, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
-        Document document = Jsoup.connect(URL).timeout(4000).get();
+        Document document = Jsoup.connect(URL).timeout(20000).get();
 
         String title = document.select("#spArticleColumn h2").text();
 

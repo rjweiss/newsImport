@@ -6,6 +6,7 @@ JARS := \
 	opencsv/opencsv-2.3.jar \
 	jsap/JSAP-2.1.jar \
 	stanford/corenlp/joda-time.jar \
+	jsoup/jsoup-1.6.3.jar \
 
 CLASSPATH := $(subst $(eval) ,:,$(addprefix $(JARDIR)/,$(JARS)))
 

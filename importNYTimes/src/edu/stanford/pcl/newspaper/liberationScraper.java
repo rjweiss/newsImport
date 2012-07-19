@@ -54,9 +54,9 @@ public class LiberationScraper {
         String URL = "http://www.liberation.fr/archives/" + date.toString("yyyy") + "/" + date.toString("MM") +"/" +date.toString("dd") +"/";
 
         System.out.println(URL);
-        Document document = Jsoup.connect(URL).timeout(12000).get();
+        Document document = Jsoup.connect(URL).timeout(20000).get();
 
-        Elements links =  document.select(".block-content a");
+        Elements links =  document.select(".block-content a[class!=next]");
         Integer articleNumber=0;
         String lastURL =null;
         for (Element link : links) {
@@ -64,7 +64,7 @@ public class LiberationScraper {
             String linkHref = link.attr("href");
             if (!linkHref.equals(lastURL))
             {
-                System.out.println("link: " + linkHref);
+               // System.out.println("link: " + linkHref);
                 processFile(linkHref,date,articleNumber);
                 lastURL = linkHref;
                 articleNumber++;
@@ -75,19 +75,20 @@ public class LiberationScraper {
     }
 
     public static void processFile(String URL, DateTime date, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
-        Document document = Jsoup.connect(URL).timeout(12000).get();
+        Document document = Jsoup.connect(URL).timeout(20000).get();
 
 
         String title = document.select(".object-header h1").text();
-        System.out.println(title);
+       // System.out.println(title);
         Elements paragraphs = document.select(".object-content p");
-        String paragraphText = "";
+        String paragraphText = paragraphs.text();
 
-        System.out.println(paragraphs);
-        for (Element paragraph : paragraphs) {
-            paragraphText += paragraph.text();
-        }
-        System.out.println("text: " +paragraphText);
+        //System.out.println(paragraphs)
+        // ;
+       // for (Element paragraph : paragraphs) {
+       //     paragraphText += paragraph.text();
+       // }
+        //System.out.println("text: " +paragraphText);
         String result = createXMLDoc(title,date,paragraphText);
         String fileName = "/Users/seanwestwood/Desktop/liberation/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
 
