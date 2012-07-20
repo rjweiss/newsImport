@@ -26,6 +26,7 @@ import java.io.*;
  * Time: 5:31 PM
  * To change this template use File | Settings | File Templates.
  */
+
 public class ZeitScraper {
     public static DateTime convertIntDateToDate(String date) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
