@@ -72,8 +72,6 @@ public class TimesIndiaScraper {
         }
     }
 
-
-
     public static void processFile(String URL, DateTime date, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
         try {
             System.out.println("waiting");
