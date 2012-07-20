@@ -192,24 +192,21 @@ public class Article {
             Date date = (Date) object.get("publicationDate"); // something weird with jodatime and java date object
             dateTime = new DateTime(date);
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         article.setId(object.get("_id").toString());
-        article.setHeadline((String) object.get("headline"));
-        article.setPageNumber((String) object.get("pageNumber"));
-        article.setText((String) object.get("text"));
-        article.setFileName((String) object.get("fileName"));
-        article.setLanguage((String) object.get("language"));
-        article.setMediaSource((String) object.get("mediaSource"));
-        article.setMediaType((String) object.get("mediaType"));
-        article.setOverLap((String) object.get("overLap"));
-        article.setPublicationDate((DateTime) dateTime);
-        article.setStatus((String) object.get("status"));
+        article.setHeadline(object.get("headline").toString());
+        article.setPageNumber(object.get("pageNumber").toString());
+        article.setText(object.get("text").toString());
+        article.setFileName(object.get("fileName").toString());
+        article.setLanguage(object.get("language").toString());
+        article.setMediaSource(object.get("mediaSource").toString());
+        article.setMediaType(object.get("mediaType").toString());
+        article.setOverLap( object.get("overLap").toString());
+        article.setPublicationDate(dateTime);
+        article.setStatus(object.get("status").toString());
 
-//        if(object.containsField("features")){
-//            article.setFeatures(( Map<String, Object>) object.get("features"));
-//        }
 
         return article;
     }
@@ -231,8 +228,6 @@ public class Article {
 
         return (doc);
     }
-
-    //second levels: add get/set for annotations<A<A<S>>, features<A<S>>, labels<A<S>>
 
     public boolean isValid() {
         boolean valid = true;
