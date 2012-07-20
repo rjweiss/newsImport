@@ -32,7 +32,7 @@ public class Process {
             if (processType.equals("annotations")) {
                 article.setAnnotation(new AnnotatedDocument(document));
             }
-            updater.updateMongo(article, collection);
+//            updater.updateMongo(article, collection);
             System.out.println(article.getFileName());
         }
         return true;

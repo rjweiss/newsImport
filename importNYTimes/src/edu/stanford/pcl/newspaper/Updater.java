@@ -46,7 +46,29 @@ public class Updater {
         return (queryResults);
     }
 
+    private static boolean collectAndUpdateResults(DBCollection collection, BasicDBObject query, String processType) {
+        Article article;
+        DBCursor cursor = collection.find(query).batchSize(10);
+        AnnotationExtractor annotator = new AnnotationExtractor("tokenize, ssplit, pos, lemma, ner");//, parse");
+        Annotation document;
+//        Map<String, Object> annotations = new HashMap<String, Object>();
 
+
+        while (cursor.hasNext()) {
+            cursor.next();
+            DBObject obj = cursor.curr();
+            article = Article.fromMongoObject(obj);
+            document = annotator.getAnnotations(article.getText());
+
+            //Process Types
+            if (processType.equals("annotations")) {
+                article.setAnnotation(new AnnotatedDocument(document));
+            }
+            updateMongo(article, collection);
+            System.out.println(article.getFileName().toString());
+        }
+        return true;
+    }
 
     private static void updateMongo(Article article, DBCollection collection) {
         BasicDBObject query = new BasicDBObject();
