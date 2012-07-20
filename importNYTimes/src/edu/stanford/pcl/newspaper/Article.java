@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public class Article {
@@ -27,7 +28,7 @@ public class Article {
     private String language;
 
     private Map<String, Object> features;
-    private ArrayList<String> labels;
+    private AnnotatedDocument entities;
     private AnnotatedDocument annotation;
 
     public Article() {
@@ -134,12 +135,12 @@ public class Article {
         return features;
     }
 
-    public void setLabels(ArrayList<String> labels) {
-        this.labels = labels;
+    public void setEntities(AnnotatedDocument entities) {
+        this.entities = entities;
     }
 
-    public ArrayList<String> getLabels() {
-        return labels;
+    public AnnotatedDocument getEntities() {
+        return entities;
 
     }
 
@@ -149,6 +150,17 @@ public class Article {
 
     public void setAnnotation(AnnotatedDocument annotation) {
         this.annotation = annotation;
+    }
+
+    private static BasicDBList createMongoList(List<String> list, String keyName){
+        DBObject annotation = new BasicDBObject();
+        BasicDBList basicDBList = new BasicDBList();
+        for (String entity : list) {
+            DBObject t = new BasicDBObject();
+            t.put(keyName, entity);
+            basicDBList.add(t);
+        }
+        return basicDBList;
     }
 
     public BasicDBObject toMongoObject() {
@@ -167,6 +179,15 @@ public class Article {
         obj.put("status", this.getStatus());
         obj.put("language", this.getStatus());
         obj.put("features", this.getFeatures());
+
+        obj.put("entitiesTime", createMongoList(this.getEntities().entitiesTime,"time"));
+        obj.put("entitiesLocation", createMongoList(this.getEntities().entitiesTime,"location"));
+        obj.put("entitiesOrganization", createMongoList(this.getEntities().entitiesTime,"organization"));
+        obj.put("entitiesPerson", createMongoList(this.getEntities().entitiesTime,"person"));
+        obj.put("entitiesMoney", createMongoList(this.getEntities().entitiesTime,"money"));
+        obj.put("entitiesPercent", createMongoList(this.getEntities().entitiesTime,"percent"));
+        obj.put("entitiesDate", createMongoList(this.getEntities().entitiesTime,"date"));
+        obj.put("entitiesMisc", createMongoList(this.getEntities().entitiesTime,"misc"));
 
         DBObject annotation = new BasicDBObject();
         BasicDBList list = new BasicDBList();
@@ -206,7 +227,6 @@ public class Article {
         article.setPublicationDate(dateTime);
         article.setStatus(object.get("status").toString());
 
-
         return article;
     }
 
@@ -224,6 +244,15 @@ public class Article {
         doc.add(new Field("overLap", this.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         doc.add(new Field("status", this.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         doc.add(new Field("language", this.getLanguage(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+
+        doc.add(new Field("entitiesTime", this.getEntities().entitiesTime.toString(), Field.Store.YES, Field.Index.ANALYZED));
+        doc.add(new Field("entitiesLocation", this.getEntities().entitiesLocation.toString(), Field.Store.YES, Field.Index.ANALYZED));
+        doc.add(new Field("entitiesOrganization", this.getEntities().entitiesOrganization.toString(), Field.Store.YES, Field.Index.ANALYZED));
+        doc.add(new Field("entitiesPerson", this.getEntities().entitiesPerson.toString(), Field.Store.YES, Field.Index.ANALYZED));
+        doc.add(new Field("entitiesMoney", this.getEntities().entitiesMoney.toString(), Field.Store.YES, Field.Index.ANALYZED));
+        doc.add(new Field("entitiesPercent", this.getEntities().entitiesPercent.toString(), Field.Store.YES, Field.Index.ANALYZED));
+        doc.add(new Field("entitiesDate", this.getEntities().entitiesDate.toString(), Field.Store.YES, Field.Index.ANALYZED));
+        doc.add(new Field("entitiesMisc", this.getEntities().entitiesMisc.toString(), Field.Store.YES, Field.Index.ANALYZED));
 
         return (doc);
     }
