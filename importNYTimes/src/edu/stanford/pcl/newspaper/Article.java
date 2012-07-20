@@ -9,6 +9,7 @@ import org.apache.lucene.document.NumericField;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 public class Article {
@@ -23,11 +24,11 @@ public class Article {
     private String status;
     private String language;
 
-    private Map<String, Object> features;
-    private Annotation annotations;
+    private Map<String, Annotation> features;
     private ArrayList<String> labels;
 
     public Article() {
+        features = null;
     }
 
     public String getPageNumber() {
@@ -110,25 +111,15 @@ public class Article {
         this.language = language;
     }
 
-    public void addFeature(String featureName, Object value) {
-        this.features.put(featureName, value);
+    public void addFeature(String featureName) {
+        this.features.put(featureName, null);
     }
 
-    //needed?
-    public void setAnnotations(Annotation annotation) {
-        this.annotations = annotation;
-    }
-
-    public Annotation getAnnotations() {
-        return annotations;
-    }
-
-
-    public void setFeatures(Map<String, Object> features) {
+    public void setFeatures(Map<String, Annotation> features) {
         this.features = features;
     }
 
-    public Map<String, Object> getFeatures() {
+    public Map<String, Annotation> getFeatures() {
         return features;
     }
 
@@ -141,11 +132,12 @@ public class Article {
 
     }
 
-    public DBObject toMongoObject(BasicDBObject mongoObject) {
-        DBObject obj = new BasicDBObject();
+    public BasicDBObject toMongoObject() {
+
+        BasicDBObject obj = new BasicDBObject();
 
         obj.put("pageNumber", this.getPageNumber());
-        obj.put("publicationDate", this.getPublicationDate().toDate());
+        obj.put("publicationDate", this.getPublicationDate().toDate());//why is this toDate and not toDateTime?
         obj.put("headline", this.getHeadline());
         obj.put("text", this.getText());
         obj.put("fileName", this.getFileName());
@@ -155,15 +147,19 @@ public class Article {
         obj.put("status", this.getStatus());
         obj.put("language", this.getStatus());
 
-        if(obj.containsField("annotations")){
-            obj.put("annotations", this.getAnnotations());
+        if(obj.containsField("features")){
+            obj.put("features", this.getFeatures());
         }
 
         return obj;
     }
 
     public static Article fromMongoObject(DBObject object) {
+
         Article article = new Article();
+        java.util.Date date = (Date) object.get("publicationDate"); // something weird with jodatime and java date object
+        DateTime dateTime = new DateTime(date);
+
         article.setHeadline((String) object.get("headline"));
         article.setPageNumber((String) object.get("pageNumber"));
         article.setText((String) object.get("text"));
@@ -172,25 +168,30 @@ public class Article {
         article.setMediaSource((String) object.get("mediaSource"));
         article.setMediaType((String) object.get("mediaType"));
         article.setOverLap((String) object.get("overLap"));
-        article.setPublicationDate((DateTime) object.get("publicationDate"));
+        article.setPublicationDate((DateTime) dateTime);
         article.setStatus((String) object.get("status"));
+
+//        if(object.containsField("features")){
+//            article.setFeatures(( Map<String, Object>) object.get("features"));
+//        }
+
         return article;
     }
 
-    public static Document toLuceneDocument(Article article) {
+    public Document toLuceneDocument() {
         Document doc = new Document();
 
-        doc.add(new Field("pageNumber", article.getPageNumber(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new NumericField("publicationDate", 8, Field.Store.YES, true).setIntValue(Integer.parseInt(article.getPublicationDate().toString("yyyyMMdd"))));
-        doc.add(new Field("publicationDateString", article.getPublicationDate().toString("yyyyMMdd"), Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field("headline", article.getHeadline(), Field.Store.YES, Field.Index.ANALYZED));
-        doc.add(new Field("text", article.getText(), Field.Store.YES, Field.Index.ANALYZED));
-        doc.add(new Field("fileName", article.getFileName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field("mediaType", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field("mediaSource", article.getMediaSource(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field("overLap", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field("status", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field("language", article.getLanguage(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("pageNumber", this.getPageNumber(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new NumericField("publicationDate", 8, Field.Store.YES, true).setIntValue(Integer.parseInt(this.getPublicationDate().toString("yyyyMMdd"))));
+        doc.add(new Field("publicationDateString", this.getPublicationDate().toString("yyyyMMdd"), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("headline", this.getHeadline(), Field.Store.YES, Field.Index.ANALYZED));
+        doc.add(new Field("text", this.getText(), Field.Store.YES, Field.Index.ANALYZED));
+        doc.add(new Field("fileName", this.getFileName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("mediaType", this.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("mediaSource", this.getMediaSource(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("overLap", this.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("status", this.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("language", this.getLanguage(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 
         return (doc);
     }

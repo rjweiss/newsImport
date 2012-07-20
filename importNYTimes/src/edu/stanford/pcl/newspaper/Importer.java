@@ -3,8 +3,6 @@ package edu.stanford.pcl.newspaper;
 import com.mongodb.*;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.NumericField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
@@ -13,6 +11,7 @@ import org.apache.lucene.util.Version;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class Importer {
@@ -21,13 +20,29 @@ public class Importer {
 
     private static final String MONGO_DB_NAME = "news";
     private static final String MONGO_DB_ARTICLES_COLLECTION = "articles";
+    private static final String MONGO_DB_MASTER_IP = "184.73.204.235";
+    private static final String MONGO_DB_SLAVE_IP = "107.22.253.110";
     private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
 //    private static final String LUCENE_INDEX_DIRECTORY = "/Users/Rebecca/Documents/research/stanford/pcl/computationalNews/newsImport";
 //    private static final String ARTICLE_IMPORT_ROOT_DIRECTORY = "/Volumes/NEWSPAPER/nytimes/2001/01";
 
+    private static Mongo mongo;
+    private static DB db;
+
     public Importer(DBCollection collection, IndexWriter indexWriter) {
         this.collection = collection;
         this.indexWriter = indexWriter;
+    }
+    private static void MongoConnect() {
+        try {
+            ArrayList<ServerAddress> address = new ArrayList<ServerAddress>();
+            address.add(new ServerAddress(MONGO_DB_MASTER_IP, 27017));
+            address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
+            mongo = new Mongo(address);
+            db = mongo.getDB(MONGO_DB_NAME);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
     public int[] importAll(File path, String source) {
@@ -65,56 +80,25 @@ public class Importer {
                     }
 
                     if (article == null || !article.isValid()) {
-                        // Parse failed, skip.
-
                         System.err.println("Parse failed or article invalid: " + file.getAbsolutePath());
                         skipped++;
                         continue;
                     }
 
                     try {
-
-                        BasicDBObject mongoObject = new BasicDBObject();
-                        article.toMongoObject(mongoObject);
-
-//                        mongoObject.put("pageNumber", article.getPageNumber());
-//                        mongoObject.put("publicationDate", article.getPublicationDate().toDate());
-//                        mongoObject.put("headline", article.getHeadline());
-//                        mongoObject.put("text", article.getText());
-//                        mongoObject.put("fileName", article.getFileName());
-//                        mongoObject.put("mediaType", article.getMediaType());
-//                        mongoObject.put("mediaSource", article.getMediaSource());
-//                        mongoObject.put("overLap", article.getOverLap());
-//                        mongoObject.put("status", article.getStatus());
-//                        mongoObject.put("language", article.getStatus());
-
+                        BasicDBObject mongoObject;
+                        mongoObject = article.toMongoObject();
                         collection.insert(mongoObject, WriteConcern.SAFE);
-                        //System.out.println("Mongo insertion...");
                     } catch (Exception e) {
                         e.printStackTrace(System.err);
                         continue;
                     }
 
                     try {
-                        Document doc = new Document();
-                        //System.out.println(Integer.parseInt(article.getPublicationDate()));
-                        //DateTools.dateToString(date, Resolution.SECOND)
-                        doc.add(new Field("pageNumber", article.getPageNumber(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-
-                        doc.add(new NumericField("publicationDate", 8, Field.Store.YES, true).setIntValue(Integer.parseInt(article.getPublicationDate().toString("yyyyMMdd"))));
-                        doc.add(new Field("publicationDateString", article.getPublicationDate().toString("yyyyMMdd"), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        doc.add(new Field("headline", article.getHeadline(), Field.Store.YES, Field.Index.ANALYZED));
-                        doc.add(new Field("text", article.getText(), Field.Store.YES, Field.Index.ANALYZED));
-                        doc.add(new Field("fileName", article.getFileName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        doc.add(new Field("mediaType", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        doc.add(new Field("mediaSource", article.getMediaSource(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        doc.add(new Field("overLap", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        doc.add(new Field("status", article.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        doc.add(new Field("language", article.getLanguage(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                        Document doc;
+                        doc = article.toLuceneDocument();
                         indexWriter.addDocument(doc);
-                        //System.out.println("Lucene insertion...");
                     } catch (IOException e) {
-                        // TODO:  Roll back insert failure (even if unlikely).
                         e.printStackTrace(System.err);
                     }
                     imported++;
@@ -127,19 +111,9 @@ public class Importer {
 
     public static void main(String[] args) throws IOException {
         // Connect to MongoDB.
+        MongoConnect();
 
-        ArrayList<ServerAddress> address = new ArrayList<ServerAddress>();
-        address.add(new ServerAddress("184.73.204.235", 27017));
-        address.add(new ServerAddress("107.22.253.110", 27017));
-        Mongo mongo = new Mongo(address);
-
-        //System.out.println("Mongo addresses:" + mongo.getAllAddress());
-        //System.out.println("Mongo connectors:" + mongo.getConnector());
-        //System.out.println("Mongo version:" + mongo.getVersion());
-
-        DB db = mongo.getDB(MONGO_DB_NAME);
         db.getCollection(MONGO_DB_ARTICLES_COLLECTION).createIndex(new BasicDBObject("fileName", 1));
-        //System.out.println("DB collection names :" + db.getCollectionNames());
 
         // Create/Open Lucene index.
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
