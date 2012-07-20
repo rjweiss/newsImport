@@ -89,7 +89,7 @@ public class TimesIndiaScraper {
             if(!paragraphText.isEmpty())
             {
             String result = createXMLDoc(title,date,paragraphText);
-            String fileName = "/Users/seanwestwood/Desktop/timesindia/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
+            String fileName = "/rawdata/newspapers/timesindia/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
 
 
            Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
