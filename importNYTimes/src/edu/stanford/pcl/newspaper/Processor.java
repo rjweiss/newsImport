@@ -6,22 +6,21 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import edu.stanford.nlp.pipeline.Annotation;
 
-/**
- * Created with IntelliJ IDEA.
- * User: seanwestwood
- * Date: 7/20/12
- * Time: 1:22 PM
- * To change this template use File | Settings | File Templates.
- */
-public class Process {
-    private static boolean processResults(DBCollection collection, BasicDBObject query, String processType) {
+import java.io.IOException;
+
+public class Processor {
+
+
+    public void annotateUpdate(String processType) throws IOException {
         Article article;
-        DBCursor cursor = collection.find(query).batchSize(10);
+
         AnnotationExtractor annotator = new AnnotationExtractor("tokenize, ssplit, pos, lemma, ner");//, parse");
         Annotation document;
-//        Map<String, Object> annotations = new HashMap<String, Object>();
 
-        Updater updater;
+        Updater updater = new Updater();
+        updater.connect();
+        DBCursor cursor = updater.queryCursor("articles");
+
         while (cursor.hasNext()) {
             cursor.next();
             DBObject obj = cursor.curr();
@@ -32,9 +31,10 @@ public class Process {
             if (processType.equals("annotations")) {
                 article.setAnnotation(new AnnotatedDocument(document));
             }
-//            updater.updateMongo(article, collection);
+            updater.updateMongo(article, "articles");
+            updater.updateLucene(article);
             System.out.println(article.getFileName());
         }
-        return true;
+        updater.close();
     }
 }
