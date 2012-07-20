@@ -5,13 +5,16 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import edu.stanford.nlp.pipeline.Annotation;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 
 public class Processor {
 
 
-    public void annotateUpdate(String processType) throws IOException {
+    public static void annotateUpdate(String collectionName, BasicDBObject query) throws IOException {
         Article article;
 
         AnnotationExtractor annotator = new AnnotationExtractor("tokenize, ssplit, pos, lemma, ner");//, parse");
@@ -19,7 +22,7 @@ public class Processor {
 
         Updater updater = new Updater();
         updater.connect();
-        DBCursor cursor = updater.queryCursor("articles");
+        DBCursor cursor = updater.queryCursor(collectionName, query);
 
         while (cursor.hasNext()) {
             cursor.next();
@@ -27,14 +30,20 @@ public class Processor {
             article = Article.fromMongoObject(obj);
             document = annotator.getAnnotations(article.getText());
 
-            //Process Types
-            if (processType.equals("annotations")) {
-                article.setAnnotation(new AnnotatedDocument(document));
-            }
-            updater.updateMongo(article, "articles");
+            article.setAnnotation(new AnnotatedDocument(document));
+
+            updater.updateMongo(article, collectionName);
             updater.updateLucene(article);
             System.out.println(article.getFileName());
         }
         updater.close();
+    }
+
+    public static void main(String[] args) throws IOException {
+        BasicDBObject query = new BasicDBObject();
+        DateTimeFormatter dateTimeFormatter= DateTimeFormat.forPattern("yyyy-MM-dd");
+        DateTime date = dateTimeFormatter.parseDateTime("2001-01-10");
+        query.put("publicationDate",date.toDate());
+        annotateUpdate("articles", query);
     }
 }

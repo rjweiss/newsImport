@@ -31,11 +31,10 @@ public class Updater {
     public Updater() {
     }
 
-    public DBCursor queryCursor(String collectionName)
+    public DBCursor queryCursor(String collectionName, BasicDBObject query)
     {
         DBCollection collection = db.getCollection(collectionName);
-        BasicDBObject query = new BasicDBObject();
-        DBCursor cursor = collection.find().batchSize(10);
+        DBCursor cursor = collection.find(query).batchSize(10);
         return cursor;
     }
 

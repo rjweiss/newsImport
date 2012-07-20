@@ -157,7 +157,7 @@ public class Article {
 
         obj.put("_id", new ObjectId(id));
         obj.put("pageNumber", this.getPageNumber());
-        obj.put("publicationDate", this.getPublicationDate().toDate());//why is this toDate and not toDateTime?
+        obj.put("publicationDate", this.getPublicationDate().toDate());
         obj.put("headline", this.getHeadline());
         obj.put("text", this.getText());
         obj.put("fileName", this.getFileName());
