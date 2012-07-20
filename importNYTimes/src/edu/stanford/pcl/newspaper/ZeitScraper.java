@@ -54,9 +54,9 @@ public class ZeitScraper {
     }
 
     public static void getNewsArticleList(String year, String issue) throws IOException, TransformerException, ParserConfigurationException {
-        //try {
+        try {
             String URL = "http://www.zeit.de/" + year + "/" + issue + "/index";
-        System.out.println(URL);
+            System.out.println(URL);
             Document document = Jsoup.connect(URL).timeout(12000).get();
 
             Elements links = document.select("#main a");
@@ -73,8 +73,8 @@ public class ZeitScraper {
                     articleNumber++;
                 }
             }
-        //} catch (Exception e) {
-        //}
+        } catch (Exception e) {
+        }
 
     }
 
@@ -85,13 +85,13 @@ public class ZeitScraper {
 
         //System.out.println("title: " +title);
         Elements paragraphs = document.select("#main p[class!=excerpt]");
-        String paragraphText = "";
-        for (Element paragraph : paragraphs) {
-            paragraphText += paragraph.text();
-        }
+        String paragraphText = paragraphs.text();
+        //for (Element paragraph : paragraphs) {
+        //    paragraphText += paragraph.text();
+        //}
 
         String result = createXMLDoc(title, year, issue, paragraphText);
-        String fileName = "/Users/seanwestwood/Desktop/zeit/" + year + "-" + issue + "-" + articleNumber.toString() + ".xml";
+        String fileName = "/rawdata/newspapers/zeit/" + year + "-" + issue + "-" + articleNumber.toString() + ".xml";
         //System.out.println("text: " +paragraphText);
         Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
         try {
