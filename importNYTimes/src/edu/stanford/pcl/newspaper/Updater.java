@@ -4,11 +4,8 @@ import com.mongodb.*;
 import edu.stanford.nlp.pipeline.Annotation;
 import org.apache.lucene.index.IndexWriter;
 
-import java.io.ByteArrayOutputStream;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Updater {
 
@@ -52,10 +49,9 @@ public class Updater {
     private static boolean collectAndUpdateResults(DBCollection collection, BasicDBObject query, String processType) {
         Article article;
         DBCursor cursor = collection.find(query).batchSize(10);
-        AnnotationExtractor annotator = new AnnotationExtractor("tokenize, ssplit, pos, lemma, ner");
+        AnnotationExtractor annotator = new AnnotationExtractor("tokenize, ssplit, pos, lemma, ner");//, parse");
         Annotation document;
-        Map<String, Annotation> annotations = new HashMap<String, Annotation>();
-        ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
+//        Map<String, Object> annotations = new HashMap<String, Object>();
 
 
         while (cursor.hasNext()) {
@@ -64,15 +60,12 @@ public class Updater {
             article = Article.fromMongoObject(obj);
             document = annotator.getAnnotations(article.getText());
 
-
             //Process Types
             if (processType.equals("annotations")) {
-                annotations.put("annotations", document);
-                article.setFeatures(annotations);
+                article.setAnnotation(new AnnotatedDocument(document));
             }
             updateMongo(article, collection);
             System.out.println(article.getFileName().toString());
-
         }
         return true;
     }
@@ -81,7 +74,7 @@ public class Updater {
         BasicDBObject query = new BasicDBObject();
 
         try {
-            collection.update(query, new BasicDBObject("$push", article.toMongoObject()), true, true); //check those true flags
+            collection.save(article.toMongoObject());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,11 +1,12 @@
 package edu.stanford.pcl.newspaper;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import edu.stanford.nlp.pipeline.Annotation;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.NumericField;
+import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.Map;
 
 public class Article {
+    private String id;
     private String pageNumber;
     private String headline;
     private String text;
@@ -24,11 +26,20 @@ public class Article {
     private String status;
     private String language;
 
-    private Map<String, Annotation> features;
+    private Map<String, Object> features;
     private ArrayList<String> labels;
+    private AnnotatedDocument annotation;
 
     public Article() {
         features = null;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getPageNumber() {
@@ -115,11 +126,11 @@ public class Article {
         this.features.put(featureName, null);
     }
 
-    public void setFeatures(Map<String, Annotation> features) {
+    public void setFeatures(Map<String, Object> features) {
         this.features = features;
     }
 
-    public Map<String, Annotation> getFeatures() {
+    public Map<String, Object> getFeatures() {
         return features;
     }
 
@@ -132,10 +143,19 @@ public class Article {
 
     }
 
+    public AnnotatedDocument getAnnotation() {
+        return annotation;
+    }
+
+    public void setAnnotation(AnnotatedDocument annotation) {
+        this.annotation = annotation;
+    }
+
     public BasicDBObject toMongoObject() {
 
         BasicDBObject obj = new BasicDBObject();
 
+        obj.put("_id", new ObjectId(id));
         obj.put("pageNumber", this.getPageNumber());
         obj.put("publicationDate", this.getPublicationDate().toDate());//why is this toDate and not toDateTime?
         obj.put("headline", this.getHeadline());
@@ -147,6 +167,19 @@ public class Article {
         obj.put("status", this.getStatus());
         obj.put("language", this.getStatus());
         obj.put("features", this.getFeatures());
+
+        DBObject annotation = new BasicDBObject();
+        BasicDBList list = new BasicDBList();
+        for (AnnotatedToken token : this.annotation.tokens) {
+            DBObject t = new BasicDBObject();
+            t.put("text", token.text);
+            t.put("lemma", token.lemma);
+            t.put("pos", token.pos);
+            t.put("entity", token.entity);
+            list.add(t);
+        }
+        annotation.put("tokens", list);
+        obj.put("annotation", annotation);
 
         return obj;
     }
@@ -162,6 +195,7 @@ public class Article {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
+        article.setId(object.get("_id").toString());
         article.setHeadline((String) object.get("headline"));
         article.setPageNumber((String) object.get("pageNumber"));
         article.setText((String) object.get("text"));
