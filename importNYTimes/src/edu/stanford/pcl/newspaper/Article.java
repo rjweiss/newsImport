@@ -171,43 +171,45 @@ public class Article {
         obj.put("language", this.getStatus());
         obj.put("features", this.getFeatures());
 
+        //Time, Location, Organization, Person, Money, Percent, Date
+
         try {
             obj.put("entitiesTime", createMongoList(this.getAnnotation().entitiesTime, "time"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesLocation", createMongoList(this.getAnnotation().entitiesTime,"location"));
+            obj.put("entitiesLocation", createMongoList(this.getAnnotation().entitiesLocation,"location"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesOrganization", createMongoList(this.getAnnotation().entitiesTime,"organization"));
+            obj.put("entitiesOrganization", createMongoList(this.getAnnotation().entitiesOrganization,"organization"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesPerson", createMongoList(this.getAnnotation().entitiesTime,"person"));
+            obj.put("entitiesPerson", createMongoList(this.getAnnotation().entitiesPerson,"person"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesMoney", createMongoList(this.getAnnotation().entitiesTime,"money"));
+            obj.put("entitiesMoney", createMongoList(this.getAnnotation().entitiesMoney,"money"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesPercent", createMongoList(this.getAnnotation().entitiesTime,"percent"));
+            obj.put("entitiesPercent", createMongoList(this.getAnnotation().entitiesPercent,"percent"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesDate", createMongoList(this.getAnnotation().entitiesTime,"date"));
+            obj.put("entitiesDate", createMongoList(this.getAnnotation().entitiesDate,"date"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesMisc", createMongoList(this.getAnnotation().entitiesTime,"misc"));
+            obj.put("entitiesMisc", createMongoList(this.getAnnotation().entitiesMisc,"misc"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
