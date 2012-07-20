@@ -43,7 +43,7 @@ public class Updater {
             ArrayList<ServerAddress> address = new ArrayList<ServerAddress>();
             address.add(new ServerAddress(MONGO_DB_MASTER_IP, 27017));
             address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
-            mongo = new Mongo("localhost");
+            mongo = new Mongo(address);
             db = mongo.getDB(MONGO_DB_NAME);
 
         } catch (UnknownHostException e) {
