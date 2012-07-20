@@ -146,10 +146,7 @@ public class Article {
         obj.put("overLap", this.getOverLap());
         obj.put("status", this.getStatus());
         obj.put("language", this.getStatus());
-
-        if(obj.containsField("features")){
-            obj.put("features", this.getFeatures());
-        }
+        obj.put("features", this.getFeatures());
 
         return obj;
     }
@@ -157,8 +154,13 @@ public class Article {
     public static Article fromMongoObject(DBObject object) {
 
         Article article = new Article();
-        java.util.Date date = (Date) object.get("publicationDate"); // something weird with jodatime and java date object
-        DateTime dateTime = new DateTime(date);
+        DateTime dateTime = null;
+        try {
+            Date date = (Date) object.get("publicationDate"); // something weird with jodatime and java date object
+            dateTime = new DateTime(date);
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
         article.setHeadline((String) object.get("headline"));
         article.setPageNumber((String) object.get("pageNumber"));

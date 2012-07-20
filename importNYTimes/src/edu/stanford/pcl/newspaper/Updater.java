@@ -4,6 +4,7 @@ import com.mongodb.*;
 import edu.stanford.nlp.pipeline.Annotation;
 import org.apache.lucene.index.IndexWriter;
 
+import java.io.ByteArrayOutputStream;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +55,8 @@ public class Updater {
         AnnotationExtractor annotator = new AnnotationExtractor("tokenize, ssplit, pos, lemma, ner");
         Annotation document;
         Map<String, Annotation> annotations = new HashMap<String, Annotation>();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
+
 
         while (cursor.hasNext()) {
             cursor.next();
@@ -61,13 +64,15 @@ public class Updater {
             article = Article.fromMongoObject(obj);
             document = annotator.getAnnotations(article.getText());
 
+
             //Process Types
             if (processType.equals("annotations")) {
                 annotations.put("annotations", document);
                 article.setFeatures(annotations);
             }
-            article.toMongoObject();
             updateMongo(article, collection);
+            System.out.println(article.getFileName().toString());
+
         }
         return true;
     }
