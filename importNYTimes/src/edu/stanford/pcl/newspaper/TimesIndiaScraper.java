@@ -72,8 +72,6 @@ public class TimesIndiaScraper {
         }
     }
 
-
-
     public static void processFile(String URL, DateTime date, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
         try {
             System.out.println("waiting");
@@ -81,18 +79,18 @@ public class TimesIndiaScraper {
 
 
             String title = document.select("span[class=arttle] h1").text();
-            System.out.println("title: " +title);
+            //System.out.println("title: " +title);
             String paragraphText = document.select(".Normal").text();
 
-            System.out.println("text: " +paragraphText);
+            //System.out.println("text: " +paragraphText);
 
             if(!paragraphText.isEmpty())
             {
             String result = createXMLDoc(title,date,paragraphText);
-            String fileName = "/Users/seanwestwood/Desktop/timesindia/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
+            String fileName = "/rawdata/newspapers/timesindia/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
 
 
-           /* Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
+           Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
             try {
                 out.write(result);
             }
@@ -102,7 +100,7 @@ public class TimesIndiaScraper {
             }
 
 
-            out.close();*/
+            out.close();
             }
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
