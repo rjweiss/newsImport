@@ -62,7 +62,7 @@ public class AnnotatedDocument extends ReflectionDBObject {
                     entitiesMisc.add(currentEntityText);
                 }
 
-                System.out.println(currentEntityText);
+                //System.out.println(currentEntityText);
                 currentEntityText = at.text;
             }
             lastEntity = at.entity;

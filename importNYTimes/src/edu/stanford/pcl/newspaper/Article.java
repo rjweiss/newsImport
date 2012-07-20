@@ -148,6 +148,7 @@ public class Article {
         for (String entity : list) {
             DBObject t = new BasicDBObject();
             t.put(keyName, entity);
+            System.out.println("e " + entity);
             basicDBList.add(t);
         }
         return basicDBList;
