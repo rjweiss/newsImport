@@ -185,11 +185,10 @@ public class Article {
     }
 
     public static Article fromMongoObject(DBObject object) {
-
         Article article = new Article();
         DateTime dateTime = null;
         try {
-            Date date = (Date) object.get("publicationDate"); // something weird with jodatime and java date object
+            Date date = (Date) object.get("publicationDate");
             dateTime = new DateTime(date);
         } catch (Exception e) {
             e.printStackTrace();

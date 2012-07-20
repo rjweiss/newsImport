@@ -33,7 +33,7 @@ public class Processor {
             article.setAnnotation(new AnnotatedDocument(document));
 
             updater.updateMongo(article, collectionName);
-            //updater.updateLucene(article);
+            updater.updateLucene(article);
             System.out.println(article.getFileName());
         }
         updater.close();

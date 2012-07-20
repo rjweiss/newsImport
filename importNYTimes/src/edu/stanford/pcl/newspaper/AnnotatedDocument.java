@@ -10,10 +10,25 @@ import java.util.List;
 
 public class AnnotatedDocument extends ReflectionDBObject {
     List<AnnotatedToken> tokens = new ArrayList<AnnotatedToken>();
+    List<String> entitiesText = new ArrayList<String>();
+
     public AnnotatedDocument(Annotation annotation) {
         List<CoreLabel> tokenList = annotation.get(CoreAnnotations.TokensAnnotation.class);
+        String lastEntity = "";
+        String currentEntityText = "";
         for (CoreLabel token : tokenList) {
-            tokens.add(new AnnotatedToken(token));
+            AnnotatedToken at = new AnnotatedToken(token);
+            tokens.add(at);
+
+            if( !("O").equals(at.entity) && at.entity.equals(lastEntity) ){
+                currentEntityText += " " + at.text;
+            }
+            else if( !("O").equals(at.entity) && !at.entity.equals(lastEntity) && !currentEntityText.isEmpty() ){
+                entitiesText.add(currentEntityText);
+                System.out.println(currentEntityText);
+                currentEntityText ="";
+            }
+            lastEntity = at.entity;
         }
     }
 }
