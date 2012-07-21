@@ -11,7 +11,6 @@ import org.joda.time.DateTime;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class Article {
     private String id;
@@ -26,12 +25,12 @@ public class Article {
     private String status;
     private String language;
 
-    private Map<String, Object> features;
+    //private Map<String, Object> features;
     private AnnotatedDocument annotation;
 
-    public Article() {
-        features = null;
-    }
+    //public Article() {
+    //    features = null;
+    //}
 
     public String getId() {
         return id;
@@ -121,7 +120,7 @@ public class Article {
         this.language = language;
     }
 
-    public void addFeature(String featureName) {
+/*    public void addFeature(String featureName) {
         this.features.put(featureName, null);
     }
 
@@ -131,7 +130,7 @@ public class Article {
 
     public Map<String, Object> getFeatures() {
         return features;
-    }
+    }*/
 
     public AnnotatedDocument getAnnotation() {
         return annotation;
@@ -142,7 +141,6 @@ public class Article {
     }
 
     private static BasicDBList createMongoList(List<String> list, String keyName) {
-        DBObject annotation = new BasicDBObject();
         BasicDBList basicDBList = new BasicDBList();
         for (String entity : list) {
             DBObject t = new BasicDBObject();
@@ -168,7 +166,7 @@ public class Article {
         obj.put("overLap", this.getOverLap());
         obj.put("status", this.getStatus());
         obj.put("language", this.getLanguage());
-        obj.put("features", this.getFeatures());
+        // obj.put("features", this.getFeatures());
 
         //Time, Location, Organization, Person, Money, Percent, Date
 

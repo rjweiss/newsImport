@@ -1,23 +1,14 @@
 package edu.stanford.pcl.news;
 
 import com.martiansoftware.jsap.*;
+import edu.stanford.pcl.news.classifiers.Classifier;
 import edu.stanford.pcl.news.dataHandlers.Importer;
 import edu.stanford.pcl.news.dataHandlers.Processor;
-import edu.stanford.pcl.news.queryData.LuceneQuerier;
+import edu.stanford.pcl.news.queriers.LuceneQuerier;
 import edu.stanford.pcl.news.scrapers.*;
-import edu.stanford.pcl.news.textProcessing.Classifier;
 
-import java.io.IOException;
-
-/**
- * Created with IntelliJ IDEA.
- * User: seanwestwood
- * Date: 7/20/12
- * Time: 6:49 PM
- * To change this template use File | Settings | File Templates.
- */
 public class NewsTools {
-    public static void main(String[] args) throws Exception, org.apache.lucene.queryParser.ParseException, JSAPException, java.text.ParseException {
+    public static void main(String[] args) throws Exception {
         SimpleJSAP jsap = new SimpleJSAP(
                 "LuceneQuerier",
                 "Pulls information from Lucene",
@@ -49,41 +40,29 @@ public class NewsTools {
         if (jsap.messagePrinted()) System.exit(1);
 
 
-        if(JSAPconfig.getString("actions").equals("import"))
-        {
+        if (JSAPconfig.getString("actions").equals("import")) {
             Importer.importNews();
-        }
-        else if(JSAPconfig.getString("actions").equals("scrape")) {
-            if(JSAPconfig.getString("scraper").equals("DerSpiegel")) {
+        } else if (JSAPconfig.getString("actions").equals("scrape")) {
+            if (JSAPconfig.getString("scraper").equals("DerSpiegel")) {
                 DerSpiegelScraper.scrapeNews();
-            }
-            else if(JSAPconfig.getString("scraper").equals("Humanite")) {
+            } else if (JSAPconfig.getString("scraper").equals("Humanite")) {
                 HumaniteScraper.scrapeNews();
-            }
-            else if(JSAPconfig.getString("scraper").equals("Liberation")) {
+            } else if (JSAPconfig.getString("scraper").equals("Liberation")) {
                 LiberationScraper.scrapeNews();
-            }
-            else if(JSAPconfig.getString("scraper").equals("TimesIndia")) {
+            } else if (JSAPconfig.getString("scraper").equals("TimesIndia")) {
                 TimesIndiaScraper.scrapeNews();
-            }
-            else if(JSAPconfig.getString("scraper").equals("Welt")) {
+            } else if (JSAPconfig.getString("scraper").equals("Welt")) {
                 WeltScraper.scrapeNews();
-            }
-            else if(JSAPconfig.getString("scraper").equals("Zeit")) {
+            } else if (JSAPconfig.getString("scraper").equals("Zeit")) {
                 ZeitScraper.scrapeNews();
             }
-        }
-        else if(JSAPconfig.getString("actions").equals("process")){
+        } else if (JSAPconfig.getString("actions").equals("process")) {
             Processor.processNews();
-        }
-        else if(JSAPconfig.getString("actions").equals("classify")){
+        } else if (JSAPconfig.getString("actions").equals("classify")) {
             Classifier.classifyNews();
-        }
-        else if(JSAPconfig.getString("actions").equals("query")){
+        } else if (JSAPconfig.getString("actions").equals("query")) {
             LuceneQuerier.queryNews(JSAPconfig);
         }
-
-
 
 
     }

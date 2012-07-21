@@ -1,4 +1,4 @@
-package edu.stanford.pcl.news.textProcessing;
+package edu.stanford.pcl.news.classifiers;
 
 import com.mongodb.*;
 
@@ -15,7 +15,7 @@ public class Classifier {
     private static DBCollection articles;
 
     private static final String MONGO_DB_NAME = "news";
-    private static final String MONGO_DB_ARTICLES_COLLECTION = "articles";
+//    private static final String MONGO_DB_ARTICLES_COLLECTION = "articles";
 //    private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
 //    private static final String MONGO_DB_MASTER_IP = "184.73.204.235";
 //    private static final String MONGO_DB_SLAVE_IP = "107.22.253.110";
@@ -183,7 +183,7 @@ public class Classifier {
 //        classifier.classify();
 
         BasicDBObject query = new BasicDBObject();
-        String field = new String("text");
+        String field = "text";
 
         DBCursor cursor = articles.find(query);
 
@@ -195,8 +195,8 @@ public class Classifier {
             BasicDBObject annotation = (BasicDBObject) obj.get("annotation");
             BasicDBList tokenList = (BasicDBList) annotation.get("tokens");
 
-            for (int i = 0; i < tokenList.size(); i++) {
-                DBObject token = (DBObject) tokenList.get(i);
+            for (Object aTokenList : tokenList) {
+                DBObject token = (DBObject) aTokenList;
                 System.out.println(token.get(field));
             }
 
