@@ -36,7 +36,7 @@ public class AnnotatedDocument extends ReflectionDBObject {
                 if (at.entity.equals(lastEntityType)) {
                     fullEntityName += " " + at.text;
                 } else if (!at.entity.equals(lastEntityType) && !fullEntityName.isEmpty()) {
-                    System.out.println(at.entity + " last: " + lastEntityType + " full: " + fullEntityName + " curr text: " + at.text);
+                    System.out.println(at.entity + " last: " + lastEntityType + " full: " + fullEntityName + " current text: " + at.text);
                     if (lastEntityType.equals("TIME")) {
                         entitiesTime.add(fullEntityName);
                     } else if (lastEntityType.equals("LOCATION")) {
@@ -44,7 +44,6 @@ public class AnnotatedDocument extends ReflectionDBObject {
                     } else if (lastEntityType.equals("ORGANIZATION")) {
                         entitiesOrganization.add(fullEntityName);
                     } else if (lastEntityType.equals("PERSON")) {
-
                         entitiesPerson.add(fullEntityName);
                     } else if (lastEntityType.equals("MONEY")) {
                         entitiesMoney.add(fullEntityName);
@@ -55,8 +54,6 @@ public class AnnotatedDocument extends ReflectionDBObject {
                     } else if (lastEntityType.equals("MISC")) {
                         entitiesMisc.add(fullEntityName);
                     }
-
-                    System.out.println("balh");
                     fullEntityName = at.text;
                 }
                 else
@@ -66,7 +63,7 @@ public class AnnotatedDocument extends ReflectionDBObject {
             }
             else
             {
-                fullEntityName = "";
+                fullEntityName = at.text;
             }
 
             lastEntityType = at.entity;
