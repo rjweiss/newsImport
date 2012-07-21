@@ -33,15 +33,18 @@ public class AnnotatedDocument extends ReflectionDBObject {
             AnnotatedToken at = new AnnotatedToken(token);
             tokens.add(at);
 
-            if( !("O").equals(at.entity) && at.entity.equals(lastEntity) ){
+            if( !("O").equals(at.entity))
+            {
+            if( at.entity.equals(lastEntity) ){
                 currentEntityText += " " + at.text;
             }
-            else if( !("O").equals(at.entity) && !at.entity.equals(lastEntity) && !currentEntityText.isEmpty() ){
+            else if(!at.entity.equals(lastEntity) && !currentEntityText.isEmpty() ){
                 if (("TIME").equals(at.entity)) {
                     entitiesTime.add(currentEntityText);
                 }
                 else if (("LOCATION").equals(at.entity)) {
                     entitiesLocation.add(currentEntityText);
+                    System.out.println("location: " + currentEntityText);
                 }
                 else if (("ORGANIZATION").equals(at.entity)) {
                     entitiesOrganization.add(currentEntityText);
@@ -65,7 +68,9 @@ public class AnnotatedDocument extends ReflectionDBObject {
                 //System.out.println(currentEntityText);
                 currentEntityText = at.text;
             }
-            lastEntity = at.entity;
+            }
+                lastEntity = at.entity;
+
         }
     }
 }
