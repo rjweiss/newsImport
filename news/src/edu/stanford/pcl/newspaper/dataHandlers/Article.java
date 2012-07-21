@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.newspaper.dataHandlers;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -9,7 +9,6 @@ import org.apache.lucene.document.NumericField;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +141,7 @@ public class Article {
         this.annotation = annotation;
     }
 
-    private static BasicDBList createMongoList(List<String> list, String keyName){
+    private static BasicDBList createMongoList(List<String> list, String keyName) {
         DBObject annotation = new BasicDBObject();
         BasicDBList basicDBList = new BasicDBList();
         for (String entity : list) {
@@ -179,37 +178,37 @@ public class Article {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesLocation", createMongoList(this.getAnnotation().entitiesLocation,"location"));
+            obj.put("entitiesLocation", createMongoList(this.getAnnotation().entitiesLocation, "location"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesOrganization", createMongoList(this.getAnnotation().entitiesOrganization,"organization"));
+            obj.put("entitiesOrganization", createMongoList(this.getAnnotation().entitiesOrganization, "organization"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesPerson", createMongoList(this.getAnnotation().entitiesPerson,"person"));
+            obj.put("entitiesPerson", createMongoList(this.getAnnotation().entitiesPerson, "person"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesMoney", createMongoList(this.getAnnotation().entitiesMoney,"money"));
+            obj.put("entitiesMoney", createMongoList(this.getAnnotation().entitiesMoney, "money"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesPercent", createMongoList(this.getAnnotation().entitiesPercent,"percent"));
+            obj.put("entitiesPercent", createMongoList(this.getAnnotation().entitiesPercent, "percent"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesDate", createMongoList(this.getAnnotation().entitiesDate,"date"));
+            obj.put("entitiesDate", createMongoList(this.getAnnotation().entitiesDate, "date"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try {
-            obj.put("entitiesMisc", createMongoList(this.getAnnotation().entitiesMisc,"misc"));
+            obj.put("entitiesMisc", createMongoList(this.getAnnotation().entitiesMisc, "misc"));
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -248,7 +247,7 @@ public class Article {
         article.setLanguage(object.get("language").toString());
         article.setMediaSource(object.get("mediaSource").toString());
         article.setMediaType(object.get("mediaType").toString());
-        article.setOverLap( object.get("overLap").toString());
+        article.setOverLap(object.get("overLap").toString());
         article.setPublicationDate(dateTime);
         article.setStatus(object.get("status").toString());
 

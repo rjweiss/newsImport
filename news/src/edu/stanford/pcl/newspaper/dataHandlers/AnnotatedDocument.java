@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.newspaper.dataHandlers;
 
 import com.mongodb.ReflectionDBObject;
 import edu.stanford.nlp.ling.CoreAnnotations;
@@ -6,7 +6,6 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class AnnotatedDocument extends ReflectionDBObject {
@@ -55,14 +54,10 @@ public class AnnotatedDocument extends ReflectionDBObject {
                         entitiesMisc.add(fullEntityName);
                     }
                     fullEntityName = at.text;
-                }
-                else
-                {
+                } else {
                     fullEntityName = at.text;
                 }
-            }
-            else
-            {
+            } else {
                 fullEntityName = at.text;
             }
 

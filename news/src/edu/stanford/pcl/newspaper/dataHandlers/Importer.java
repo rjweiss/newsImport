@@ -1,6 +1,8 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.newspaper.dataHandlers;
 
 import com.mongodb.*;
+import edu.stanford.pcl.newspaper.parsers.NytParser;
+import edu.stanford.pcl.newspaper.parsers.TribParser;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
@@ -33,6 +35,7 @@ public class Importer {
         this.collection = collection;
         this.indexWriter = indexWriter;
     }
+
     private static void MongoConnect() {
         try {
             ArrayList<ServerAddress> address = new ArrayList<ServerAddress>();
@@ -58,7 +61,7 @@ public class Importer {
             } else {
                 // TODO:  Only import XML files, and probably do some sanity checking.
                 //System.out.println("Parsing " + file.getAbsolutePath() + "...");
-                String extension=null;
+                String extension = null;
                 int dotPos = file.getName().lastIndexOf(".");
                 extension = file.getName().substring(dotPos + 1);
 

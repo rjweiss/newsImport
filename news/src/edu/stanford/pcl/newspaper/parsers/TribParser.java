@@ -1,5 +1,6 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.newspaper.parsers;
 
+import edu.stanford.pcl.newspaper.dataHandlers.Article;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.w3c.dom.Document;

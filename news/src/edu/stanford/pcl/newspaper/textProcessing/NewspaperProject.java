@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.newspaper.textProcessing;
 
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -22,7 +22,7 @@ import java.util.Properties;
 public class NewspaperProject {
     public static void main(String[] args) throws Exception {
 //        Mongo m = new Mongo();
-//        DB db = m.getDB("test");
+//        DB db = m.getDB("scrapers");
 //        DBCollection articles = db.getCollection("articles");
 //        DBObject myDoc = articles.findOne();
 //        DBCursor cur;
@@ -201,18 +201,18 @@ public class NewspaperProject {
 
 //        AbstractSequenceClassifier classifier = CRFClassifier.getClassifierNoExceptions("edu/stanford/nlp/models/ner/english.all.3class.distsim.crf.ser.gz");
         //can also just use CRFClassifier object
-        
+
         //Testing NER for just one article
 //        printNamedEntities(pipeline, classifier, (String)myDoc.get("body"));
 
         Iterator iterator = docs.iterator();
 
-        while(iterator.hasNext())
+        while (iterator.hasNext())
             printNamedEntities(pipeline, iterator.next().toString());
 
     }
 
-//    private static void printNamedEntities(StanfordCoreNLP pipeline, AbstractSequenceClassifier classifier, String text) {
+    //    private static void printNamedEntities(StanfordCoreNLP pipeline, AbstractSequenceClassifier classifier, String text) {
     private static void printNamedEntities(StanfordCoreNLP pipeline, String text) {
         Annotation document = new Annotation(text);
         pipeline.annotate(document);
@@ -225,10 +225,10 @@ public class NewspaperProject {
             //not necessary, should look at pipeline annotated document
             for (CoreLabel token : tokens) {
 //                for (CoreLabel label : labels) {
-                    String currentLabel = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
+                String currentLabel = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
 //                    String currentLabel = token.get(CoreAnnotations.AnswerAnnotation.class); // should look at NamedEntityTagAnnotation
-                    String currentText = token.get(CoreAnnotations.TextAnnotation.class);
-                    System.out.println(currentText + "(" + currentLabel + ")");
+                String currentText = token.get(CoreAnnotations.TextAnnotation.class);
+                System.out.println(currentText + "(" + currentLabel + ")");
 //                }
             }
         }

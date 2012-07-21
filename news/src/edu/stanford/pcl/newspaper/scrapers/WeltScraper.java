@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.newspaper.scrapers;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -19,15 +19,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: seanwestwood
- * Date: 7/18/12
- * Time: 5:31 PM
- * To change this template use File | Settings | File Templates.
- */
-
-public class ZeitScraper {
+//http://www.welt.de/nachrichtenarchiv/print-nachrichten-vom-1-1-2000.html?tabPane=ZEITUNG
+public class WeltScraper {
     public static DateTime convertIntDateToDate(String date) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
         String year = date.substring(0, 4);
@@ -38,62 +31,56 @@ public class ZeitScraper {
     }
 
     public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException {
-        int year = 2000;
-        int issue = 1;
-        for (year = 2000; year <= 2011; year++) {
-            for (issue = 1; issue <= 55; issue++) {
-                String twoDigitIssue =  Integer.toString(issue);
-                if (twoDigitIssue.length() <2) {
-                    twoDigitIssue = "0" + twoDigitIssue;
-                }
+        DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-                getNewsArticleList(Integer.toString(year), twoDigitIssue);
-                System.out.println(year + "-" + twoDigitIssue);
-            }
+        DateTime dtStartDate = dateFormat.parseDateTime("2004-09-10");
+        DateTime dtEndDate = dateFormat.parseDateTime("2012-07-08");
+
+        for (DateTime date = dtStartDate; date.isBefore(dtEndDate.plusDays(1)); date = date.plusDays(1)) {
+            System.out.println(date.toString("d-M-yyyy"));
+            getNewsArticleList(date);
         }
 
     }
 
-    public static void getNewsArticleList(String year, String issue) throws IOException, TransformerException, ParserConfigurationException {
-        try {
-            String URL = "http://www.zeit.de/" + year + "/" + issue + "/index";
-            System.out.println(URL);
-            Document document = Jsoup.connect(URL).timeout(12000).get();
+    public static void getNewsArticleList(DateTime date) throws IOException, TransformerException, ParserConfigurationException {
+        String URL = "http://www.welt.de/nachrichtenarchiv/print-nachrichten-vom-" + date.toString("d-M-yyyy") + ".html?tabPane=ZEITUNG";
 
-            Elements links = document.select("#main a");
-            Integer articleNumber = 0;
-            String lastURL = null;
-            for (Element link : links) {
 
-                String linkHref = link.attr("href");
-                if (!linkHref.equals(lastURL)) {
+        Document document = Jsoup.connect(URL).timeout(12000).get();
 
-                    //System.out.println("link: " + linkHref);
-                    processFile(linkHref, year, issue, articleNumber);
-                    lastURL = linkHref;
-                    articleNumber++;
-                }
+        Elements links = document.select("a[name=_ch_R_printArchive_]");
+        Integer articleNumber = 0;
+        String lastURL = null;
+        for (Element link : links) {
+
+            String linkHref = link.attr("href");
+            if (!linkHref.equals(lastURL)) {
+
+                processFile(linkHref, date, articleNumber);
+                lastURL = linkHref;
+                articleNumber++;
             }
-        } catch (Exception e) {
         }
+
 
     }
 
-    public static void processFile(String URL, String year, String issue, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
-        Document document = Jsoup.connect(URL).timeout(4000).get();
+    public static void processFile(String URL, DateTime date, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
+        Document document = Jsoup.connect(URL).timeout(12000).get();
 
-        String title = document.select(".articleheader").text();
 
-        //System.out.println("title: " +title);
-        Elements paragraphs = document.select("#main p[class!=excerpt]");
-        String paragraphText = paragraphs.text();
-        //for (Element paragraph : paragraphs) {
-        //    paragraphText += paragraph.text();
-        //}
+        String title = document.select("h1").text();
+        //System.out.println(title);
+        Elements paragraphs = document.select("p[class=prefix_2 text artContent]");
+        String paragraphText = null;
+        for (Element paragraph : paragraphs) {
+            paragraphText += paragraph.text();
+        }
 
-        String result = createXMLDoc(title, year, issue, paragraphText);
-        String fileName = "/rawdata/newspapers/zeit/" + year + "-" + issue + "-" + articleNumber.toString() + ".xml";
-        //System.out.println("text: " +paragraphText);
+        String result = createXMLDoc(title, date, paragraphText);
+        String fileName = "/Users/seanwestwood/Desktop/diewelt/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
+
         Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
         try {
             out.write(result);
@@ -101,10 +88,12 @@ public class ZeitScraper {
             System.out.println("No text for article: " + title);
         }
 
+
         out.close();
+
     }
 
-    public static String createXMLDoc(String title, String year, String issue, String paragraphs) throws ParserConfigurationException, TransformerException {
+    public static String createXMLDoc(String title, DateTime date, String paragraphs) throws ParserConfigurationException, TransformerException {
         DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
         org.w3c.dom.Document doc = docBuilder.newDocument();
@@ -114,7 +103,7 @@ public class ZeitScraper {
 
         org.w3c.dom.Element publicationDate = doc.createElement("publicationDate");
         article.appendChild(publicationDate);
-        publicationDate.appendChild(doc.createTextNode(year + "-" + issue));
+        publicationDate.appendChild(doc.createTextNode(date.toString("yyyy-MM-dd")));
 
         org.w3c.dom.Element headline = doc.createElement("headline");
         article.appendChild(headline);
@@ -142,4 +131,5 @@ public class ZeitScraper {
         //System.out.println(xmlString);
         return xmlString;
     }
+
 }

@@ -1,9 +1,9 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.newspaper.textProcessing;
 
 import com.mongodb.*;
 
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
 
 //import java.io.Serializable;
 //implement serializable to dump the trained classifier (eventually)
@@ -93,7 +93,7 @@ public class NewsClassifier {
 //
 //        ArrayList<Datum<String, String>> testData = new ArrayList<Datum<String, String>>();
 //
-//        //should sample from same time period, e.g. train on first 3 weeks, test on last week, then cross validate
+//        //should sample from same time period, e.g. train on first 3 weeks, scrapers on last week, then cross validate
 //
 //        int numSamples = trainingData.size() / 25;
 //        Random rand = new Random(System.currentTimeMillis());

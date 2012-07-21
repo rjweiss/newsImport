@@ -1,7 +1,6 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.newspaper.dataHandlers;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import edu.stanford.nlp.pipeline.Annotation;
@@ -41,9 +40,9 @@ public class Processor {
 
     public static void main(String[] args) throws IOException {
         BasicDBObject query = new BasicDBObject();
-        DateTimeFormatter dateTimeFormatter= DateTimeFormat.forPattern("yyyy-MM-dd");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         DateTime date = dateTimeFormatter.parseDateTime("2001-01-11");
-        query.put("publicationDate",date.toDate());
+        query.put("publicationDate", date.toDate());
         annotateUpdate("articles", query);
     }
 }
