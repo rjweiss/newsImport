@@ -23,7 +23,6 @@ public class AnnotatedDocument extends ReflectionDBObject {
     //Time, Location, Organization, Person, Money, Percent, Date
 
 
-
     public AnnotatedDocument(Annotation annotation) {
 
         List<CoreLabel> tokenList = annotation.get(CoreAnnotations.TokensAnnotation.class);
@@ -33,43 +32,34 @@ public class AnnotatedDocument extends ReflectionDBObject {
             AnnotatedToken at = new AnnotatedToken(token);
             tokens.add(at);
 
-            if( !("O").equals(at.entity))
-            {
-            if( at.entity.equals(lastEntity) ){
-                currentEntityText += " " + at.text;
-            }
-            else if(!at.entity.equals(lastEntity) && !currentEntityText.isEmpty() ){
-                if (("TIME").equals(lastEntity)) {
-                    entitiesTime.add(currentEntityText);
-                }
-                else if (("LOCATION").equals(lastEntity)) {
-                    entitiesLocation.add(currentEntityText);
-                    System.out.println("location: " + currentEntityText);
-                }
-                else if (("ORGANIZATION").equals(lastEntity)) {
-                    entitiesOrganization.add(currentEntityText);
-                }
-                else if (("PERSON").equals(lastEntity)) {
-                    entitiesPerson.add(currentEntityText);
-                }
-                else if (("MONEY").equals(lastEntity)) {
-                    entitiesMoney.add(currentEntityText);
-                }
-                else if (("PERCENT").equals(lastEntity)) {
-                    entitiesPercent.add(currentEntityText);
-                }
-                else if (("DATE").equals(lastEntity)) {
-                    entitiesDate.add(currentEntityText);
-                }
-                else if (("MISC").equals(lastEntity)) {
-                    entitiesMisc.add(currentEntityText);
-                }
+            if (!("O").equals(lastEntity)) {
+                if (at.entity.equals(lastEntity)) {
+                    currentEntityText += " " + at.text;
+                } else if (!at.entity.equals(lastEntity) && !currentEntityText.isEmpty()) {
+                    if (("TIME").equals(lastEntity)) {
+                        entitiesTime.add(currentEntityText);
+                    } else if (("LOCATION").equals(lastEntity)) {
+                        entitiesLocation.add(currentEntityText);
+                        System.out.println("location: " + currentEntityText);
+                    } else if (("ORGANIZATION").equals(lastEntity)) {
+                        entitiesOrganization.add(currentEntityText);
+                    } else if (("PERSON").equals(lastEntity)) {
+                        entitiesPerson.add(currentEntityText);
+                    } else if (("MONEY").equals(lastEntity)) {
+                        entitiesMoney.add(currentEntityText);
+                    } else if (("PERCENT").equals(lastEntity)) {
+                        entitiesPercent.add(currentEntityText);
+                    } else if (("DATE").equals(lastEntity)) {
+                        entitiesDate.add(currentEntityText);
+                    } else if (("MISC").equals(lastEntity)) {
+                        entitiesMisc.add(currentEntityText);
+                    }
 
-                //System.out.println(currentEntityText);
-                currentEntityText = at.text;
+                    //System.out.println(currentEntityText);
+                    currentEntityText = at.text;
+                }
             }
-            }
-                lastEntity = at.entity;
+            lastEntity = at.entity;
 
         }
     }
