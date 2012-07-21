@@ -42,7 +42,7 @@ public class Processor {
     public static void main(String[] args) throws IOException {
         BasicDBObject query = new BasicDBObject();
         DateTimeFormatter dateTimeFormatter= DateTimeFormat.forPattern("yyyy-MM-dd");
-        DateTime date = dateTimeFormatter.parseDateTime("2001-01-10");
+        DateTime date = dateTimeFormatter.parseDateTime("2001-01-11");
         query.put("publicationDate",date.toDate());
         annotateUpdate("articles", query);
     }
