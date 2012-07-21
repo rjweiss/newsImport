@@ -46,7 +46,7 @@ public class NewsTools {
             if (JSAPconfig.getString("scraper").equals("DerSpiegel")) {
                 DerSpiegelScraper.scrapeNews();
             } else if (JSAPconfig.getString("scraper").equals("Humanite")) {
-                HumaniteScraper.scrapeNews();
+                //HumaniteScraper.scrapeNews();
             } else if (JSAPconfig.getString("scraper").equals("Liberation")) {
                 LiberationScraper.scrapeNews();
             } else if (JSAPconfig.getString("scraper").equals("TimesIndia")) {
