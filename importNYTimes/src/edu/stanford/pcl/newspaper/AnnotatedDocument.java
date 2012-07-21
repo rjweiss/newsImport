@@ -26,7 +26,7 @@ public class AnnotatedDocument extends ReflectionDBObject {
     public AnnotatedDocument(Annotation annotation) {
 
         List<CoreLabel> tokenList = annotation.get(CoreAnnotations.TokensAnnotation.class);
-        String lastEntity = "";
+        String lastEntity = "O";
         String currentEntityText = "";
         for (CoreLabel token : tokenList) {
             AnnotatedToken at = new AnnotatedToken(token);
@@ -40,10 +40,10 @@ public class AnnotatedDocument extends ReflectionDBObject {
                         entitiesTime.add(currentEntityText);
                     } else if (("LOCATION").equals(lastEntity)) {
                         entitiesLocation.add(currentEntityText);
-                        System.out.println("location: " + currentEntityText);
                     } else if (("ORGANIZATION").equals(lastEntity)) {
                         entitiesOrganization.add(currentEntityText);
                     } else if (("PERSON").equals(lastEntity)) {
+                        System.out.println("p2: " + currentEntityText);
                         entitiesPerson.add(currentEntityText);
                     } else if (("MONEY").equals(lastEntity)) {
                         entitiesMoney.add(currentEntityText);
