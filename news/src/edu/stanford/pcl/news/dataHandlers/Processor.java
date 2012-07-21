@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper.dataHandlers;
+package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
@@ -38,7 +38,7 @@ public class Processor {
         updater.close();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void processNews() throws IOException {
         BasicDBObject query = new BasicDBObject();
         DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         DateTime date = dateTimeFormatter.parseDateTime("2001-01-11");

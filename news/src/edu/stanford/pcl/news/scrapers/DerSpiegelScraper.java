@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper.scrapers;
+package edu.stanford.pcl.news.scrapers;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -29,7 +29,7 @@ public class DerSpiegelScraper {
         return dateFormat.parseDateTime(fullDate);
     }
 
-    public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException {
+    public static void scrapeNews() throws IOException, TransformerException, ParserConfigurationException {
         int year = 2000;
         int issue = 1;
         for (year = 2000; year <= 2011; year++) {

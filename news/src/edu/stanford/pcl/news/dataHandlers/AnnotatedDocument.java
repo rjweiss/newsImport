@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper.dataHandlers;
+package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.ReflectionDBObject;
 import edu.stanford.nlp.ling.CoreAnnotations;

@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper.scrapers;
+package edu.stanford.pcl.news.scrapers;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -22,12 +22,11 @@ import java.io.*;
 /**
  * Created with IntelliJ IDEA.
  * User: seanwestwood
- * Date: 7/18/12
- * Time: 5:58 PM
+ * Date: 7/19/12
+ * Time: 5:46 PM
  * To change this template use File | Settings | File Templates.
  */
-
-public class LiberationScraper {
+public class HumaniteScraper {
     public static DateTime convertIntDateToDate(String date) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
         String year = date.substring(0, 4);
@@ -37,69 +36,74 @@ public class LiberationScraper {
         return dateFormat.parseDateTime(fullDate);
     }
 
-    public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException {
+    public static void scrapeNews() throws IOException, TransformerException, ParserConfigurationException {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-        DateTime dtStartDate = dateFormat.parseDateTime("2000-01-01");
+        DateTime dtStartDate = dateFormat.parseDateTime("2001-01-18");
         DateTime dtEndDate = dateFormat.parseDateTime("2012-07-08");
+
+        Integer starttime = 36892;
 
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate.plusDays(1)); date = date.plusDays(1)) {
             System.out.println(date.toString("d-M-yyyy"));
-            getNewsArticleList(date);
+            getNewsArticleList(date, starttime);
+            starttime++;
         }
 
     }
 
-    public static void getNewsArticleList(DateTime date) throws IOException, TransformerException, ParserConfigurationException {
-        String URL = "http://www.liberation.fr/archives/" + date.toString("yyyy") + "/" + date.toString("MM") + "/" + date.toString("dd") + "/";
+    public static void getNewsArticleList(DateTime date, Integer starttime) throws IOException, TransformerException, ParserConfigurationException {
+        String URL = "http://timesofindia.indiatimes.com/" + date.toString("yyyy") + "/" + date.toString("M") + "/" + date.toString("d") + "/archivelist/year-" + date.toString("yyyy") + ",month-" + date.toString("M") + ",starttime-" + starttime + ".cms";
 
         System.out.println(URL);
-        Document document = Jsoup.connect(URL).timeout(20000).get();
+        Document document = Jsoup.connect(URL).timeout(30000).get();
 
-        Elements links = document.select(".block-content a[class!=next]");
+        Elements links = document.select("div[style=font-family:arial ;font-size:12;font-weight:bold; color: #006699] a");
         Integer articleNumber = 0;
-        String lastURL = null;
         for (Element link : links) {
 
             String linkHref = link.attr("href");
-            if (!linkHref.equals(lastURL)) {
-                // System.out.println("link: " + linkHref);
-                processFile(linkHref, date, articleNumber);
-                lastURL = linkHref;
-                articleNumber++;
-            }
+            //System.out.println("link: " + linkHref);
+            processFile(linkHref, date, articleNumber);
+            articleNumber++;
+
         }
-
-
     }
 
+
     public static void processFile(String URL, DateTime date, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
-        Document document = Jsoup.connect(URL).timeout(20000).get();
-
-
-        String title = document.select(".object-header h1").text();
-        // System.out.println(title);
-        Elements paragraphs = document.select(".object-content p");
-        String paragraphText = paragraphs.text();
-
-        //System.out.println(paragraphs)
-        // ;
-        // for (Element paragraph : paragraphs) {
-        //     paragraphText += paragraph.text();
-        // }
-        //System.out.println("text: " +paragraphText);
-        String result = createXMLDoc(title, date, paragraphText);
-        String fileName = "/Users/seanwestwood/Desktop/liberation/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
-
-        Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
         try {
-            out.write(result);
-        } catch (Exception e) {
-            System.out.println("No text for article: " + title);
+            Document document = Jsoup.connect(URL).timeout(30000).get();
+
+
+            String title = document.select("span[class=arttle] h1").text();
+            //System.out.println("title: " +title);
+            String paragraphText = document.select(".Normal").text();
+
+            //System.out.println("text: " +paragraphText);
+
+            if (!paragraphText.isEmpty()) {
+                String result = createXMLDoc(title, date, paragraphText);
+                String fileName = "/Users/seanwestwood/Desktop/humanite/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
+
+
+                Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
+                try {
+                    out.write(result);
+                } catch (Exception e) {
+                    System.out.println("No text for article: " + title);
+                }
+
+
+                out.close();
+            }
+        } catch (IOException e) {
+            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (ParserConfigurationException e) {
+            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (TransformerException e) {
+            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-
-
-        out.close();
 
     }
 

@@ -1,6 +1,6 @@
-package edu.stanford.pcl.newspaper.parsers;
+package edu.stanford.pcl.news.parsers;
 
-import edu.stanford.pcl.newspaper.dataHandlers.Article;
+import edu.stanford.pcl.news.dataHandlers.Article;
 
 import java.io.File;
 

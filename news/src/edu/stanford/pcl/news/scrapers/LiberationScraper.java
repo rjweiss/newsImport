@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper.scrapers;
+package edu.stanford.pcl.news.scrapers;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -19,8 +19,15 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
-//http://www.welt.de/nachrichtenarchiv/print-nachrichten-vom-1-1-2000.html?tabPane=ZEITUNG
-public class WeltScraper {
+/**
+ * Created with IntelliJ IDEA.
+ * User: seanwestwood
+ * Date: 7/18/12
+ * Time: 5:58 PM
+ * To change this template use File | Settings | File Templates.
+ */
+
+public class LiberationScraper {
     public static DateTime convertIntDateToDate(String date) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
         String year = date.substring(0, 4);
@@ -30,10 +37,10 @@ public class WeltScraper {
         return dateFormat.parseDateTime(fullDate);
     }
 
-    public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException {
+    public static void scrapeNews() throws IOException, TransformerException, ParserConfigurationException {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-        DateTime dtStartDate = dateFormat.parseDateTime("2004-09-10");
+        DateTime dtStartDate = dateFormat.parseDateTime("2000-01-01");
         DateTime dtEndDate = dateFormat.parseDateTime("2012-07-08");
 
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate.plusDays(1)); date = date.plusDays(1)) {
@@ -44,19 +51,19 @@ public class WeltScraper {
     }
 
     public static void getNewsArticleList(DateTime date) throws IOException, TransformerException, ParserConfigurationException {
-        String URL = "http://www.welt.de/nachrichtenarchiv/print-nachrichten-vom-" + date.toString("d-M-yyyy") + ".html?tabPane=ZEITUNG";
+        String URL = "http://www.liberation.fr/archives/" + date.toString("yyyy") + "/" + date.toString("MM") + "/" + date.toString("dd") + "/";
 
+        System.out.println(URL);
+        Document document = Jsoup.connect(URL).timeout(20000).get();
 
-        Document document = Jsoup.connect(URL).timeout(12000).get();
-
-        Elements links = document.select("a[name=_ch_R_printArchive_]");
+        Elements links = document.select(".block-content a[class!=next]");
         Integer articleNumber = 0;
         String lastURL = null;
         for (Element link : links) {
 
             String linkHref = link.attr("href");
             if (!linkHref.equals(lastURL)) {
-
+                // System.out.println("link: " + linkHref);
                 processFile(linkHref, date, articleNumber);
                 lastURL = linkHref;
                 articleNumber++;
@@ -67,19 +74,22 @@ public class WeltScraper {
     }
 
     public static void processFile(String URL, DateTime date, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
-        Document document = Jsoup.connect(URL).timeout(12000).get();
+        Document document = Jsoup.connect(URL).timeout(20000).get();
 
 
-        String title = document.select("h1").text();
-        //System.out.println(title);
-        Elements paragraphs = document.select("p[class=prefix_2 text artContent]");
-        String paragraphText = null;
-        for (Element paragraph : paragraphs) {
-            paragraphText += paragraph.text();
-        }
+        String title = document.select(".object-header h1").text();
+        // System.out.println(title);
+        Elements paragraphs = document.select(".object-content p");
+        String paragraphText = paragraphs.text();
 
+        //System.out.println(paragraphs)
+        // ;
+        // for (Element paragraph : paragraphs) {
+        //     paragraphText += paragraph.text();
+        // }
+        //System.out.println("text: " +paragraphText);
         String result = createXMLDoc(title, date, paragraphText);
-        String fileName = "/Users/seanwestwood/Desktop/diewelt/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
+        String fileName = "/Users/seanwestwood/Desktop/liberation/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
 
         Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
         try {
@@ -131,5 +141,4 @@ public class WeltScraper {
         //System.out.println(xmlString);
         return xmlString;
     }
-
 }

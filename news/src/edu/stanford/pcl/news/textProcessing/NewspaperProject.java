@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper.textProcessing;
+package edu.stanford.pcl.news.textProcessing;
 
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;

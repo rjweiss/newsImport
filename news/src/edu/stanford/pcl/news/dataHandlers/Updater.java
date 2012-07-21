@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper.dataHandlers;
+package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.*;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;

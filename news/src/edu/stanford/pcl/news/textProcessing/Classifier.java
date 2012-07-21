@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper.textProcessing;
+package edu.stanford.pcl.news.textProcessing;
 
 import com.mongodb.*;
 
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 //import java.io.Serializable;
 //implement serializable to dump the trained classifier (eventually)
 
-public class NewsClassifier {
+public class Classifier {
 
     private static Mongo mongo;
     private static DB db;
@@ -20,7 +20,7 @@ public class NewsClassifier {
 //    private static final String MONGO_DB_MASTER_IP = "184.73.204.235";
 //    private static final String MONGO_DB_SLAVE_IP = "107.22.253.110";
 
-//    private NewsClassifier() {
+//    private Classifier() {
 //    }
 
     private static void MongoConnect() {
@@ -177,9 +177,9 @@ public class NewsClassifier {
 //        System.out.println("Done.");
 //    }
 
-    public static void main(String[] args) throws Exception {
+    public static void classifyNews() throws Exception {
         MongoConnect();
-//        NewsClassifier classifier = new NewsClassifier();
+//        Classifier classifier = new Classifier();
 //        classifier.classify();
 
         BasicDBObject query = new BasicDBObject();

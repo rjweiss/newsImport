@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper.dataHandlers;
+package edu.stanford.pcl.news.dataHandlers;
 
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;

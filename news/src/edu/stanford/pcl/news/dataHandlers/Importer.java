@@ -1,8 +1,8 @@
-package edu.stanford.pcl.newspaper.dataHandlers;
+package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.*;
-import edu.stanford.pcl.newspaper.parsers.NytParser;
-import edu.stanford.pcl.newspaper.parsers.TribParser;
+import edu.stanford.pcl.news.parsers.NytParser;
+import edu.stanford.pcl.news.parsers.TribParser;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
@@ -112,7 +112,7 @@ public class Importer {
         return new int[]{imported, skipped};
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void importNews() throws IOException {
         // Connect to MongoDB.
         MongoConnect();
 
@@ -129,7 +129,6 @@ public class Importer {
         importer.importAll(new File("/rawdata/newspapers/nytimes"), "New York Times");
         importer.importAll(new File("/rawdata/newspapers/chitrib"), "Chicago Tribune");
         importer.importAll(new File("/rawdata/newspapers/latimes"), "Los Angeles Times");
-
         importer.importAll(new File("/rawdata/newspapers/bsun"), "Baltimore Sun");
 
         // Clean up.

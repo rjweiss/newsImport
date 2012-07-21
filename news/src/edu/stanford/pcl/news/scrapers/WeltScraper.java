@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper.scrapers;
+package edu.stanford.pcl.news.scrapers;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -19,14 +19,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: seanwestwood
- * Date: 7/19/12
- * Time: 5:46 PM
- * To change this template use File | Settings | File Templates.
- */
-public class humaniteScraper {
+//http://www.welt.de/nachrichtenarchiv/print-nachrichten-vom-1-1-2000.html?tabPane=ZEITUNG
+public class WeltScraper {
     public static DateTime convertIntDateToDate(String date) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
         String year = date.substring(0, 4);
@@ -36,74 +30,66 @@ public class humaniteScraper {
         return dateFormat.parseDateTime(fullDate);
     }
 
-    public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException {
+    public static void scrapeNews() throws IOException, TransformerException, ParserConfigurationException {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-        DateTime dtStartDate = dateFormat.parseDateTime("2001-01-18");
+        DateTime dtStartDate = dateFormat.parseDateTime("2004-09-10");
         DateTime dtEndDate = dateFormat.parseDateTime("2012-07-08");
-
-        Integer starttime = 36892;
 
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate.plusDays(1)); date = date.plusDays(1)) {
             System.out.println(date.toString("d-M-yyyy"));
-            getNewsArticleList(date, starttime);
-            starttime++;
+            getNewsArticleList(date);
         }
 
     }
 
-    public static void getNewsArticleList(DateTime date, Integer starttime) throws IOException, TransformerException, ParserConfigurationException {
-        String URL = "http://timesofindia.indiatimes.com/" + date.toString("yyyy") + "/" + date.toString("M") + "/" + date.toString("d") + "/archivelist/year-" + date.toString("yyyy") + ",month-" + date.toString("M") + ",starttime-" + starttime + ".cms";
+    public static void getNewsArticleList(DateTime date) throws IOException, TransformerException, ParserConfigurationException {
+        String URL = "http://www.welt.de/nachrichtenarchiv/print-nachrichten-vom-" + date.toString("d-M-yyyy") + ".html?tabPane=ZEITUNG";
 
-        System.out.println(URL);
-        Document document = Jsoup.connect(URL).timeout(30000).get();
 
-        Elements links = document.select("div[style=font-family:arial ;font-size:12;font-weight:bold; color: #006699] a");
+        Document document = Jsoup.connect(URL).timeout(12000).get();
+
+        Elements links = document.select("a[name=_ch_R_printArchive_]");
         Integer articleNumber = 0;
+        String lastURL = null;
         for (Element link : links) {
 
             String linkHref = link.attr("href");
-            //System.out.println("link: " + linkHref);
-            processFile(linkHref, date, articleNumber);
-            articleNumber++;
+            if (!linkHref.equals(lastURL)) {
 
+                processFile(linkHref, date, articleNumber);
+                lastURL = linkHref;
+                articleNumber++;
+            }
         }
+
+
     }
 
-
     public static void processFile(String URL, DateTime date, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
-        try {
-            Document document = Jsoup.connect(URL).timeout(30000).get();
+        Document document = Jsoup.connect(URL).timeout(12000).get();
 
 
-            String title = document.select("span[class=arttle] h1").text();
-            //System.out.println("title: " +title);
-            String paragraphText = document.select(".Normal").text();
-
-            //System.out.println("text: " +paragraphText);
-
-            if (!paragraphText.isEmpty()) {
-                String result = createXMLDoc(title, date, paragraphText);
-                String fileName = "/Users/seanwestwood/Desktop/humanite/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
-
-
-                Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
-                try {
-                    out.write(result);
-                } catch (Exception e) {
-                    System.out.println("No text for article: " + title);
-                }
-
-
-                out.close();
-            }
-        } catch (IOException e) {
-            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (ParserConfigurationException e) {
-            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (TransformerException e) {
-            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        String title = document.select("h1").text();
+        //System.out.println(title);
+        Elements paragraphs = document.select("p[class=prefix_2 text artContent]");
+        String paragraphText = null;
+        for (Element paragraph : paragraphs) {
+            paragraphText += paragraph.text();
         }
+
+        String result = createXMLDoc(title, date, paragraphText);
+        String fileName = "/Users/seanwestwood/Desktop/diewelt/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
+
+        Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
+        try {
+            out.write(result);
+        } catch (Exception e) {
+            System.out.println("No text for article: " + title);
+        }
+
+
+        out.close();
 
     }
 
@@ -145,4 +131,5 @@ public class humaniteScraper {
         //System.out.println(xmlString);
         return xmlString;
     }
+
 }

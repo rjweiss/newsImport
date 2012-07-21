@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper.scrapers;
+package edu.stanford.pcl.news.scrapers;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -37,7 +37,7 @@ public class TimesIndiaScraper {
         return dateFormat.parseDateTime(fullDate);
     }
 
-    public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException, InterruptedException {
+    public static void scrapeNews() throws IOException, TransformerException, ParserConfigurationException, InterruptedException {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
         DateTime dtStartDate = dateFormat.parseDateTime("2001-01-22");
@@ -100,7 +100,7 @@ public class TimesIndiaScraper {
                 out.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (ParserConfigurationException e) {
             // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (TransformerException e) {

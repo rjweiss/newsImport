@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper.textProcessing;
+package edu.stanford.pcl.news.textProcessing;
 
 import edu.stanford.nlp.classify.LinearClassifier;
 import edu.stanford.nlp.classify.LinearClassifierFactory;
