@@ -39,29 +39,29 @@ public class AnnotatedDocument extends ReflectionDBObject {
                 currentEntityText += " " + at.text;
             }
             else if(!at.entity.equals(lastEntity) && !currentEntityText.isEmpty() ){
-                if (("TIME").equals(at.entity)) {
+                if (("TIME").equals(lastEntity)) {
                     entitiesTime.add(currentEntityText);
                 }
-                else if (("LOCATION").equals(at.entity)) {
+                else if (("LOCATION").equals(lastEntity)) {
                     entitiesLocation.add(currentEntityText);
                     System.out.println("location: " + currentEntityText);
                 }
-                else if (("ORGANIZATION").equals(at.entity)) {
+                else if (("ORGANIZATION").equals(lastEntity)) {
                     entitiesOrganization.add(currentEntityText);
                 }
-                else if (("PERSON").equals(at.entity)) {
+                else if (("PERSON").equals(lastEntity)) {
                     entitiesPerson.add(currentEntityText);
                 }
-                else if (("MONEY").equals(at.entity)) {
+                else if (("MONEY").equals(lastEntity)) {
                     entitiesMoney.add(currentEntityText);
                 }
-                else if (("PERCENT").equals(at.entity)) {
+                else if (("PERCENT").equals(lastEntity)) {
                     entitiesPercent.add(currentEntityText);
                 }
-                else if (("DATE").equals(at.entity)) {
+                else if (("DATE").equals(lastEntity)) {
                     entitiesDate.add(currentEntityText);
                 }
-                else if (("MISC").equals(at.entity)) {
+                else if (("MISC").equals(lastEntity)) {
                     entitiesMisc.add(currentEntityText);
                 }
 
