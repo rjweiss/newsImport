@@ -43,7 +43,7 @@ public class AnnotatedDocument extends ReflectionDBObject {
                     } else if (lastEntityType.equals("ORGANIZATION")) {
                         entitiesOrganization.add(fullEntityName);
                     } else if (lastEntityType.equals("PERSON")) {
-                        System.out.println(at.entity + " last: " + lastEntityType + " full: " + fullEntityName);
+                        System.out.println(at.entity + " last: " + lastEntityType + " full: " + fullEntityName + " curr text: " + at.text);
                         entitiesPerson.add(fullEntityName);
                     } else if (lastEntityType.equals("MONEY")) {
                         entitiesMoney.add(fullEntityName);
