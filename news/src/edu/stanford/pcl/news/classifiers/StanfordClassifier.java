@@ -1,6 +1,8 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.news.classifiers;
 
 import com.mongodb.*;
+import edu.stanford.nlp.classify.LinearClassifier;
+import edu.stanford.nlp.classify.LinearClassifierFactory;
 import edu.stanford.nlp.ling.BasicDatum;
 import edu.stanford.nlp.ling.Datum;
 
@@ -10,7 +12,7 @@ import java.util.*;
 //import java.io.Serializable;
 //implement serializable to dump the trained classifier (eventually)
 
-public class NewsClassifier {
+public class StanfordClassifier {
 
     private static Mongo mongo;
     private static DB db;
@@ -22,10 +24,18 @@ public class NewsClassifier {
 //    private static final String MONGO_DB_MASTER_IP = "184.73.204.235";
 //    private static final String MONGO_DB_SLAVE_IP = "107.22.253.110";
 
-//    private NewsClassifier() {
-//    }
+    public ArrayList<Datum<String, String>> trainingData;
+    public ArrayList<Datum<String, String>> testData;
+    private LinearClassifierFactory<String, String> factory;
+    private LinearClassifier<String, String> classifier;
 
-    private static void MongoConnect() {
+    private StanfordClassifier() {
+        this.trainingData =  new ArrayList<Datum<String, String>>();
+        this.testData = new ArrayList<Datum<String, String>>();
+        this.factory = new LinearClassifierFactory<String, String>();
+    }
+
+    private static void connect() {
         try {
 //            ArrayList<ServerAddress> address = new ArrayList<ServerAddress>();
 //            address.add(new ServerAddress(MONGO_DB_MASTER_IP, 27017));
@@ -70,11 +80,30 @@ public class NewsClassifier {
             }
             System.out.println(features);
         }
-        ArrayList<Datum<String, String>> trainingData = new ArrayList<Datum<String, String>>();
         trainingData.add(makeDatum(features, labelName));
         return trainingData;
 
     }
+
+    private ArrayList<Datum<String, String>> makeTestData(ArrayList<Datum<String, String>> trainingData) {
+
+        ArrayList<Datum<String, String>> testData = new ArrayList<Datum<String, String>>();
+
+        int numSamples = trainingData.size() / 25;
+        Random rand = new Random(System.currentTimeMillis());
+        for (int i = 0; i < numSamples; i++) {
+            int sampleIndex = rand.nextInt(trainingData.size());
+            Datum sample = trainingData.get(sampleIndex);
+            if (testData.contains(sample)) {
+                i--;
+                continue;
+            }
+            testData.add(sample);
+            trainingData.remove(sampleIndex); //need to make sure this carries into actual trainingData
+        }
+        return testData;
+    }
+
 //
 //    private void classify() throws Exception {
 //        Mongo mongo = new Mongo();
@@ -92,26 +121,6 @@ public class NewsClassifier {
 //            trainingData.add(makeDocDatum(currentHeadline, currentSource));
 //            System.out.println("Training " + (n++));
 //        }
-//
-//        ArrayList<Datum<String, String>> testData = new ArrayList<Datum<String, String>>();
-//
-//        //should sample from same time period, e.g. train on first 3 weeks, test on last week, then cross validate
-//
-//        int numSamples = trainingData.size() / 25;
-//        Random rand = new Random(System.currentTimeMillis());
-//        for (int i = 0; i < numSamples; i++) {
-//            int sampleIndex = rand.nextInt(trainingData.size());
-//            Datum sample = trainingData.get(sampleIndex);
-//            if (testData.contains(sample)) {
-//                // Already sampled this datum, try again.
-//                i--;
-//                continue;
-//            }
-//            testData.add(sample);
-//            trainingData.remove(sampleIndex);
-//        }
-//
-//        LinearClassifierFactory<String, String> factory = new LinearClassifierFactory<String, String>();
 //        factory.useConjugateGradientAscent();
 //        factory.setVerbose(true);
 //        factory.setSigma(10.0);
@@ -180,15 +189,15 @@ public class NewsClassifier {
 //    }
 
     public static void main(String[] args) throws Exception {
-        MongoConnect();
+        connect();
         BasicDBObject query = new BasicDBObject();
 
         List<String> includedFeatures = new ArrayList<String>();
 
 //        NewsClassifier classifier = new NewsClassifier();
 //        classifier.classify();
-        makeTrainingData(DBCollection collection, BasicDBObject query, ArrayList<String> includedFeatures, String labelName) throws Exception {
-        makeTrainingData();
+//        makeTrainingData(DBCollection collection, BasicDBObject query, ArrayList<String> includedFeatures, String labelName) throws Exception {
+//        makeTrainingData();
 
 
     }
