@@ -1,6 +1,8 @@
 package edu.stanford.pcl.newspaper;
 
 import com.mongodb.*;
+import edu.stanford.nlp.ling.BasicDatum;
+import edu.stanford.nlp.ling.Datum;
 
 import java.net.UnknownHostException;
 import java.util.*;
@@ -36,43 +38,43 @@ public class NewsClassifier {
         articles = db.getCollection("articles");
     }
 //
-//    private Datum<String, String> makeDocDatum(ArrayList<String> includedFeatures, String label) {
-//        List<String> features = new ArrayList<String>();
-//
-//        BasicDatum<String, String> datum;
-//        if (label == null) {
-//            datum = new BasicDatum<String, String>(features);
-//        } else {
-//            datum = new BasicDatum<String, String>(features, label);
-//        }
-//        return datum;
-//    }
-//
-//    private ArrayList<Datum<String, String>> makeTrainingData(DBCollection collection, BasicDBObject query, ArrayList<String> includedFeatures, String labelName) throws Exception {
-//
-//        ArrayList<Datum<String, String>> trainingData = new ArrayList<Datum<String, String>>();
-//        Iterator iterator = includedFeatures.iterator();
-//        ArrayList<String> result = new ArrayList<String>();
-//
-//        query.put("annotation", includedFeatures);
-//
-//        DBCursor cursor = articles.find(query);
-//
-//        while (cursor.hasNext()) {
-//            BasicDBObject obj = (BasicDBObject) cursor.next();
-//            StringBuilder sb = new StringBuilder();
-//            while (iterator.hasNext()) {
-//                result.add(sb.append(iterator.toString()).append(obj.get("annotation").getString("tokens").get(iterator.toString()));
-//
-//            }
-//
-//
-//        }
-//
-//
-//        return trainingData;
-//
-//    }
+    private Datum<String, String> makeDatum(List<String> features, String label) {
+
+        BasicDatum<String, String> datum;
+        if (label == null) {
+            datum = new BasicDatum<String, String>(features);
+        } else {
+            datum = new BasicDatum<String, String>(features, label);
+        }
+        return datum;
+    }
+
+    private ArrayList<Datum<String, String>> makeTrainingData(DBCollection collection, BasicDBObject query, ArrayList<String> includedFeatures, String labelName) throws Exception {
+        List<String> features = new ArrayList<String>();
+
+        DBCursor cursor = articles.find(query);
+
+        while (cursor.hasNext()) {
+            DBObject obj = cursor.next();
+
+            BasicDBObject annotation = (BasicDBObject) obj.get("annotation");
+            BasicDBList tokenList = (BasicDBList) annotation.get("tokens");
+
+            for (int i = 0; i < tokenList.size(); i++) {
+                DBObject token = (DBObject) tokenList.get(i);
+                StringBuilder sb = new StringBuilder();
+                for (String feature : (ArrayList<String>) includedFeatures) {
+                    sb.append(token.get(feature)).append(" ");
+                    features.add(sb.toString());
+                }
+            }
+            System.out.println(features);
+        }
+        ArrayList<Datum<String, String>> trainingData = new ArrayList<Datum<String, String>>();
+        trainingData.add(makeDatum(features, labelName));
+        return trainingData;
+
+    }
 //
 //    private void classify() throws Exception {
 //        Mongo mongo = new Mongo();
@@ -179,28 +181,15 @@ public class NewsClassifier {
 
     public static void main(String[] args) throws Exception {
         MongoConnect();
+        BasicDBObject query = new BasicDBObject();
+
+        List<String> includedFeatures = new ArrayList<String>();
+
 //        NewsClassifier classifier = new NewsClassifier();
 //        classifier.classify();
+        makeTrainingData(DBCollection collection, BasicDBObject query, ArrayList<String> includedFeatures, String labelName) throws Exception {
+        makeTrainingData();
 
-        BasicDBObject query = new BasicDBObject();
-        String field = new String("text");
-
-        DBCursor cursor = articles.find(query);
-
-        ArrayList<String> result = new ArrayList<String>();
-
-        while (cursor.hasNext()) {
-            DBObject obj = cursor.next();
-
-            BasicDBObject annotation = (BasicDBObject) obj.get("annotation");
-            BasicDBList tokenList = (BasicDBList) annotation.get("tokens");
-
-            for (int i = 0; i < tokenList.size(); i++) {
-                DBObject token = (DBObject) tokenList.get(i);
-                System.out.println(token.get(field));
-            }
-
-        }
 
     }
 
