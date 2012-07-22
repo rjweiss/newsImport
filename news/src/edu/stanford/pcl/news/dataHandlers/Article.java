@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -9,10 +9,8 @@ import org.apache.lucene.document.NumericField;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class Article {
     private String id;
@@ -27,12 +25,12 @@ public class Article {
     private String status;
     private String language;
 
-    private Map<String, Object> features;
+    //private Map<String, Object> features;
     private AnnotatedDocument annotation;
 
-    public Article() {
-        features = null;
-    }
+    //public Article() {
+    //    features = null;
+    //}
 
     public String getId() {
         return id;
@@ -122,7 +120,7 @@ public class Article {
         this.language = language;
     }
 
-    public void addFeature(String featureName) {
+/*    public void addFeature(String featureName) {
         this.features.put(featureName, null);
     }
 
@@ -132,7 +130,7 @@ public class Article {
 
     public Map<String, Object> getFeatures() {
         return features;
-    }
+    }*/
 
     public AnnotatedDocument getAnnotation() {
         return annotation;
@@ -142,13 +140,12 @@ public class Article {
         this.annotation = annotation;
     }
 
-    private static BasicDBList createMongoList(List<String> list, String keyName){
-        DBObject annotation = new BasicDBObject();
+    private static BasicDBList createMongoList(List<String> list, String keyName) {
         BasicDBList basicDBList = new BasicDBList();
         for (String entity : list) {
             DBObject t = new BasicDBObject();
             t.put(keyName, entity);
-            System.out.println("e " + entity);
+            System.out.println(keyName + ": " + entity);
             basicDBList.add(t);
         }
         return basicDBList;
@@ -168,50 +165,50 @@ public class Article {
         obj.put("mediaSource", this.getMediaSource());
         obj.put("overLap", this.getOverLap());
         obj.put("status", this.getStatus());
-        obj.put("language", this.getStatus());
-        obj.put("features", this.getFeatures());
+        obj.put("language", this.getLanguage());
+        // obj.put("features", this.getFeatures());
 
         //Time, Location, Organization, Person, Money, Percent, Date
 
         try {
             obj.put("entitiesTime", createMongoList(this.getAnnotation().entitiesTime, "time"));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
-            obj.put("entitiesLocation", createMongoList(this.getAnnotation().entitiesLocation,"location"));
+            obj.put("entitiesLocation", createMongoList(this.getAnnotation().entitiesLocation, "location"));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
-            obj.put("entitiesOrganization", createMongoList(this.getAnnotation().entitiesOrganization,"organization"));
+            obj.put("entitiesOrganization", createMongoList(this.getAnnotation().entitiesOrganization, "organization"));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
-            obj.put("entitiesPerson", createMongoList(this.getAnnotation().entitiesPerson,"person"));
+            obj.put("entitiesPerson", createMongoList(this.getAnnotation().entitiesPerson, "person"));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
-            obj.put("entitiesMoney", createMongoList(this.getAnnotation().entitiesMoney,"money"));
+            obj.put("entitiesMoney", createMongoList(this.getAnnotation().entitiesMoney, "money"));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
-            obj.put("entitiesPercent", createMongoList(this.getAnnotation().entitiesPercent,"percent"));
+            obj.put("entitiesPercent", createMongoList(this.getAnnotation().entitiesPercent, "percent"));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
-            obj.put("entitiesDate", createMongoList(this.getAnnotation().entitiesDate,"date"));
+            obj.put("entitiesDate", createMongoList(this.getAnnotation().entitiesDate, "date"));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
-            obj.put("entitiesMisc", createMongoList(this.getAnnotation().entitiesMisc,"misc"));
+            obj.put("entitiesMisc", createMongoList(this.getAnnotation().entitiesMisc, "misc"));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         DBObject annotation = new BasicDBObject();
@@ -248,7 +245,7 @@ public class Article {
         article.setLanguage(object.get("language").toString());
         article.setMediaSource(object.get("mediaSource").toString());
         article.setMediaType(object.get("mediaType").toString());
-        article.setOverLap( object.get("overLap").toString());
+        article.setOverLap(object.get("overLap").toString());
         article.setPublicationDate(dateTime);
         article.setStatus(object.get("status").toString());
 
@@ -273,42 +270,42 @@ public class Article {
         try {
             doc.add(new Field("entitiesTime", this.getAnnotation().entitiesTime.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesLocation", this.getAnnotation().entitiesLocation.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesOrganization", this.getAnnotation().entitiesOrganization.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesPerson", this.getAnnotation().entitiesPerson.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesMoney", this.getAnnotation().entitiesMoney.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesPercent", this.getAnnotation().entitiesPercent.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesDate", this.getAnnotation().entitiesDate.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesMisc", this.getAnnotation().entitiesMisc.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         return (doc);

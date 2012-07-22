@@ -1,36 +1,36 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.news.scrapers;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Text;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.util.ArrayList;
 
 //http://www.welt.de/nachrichtenarchiv/print-nachrichten-vom-1-1-2000.html?tabPane=ZEITUNG
 public class WeltScraper {
-    public static DateTime convertIntDateToDate(String date){
+    public static DateTime convertIntDateToDate(String date) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
-        String year = date.substring(0,4);
-        String month = date.substring(4,6);
-        String day = date.substring(6,8);
-        String fullDate = year + "-" + month + "-" +day;
+        String year = date.substring(0, 4);
+        String month = date.substring(4, 6);
+        String day = date.substring(6, 8);
+        String fullDate = year + "-" + month + "-" + day;
         return dateFormat.parseDateTime(fullDate);
     }
 
-    public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException {
+    public static void scrapeNews() throws IOException, TransformerException, ParserConfigurationException {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
         DateTime dtStartDate = dateFormat.parseDateTime("2004-09-10");
@@ -49,19 +49,18 @@ public class WeltScraper {
 
         Document document = Jsoup.connect(URL).timeout(12000).get();
 
-        Elements links =  document.select("a[name=_ch_R_printArchive_]");
-        Integer articleNumber=0;
-        String lastURL =null;
+        Elements links = document.select("a[name=_ch_R_printArchive_]");
+        Integer articleNumber = 0;
+        String lastURL = null;
         for (Element link : links) {
 
-                String linkHref = link.attr("href");
-                if (!linkHref.equals(lastURL))
-                {
+            String linkHref = link.attr("href");
+            if (!linkHref.equals(lastURL)) {
 
-                    processFile(linkHref,date,articleNumber);
-                    lastURL = linkHref;
-                    articleNumber++;
-                }
+                processFile(linkHref, date, articleNumber);
+                lastURL = linkHref;
+                articleNumber++;
+            }
         }
 
 
@@ -79,20 +78,18 @@ public class WeltScraper {
             paragraphText += paragraph.text();
         }
 
-        String result = createXMLDoc(title,date,paragraphText);
+        String result = createXMLDoc(title, date, paragraphText);
         String fileName = "/Users/seanwestwood/Desktop/diewelt/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
 
         Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
         try {
             out.write(result);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("No text for article: " + title);
         }
 
 
-            out.close();
+        out.close();
 
     }
 
@@ -104,7 +101,7 @@ public class WeltScraper {
         org.w3c.dom.Element article = doc.createElement("article");
         doc.appendChild(article);
 
-        org.w3c.dom.Element publicationDate= doc.createElement("publicationDate");
+        org.w3c.dom.Element publicationDate = doc.createElement("publicationDate");
         article.appendChild(publicationDate);
         publicationDate.appendChild(doc.createTextNode(date.toString("yyyy-MM-dd")));
 
@@ -121,16 +118,14 @@ public class WeltScraper {
         trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         trans.setOutputProperty(OutputKeys.INDENT, "yes");
 
-        String xmlString =null;
-        try{
-        StringWriter sw = new StringWriter();
-        StreamResult result = new StreamResult(sw);
-        DOMSource source = new DOMSource(doc);
-        trans.transform(source, result);
-        xmlString = sw.toString();
-        }
-        catch (Exception e)
-        {
+        String xmlString = null;
+        try {
+            StringWriter sw = new StringWriter();
+            StreamResult result = new StreamResult(sw);
+            DOMSource source = new DOMSource(doc);
+            trans.transform(source, result);
+            xmlString = sw.toString();
+        } catch (Exception e) {
             xmlString = null;
         }
         //System.out.println(xmlString);

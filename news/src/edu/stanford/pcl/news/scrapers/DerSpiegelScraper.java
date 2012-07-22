@@ -1,4 +1,4 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.news.scrapers;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -19,15 +19,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: seanwestwood
- * Date: 7/18/12
- * Time: 5:31 PM
- * To change this template use File | Settings | File Templates.
- */
-
-public class ZeitScraper {
+public class DerSpiegelScraper {
     public static DateTime convertIntDateToDate(String date) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
         String year = date.substring(0, 4);
@@ -37,18 +29,14 @@ public class ZeitScraper {
         return dateFormat.parseDateTime(fullDate);
     }
 
-    public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException {
+    public static void scrapeNews() throws IOException, TransformerException, ParserConfigurationException {
         int year = 2000;
         int issue = 1;
         for (year = 2000; year <= 2011; year++) {
             for (issue = 1; issue <= 55; issue++) {
-                String twoDigitIssue =  Integer.toString(issue);
-                if (twoDigitIssue.length() <2) {
-                    twoDigitIssue = "0" + twoDigitIssue;
-                }
 
-                getNewsArticleList(Integer.toString(year), twoDigitIssue);
-                System.out.println(year + "-" + twoDigitIssue);
+                getNewsArticleList(Integer.toString(year), Integer.toString(issue));
+                System.out.println(year + "-" + issue);
             }
         }
 
@@ -56,16 +44,16 @@ public class ZeitScraper {
 
     public static void getNewsArticleList(String year, String issue) throws IOException, TransformerException, ParserConfigurationException {
         try {
-            String URL = "http://www.zeit.de/" + year + "/" + issue + "/index";
-            System.out.println(URL);
+            String URL = "http://www.spiegel.de/spiegel/print/index-" + year + "-" + issue + ".html";
+
             Document document = Jsoup.connect(URL).timeout(12000).get();
 
-            Elements links = document.select("#main a");
+            Elements links = document.select("#spHeftInhalt a");
             Integer articleNumber = 0;
             String lastURL = null;
             for (Element link : links) {
 
-                String linkHref = link.attr("href");
+                String linkHref = "http://www.spiegel.de" + link.attr("href");
                 if (!linkHref.equals(lastURL)) {
 
                     //System.out.println("link: " + linkHref);
@@ -80,20 +68,20 @@ public class ZeitScraper {
     }
 
     public static void processFile(String URL, String year, String issue, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
-        Document document = Jsoup.connect(URL).timeout(4000).get();
+        Document document = Jsoup.connect(URL).timeout(20000).get();
 
-        String title = document.select(".articleheader").text();
+        String title = document.select("#spArticleColumn h2").text();
 
         //System.out.println("title: " +title);
-        Elements paragraphs = document.select("#main p[class!=excerpt]");
+        Elements paragraphs = document.select(".artikel p");
         String paragraphText = paragraphs.text();
-        //for (Element paragraph : paragraphs) {
-        //    paragraphText += paragraph.text();
-        //}
+        // for (Element paragraph : paragraphs) {
+        //     paragraphText += paragraph.text();
+        // }
 
         String result = createXMLDoc(title, year, issue, paragraphText);
-        String fileName = "/rawdata/newspapers/zeit/" + year + "-" + issue + "-" + articleNumber.toString() + ".xml";
-        //System.out.println("text: " +paragraphText);
+        String fileName = "/rawdata/newspapers/derspiegel/" + year + "-" + issue + "-" + articleNumber.toString() + ".xml";
+
         Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
         try {
             out.write(result);

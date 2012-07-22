@@ -1,5 +1,6 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.news.parsers;
 
+import edu.stanford.pcl.news.dataHandlers.Article;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.w3c.dom.Document;
@@ -27,7 +28,7 @@ public class TribParser extends Parser {
     // TODO:  Handle missing fields robustly.
     public Article parse(File file, String source) {
         Article article = new Article();
-        article.setMediaType("newspaper");
+        article.setMediaType("news");
         article.setMediaSource(source);
         article.setFileName(file.getAbsolutePath());
         article.setLanguage("en");

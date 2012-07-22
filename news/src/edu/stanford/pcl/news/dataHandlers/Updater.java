@@ -1,7 +1,6 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.*;
-import edu.stanford.nlp.pipeline.Annotation;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
@@ -9,7 +8,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
 
 import java.io.File;
@@ -31,8 +29,7 @@ public class Updater {
     public Updater() {
     }
 
-    public DBCursor queryCursor(String collectionName, BasicDBObject query)
-    {
+    public DBCursor queryCursor(String collectionName, BasicDBObject query) {
         DBCollection collection = db.getCollection(collectionName);
         DBCursor cursor = collection.find(query).batchSize(10);
         return cursor;
@@ -71,8 +68,7 @@ public class Updater {
         }
     }
 
-    public void updateLucene(Article article) throws IOException
-    {
+    public void updateLucene(Article article) throws IOException {
         Document document = article.toLuceneDocument();
         indexWriter.updateDocument(new Term("fileName", article.getFileName()), document);
     }

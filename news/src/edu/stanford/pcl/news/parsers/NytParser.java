@@ -1,5 +1,6 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.news.parsers;
 
+import edu.stanford.pcl.news.dataHandlers.Article;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.w3c.dom.Document;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class NytParser extends Parser {
 
     private static Map<String, String> attributeMap = new HashMap<String, String>();
+
     static {
         attributeMap.put("articlePageNumber", "//head/meta[@name=\"print_page_number\"]");
         attributeMap.put("_articlePublicationMonth", "//head/meta[@name=\"publication_month\"]");
@@ -42,7 +44,7 @@ public class NytParser extends Parser {
     // TODO:  Handle missing fields robustly.
     public Article parse(File file, String source) {
         Article article = new Article();
-        article.setMediaType("newspaper");
+        article.setMediaType("news");
         article.setMediaSource(source);
         article.setFileName(file.getAbsolutePath());
         article.setLanguage("en");
@@ -69,15 +71,14 @@ public class NytParser extends Parser {
             // Attributes
             for (Map.Entry<String, String> entry : attributeMap.entrySet()) {
                 expr = xpath.compile(entry.getValue());
-                result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
+                result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
                 attributes.put(entry.getKey(), result.item(0).getAttributes().getNamedItem("content").getNodeValue());
             }
 
             // Page Number
             try {
                 article.setPageNumber(attributes.get("articlePageNumber"));
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 article.setPageNumber("");
             }
 
@@ -87,46 +88,41 @@ public class NytParser extends Parser {
                 //DateTools.dateToString(date, DateTools.Resolution.SECOND);
                 String month;
                 String day;
-                if (attributes.get("_articlePublicationMonth").length() <2) {
+                if (attributes.get("_articlePublicationMonth").length() < 2) {
                     month = "0" + attributes.get("_articlePublicationMonth");
-                }
-                else {
+                } else {
                     month = attributes.get("_articlePublicationMonth");
                 }
-                if (attributes.get("_articlePublicationDayOfMonth").length() <2) {
+                if (attributes.get("_articlePublicationDayOfMonth").length() < 2) {
                     day = "0" + attributes.get("_articlePublicationDayOfMonth");
-                }
-                else {
+                } else {
                     day = attributes.get("_articlePublicationDayOfMonth");
                 }
                 DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
-                article.setPublicationDate(dateFormat.parseDateTime(attributes.get("_articlePublicationYear") + "-" + month + "-" + day ));
-            }
-            catch (Exception e) {
+                article.setPublicationDate(dateFormat.parseDateTime(attributes.get("_articlePublicationYear") + "-" + month + "-" + day));
+            } catch (Exception e) {
                 article.setPublicationDate(null);
             }
 
             // Headline
             expr = xpath.compile("//body/body.head/hedline/hl1");
-            result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
+            result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
             try {
                 article.setHeadline(result.item(0).getTextContent());
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 article.setHeadline("");
             }
 
             // Text
             StringBuilder sb = new StringBuilder();
             expr = xpath.compile("//body/body.content/block[@class=\"full_text\"]/p/text()");
-            result = (NodeList)expr.evaluate(document, XPathConstants.NODESET);
+            result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
             for (int i = 0; i < result.getLength(); i++) {
                 sb.append(result.item(i).getTextContent()).append(" ");
             }
             try {
                 article.setText(sb.toString());
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 article.setText("");
             }
 
@@ -138,10 +134,9 @@ public class NytParser extends Parser {
             int monthTwo = Integer.parseInt(article.getPublicationDate().toString("MM"));
 
 
-            if (yearFour <2007 || (yearFour == 2007 && monthTwo <6)){
+            if (yearFour < 2007 || (yearFour == 2007 && monthTwo < 6)) {
                 article.setOverLap("1");
-            }
-            else{
+            } else {
                 article.setOverLap("0");
             }
 
@@ -149,7 +144,7 @@ public class NytParser extends Parser {
         // TODO:  Exception handling.
         catch (Exception e) {
             e.printStackTrace(System.err);
-	    return null;
+            return null;
         }
 
         return article;

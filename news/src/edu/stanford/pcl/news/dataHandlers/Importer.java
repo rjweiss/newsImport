@@ -1,6 +1,8 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.*;
+import edu.stanford.pcl.news.parsers.NytParser;
+import edu.stanford.pcl.news.parsers.TribParser;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
@@ -33,6 +35,7 @@ public class Importer {
         this.collection = collection;
         this.indexWriter = indexWriter;
     }
+
     private static void MongoConnect() {
         try {
             ArrayList<ServerAddress> address = new ArrayList<ServerAddress>();
@@ -58,7 +61,7 @@ public class Importer {
             } else {
                 // TODO:  Only import XML files, and probably do some sanity checking.
                 //System.out.println("Parsing " + file.getAbsolutePath() + "...");
-                String extension=null;
+                String extension = null;
                 int dotPos = file.getName().lastIndexOf(".");
                 extension = file.getName().substring(dotPos + 1);
 
@@ -109,7 +112,7 @@ public class Importer {
         return new int[]{imported, skipped};
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void importNews() throws IOException {
         // Connect to MongoDB.
         MongoConnect();
 
@@ -126,7 +129,6 @@ public class Importer {
         importer.importAll(new File("/rawdata/newspapers/nytimes"), "New York Times");
         importer.importAll(new File("/rawdata/newspapers/chitrib"), "Chicago Tribune");
         importer.importAll(new File("/rawdata/newspapers/latimes"), "Los Angeles Times");
-
         importer.importAll(new File("/rawdata/newspapers/bsun"), "Baltimore Sun");
 
         // Clean up.

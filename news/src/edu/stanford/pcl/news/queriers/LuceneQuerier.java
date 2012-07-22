@@ -1,8 +1,9 @@
-package edu.stanford.pcl.newspaper;
+package edu.stanford.pcl.news.queriers;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
-import com.martiansoftware.jsap.*;
+import com.martiansoftware.jsap.JSAPException;
+import com.martiansoftware.jsap.JSAPResult;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
@@ -31,7 +32,7 @@ import java.util.Map.Entry;
 // 1) Dates are treated as integers because of Lucene's limited type system
 // 2) Aggregate queries are not tested and should be used with extreme caution
 
-public class QueryLucene {
+public class LuceneQuerier {
     private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
     LinkedHashMap<String, ArrayList> results = new LinkedHashMap<String, ArrayList>();
     private static ArrayList<String> mediaSourceList = new ArrayList<String>();
@@ -130,7 +131,7 @@ public class QueryLucene {
         return hitCount;
     }
 
-    public static void generateQueryCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries, String outFile) throws IOException, ParseException {
+    public static void generateQueryCounts(Integer startDate, Integer endDate, String querySources, LuceneQuerier ql, List<String[]> queries, String outFile) throws IOException, ParseException {
         Boolean isHeader = true;
 
         for (String[] row : queries) {
@@ -183,7 +184,7 @@ public class QueryLucene {
         ql.saveFile(outFile);
     }
 
-    public static void generateDateRangeCounts(Integer startDate, Integer endDate, String querySources, QueryLucene ql, List<String[]> queries, String outFile) throws IOException, ParseException {
+    public static void generateDateRangeCounts(Integer startDate, Integer endDate, String querySources, LuceneQuerier ql, List<String[]> queries, String outFile) throws IOException, ParseException {
 
         ql.results.put("", createDateRangeHeader(startDate, endDate));
         for (String[] row : queries) {
@@ -201,7 +202,7 @@ public class QueryLucene {
         ql.saveFile(outFile);
     }
 
-    private static void issueDateRangeQueries(Integer startDate, Integer endDate, String source, String queryText, QueryLucene ql) throws IOException, ParseException {
+    private static void issueDateRangeQueries(Integer startDate, Integer endDate, String source, String queryText, LuceneQuerier ql) throws IOException, ParseException {
         DateTime dtStartDate = convertIntDateToDate(startDate.toString());
         DateTime dtEndDate = convertIntDateToDate(endDate.toString());
 
@@ -220,7 +221,7 @@ public class QueryLucene {
         ql.results.put(rowName, resultRow);
     }
 
-    public static void generateOccurenceList(Integer startDate, Integer endDate, String querySources, String terms, QueryLucene ql, String outFilePath) throws IOException, ParseException {
+    public static void generateOccurenceList(Integer startDate, Integer endDate, String querySources, String terms, LuceneQuerier ql, String outFilePath) throws IOException, ParseException {
         if (querySources.equals("all")) {
             for (String source : mediaSourceList) {
                 executeOccurenceQuery(ql, source, terms, startDate, endDate, outFilePath);
@@ -232,7 +233,7 @@ public class QueryLucene {
         }
     }
 
-    public static void executeOccurenceQuery(QueryLucene ql, String source, String terms, Integer startDate, Integer endDate, String outFilePath) throws IOException, ParseException {
+    public static void executeOccurenceQuery(LuceneQuerier ql, String source, String terms, Integer startDate, Integer endDate, String outFilePath) throws IOException, ParseException {
         ql.results.clear();
         StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
         Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
@@ -300,8 +301,8 @@ public class QueryLucene {
         reader.close();
         analyzer.close();
 
-        if(terms.length()>80) {
-            String cname = terms.substring(0,terms.lastIndexOf("(")-5);
+        if (terms.length() > 80) {
+            String cname = terms.substring(0, terms.lastIndexOf("(") - 5);
             terms = cname + "-conflict";
         }
 
@@ -310,38 +311,14 @@ public class QueryLucene {
         ql.saveFile(file);
     }
 
-    public static void main(String[] args) throws IOException, ParseException, JSAPException, java.text.ParseException {
-        SimpleJSAP jsap = new SimpleJSAP(
-                "QueryLucene",
-                "Pulls information from Lucene",
-                new Parameter[]{
-                        new FlaggedOption("queryListFile", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'q', "queryListFile",
-                                "List of queries to run"),
-                        new FlaggedOption("querySources", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 's', "querySources",
-                                "Sources to query (source name, all, or aggregate)"),
-                        new FlaggedOption("outputFile", JSAP.STRING_PARSER, "", JSAP.NOT_REQUIRED, 'o', "outputFile",
-                                "Path and name for output"),
-                        new FlaggedOption("startDate", JSAP.STRING_PARSER, "20020101", JSAP.NOT_REQUIRED, 'b', "startDate",
-                                "Start date (yyyyMMdd)"),
-                        new FlaggedOption("endDate", JSAP.STRING_PARSER, "20040101", JSAP.NOT_REQUIRED, 'f', "endDate",
-                                "End date (yyyyMMdd)"),
-                        new FlaggedOption("outputFilePath", JSAP.STRING_PARSER, "/home/ec2-user/occurrence/", JSAP.NOT_REQUIRED, 'p', "outFilePath",
-                                "Out file path (occurrence only)"),
-                        new FlaggedOption("sourceList", JSAP.STRING_PARSER, "/home/ec2-user/sourceList.txt", JSAP.NOT_REQUIRED, 'l', "sourceList",
-                                "Source List File Location"),
-                        new FlaggedOption("type", JSAP.STRING_PARSER, "count", JSAP.REQUIRED, 't', "type",
-                                "Type of data output (queryCounts, dateRangeCounts, occurrenceList)").setList(true).setListSeparator(',')
-                }
-        );
+    public static void queryNews(JSAPResult JSAPconfig) throws IOException, ParseException, JSAPException, java.text.ParseException {
 
-        JSAPResult JSAPconfig = jsap.parse(args);
-        if (jsap.messagePrinted()) System.exit(1);
         loadSourceList(JSAPconfig.getString("sourceList"));
         String type = JSAPconfig.getString("source");
         Integer startDate = Integer.parseInt(JSAPconfig.getString("startDate"));
         Integer endDate = Integer.parseInt(JSAPconfig.getString("endDate"));
 
-        QueryLucene ql = new QueryLucene();
+        LuceneQuerier ql = new LuceneQuerier();
         CSVReader CSVReader = new CSVReader(new FileReader(JSAPconfig.getString("queryListFile")), '\t');
         List<String[]> queries = CSVReader.readAll();
 
