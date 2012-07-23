@@ -43,7 +43,7 @@ public class TimesIndiaScraper {
         DateTime dtStartDate = dateFormat.parseDateTime(startDate);
         DateTime dtEndDate = dateFormat.parseDateTime(endDate);
 
-        Integer starttime = 36913;
+        Integer starttime = 36922;
 
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate.plusDays(1)); date = date.plusDays(1)) {
             System.out.println(date.toString("d-M-yyyy"));
@@ -57,14 +57,14 @@ public class TimesIndiaScraper {
         String URL = "http://timesofindia.indiatimes.com/" + date.toString("yyyy") + "/" + date.toString("M") + "/" + date.toString("d") + "/archivelist/year-" + date.toString("yyyy") + ",month-" + date.toString("M") + ",starttime-" + starttime + ".cms";
 
         System.out.println(URL);
-        Document document = Jsoup.connect(URL).timeout(30000).get();
+        Document document = Jsoup.connect(URL).timeout(0).get();
 
         Elements links = document.select("div[style=font-family:arial ;font-size:12;font-weight:bold; color: #006699] a");
         Integer articleNumber = 0;
         for (Element link : links) {
 
             String linkHref = link.attr("href");
-            //System.out.println("link: " + linkHref);
+            System.out.println("link: " + linkHref);
             processFile(linkHref, date, articleNumber);
             Thread.currentThread().sleep(3000);
             articleNumber++;
@@ -92,6 +92,7 @@ public class TimesIndiaScraper {
                 Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
                 try {
                     out.write(result);
+                    System.out.println("saved");
                 } catch (Exception e) {
                     System.out.println("No text for article: " + title);
                 }
