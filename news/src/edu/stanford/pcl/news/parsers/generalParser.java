@@ -22,7 +22,7 @@ import java.io.File;
  * To change this template use File | Settings | File Templates.
  */
 
-public class GeneralParser extends Parser {
+public class generalParser extends Parser {
 
     public Article parse(File file, String source, String language, String country) {
         Article article = new Article();

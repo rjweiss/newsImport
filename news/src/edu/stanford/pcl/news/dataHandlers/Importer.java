@@ -1,9 +1,9 @@
 package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.*;
-import edu.stanford.pcl.news.parsers.GeneralParser;
 import edu.stanford.pcl.news.parsers.NytParser;
 import edu.stanford.pcl.news.parsers.TribParser;
+import edu.stanford.pcl.news.parsers.generalParser;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
@@ -76,7 +76,7 @@ public class Importer {
                         } else if (parserType.equals("TribParser")) {
                             article = new TribParser().parse(file, sourceName, language, country);
                         } else {
-                            article = new GeneralParser().parse(file, sourceName, language, country);
+                            article = new generalParser().parse(file, sourceName, language, country);
                         }
 
                     } catch (Exception e) {

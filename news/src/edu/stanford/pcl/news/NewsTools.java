@@ -42,7 +42,7 @@ public class NewsTools {
 
         if (JSAPconfig.getString("actions").equals("import")) {
 
-            Importer.importNews("/rawdata/newspapers/diewelt", "Die Welt", "german", "Germany", "GeneralParser");
+            Importer.importNews("/rawdata/newspapers/diewelt", "Die Welt", "german", "Germany", "generalParser");
             Importer.importNews("/rawdata/newspapers/nytimes", "New York Times", "english", "US", "NytParser");
             Importer.importNews("/rawdata/newspapers/chitrib", "Chicago Tribune", "english", "US", "TribParser");
             Importer.importNews("/rawdata/newspapers/latimes", "Los Angeles Times", "english", "US", "TribParser");
