@@ -13,7 +13,7 @@ public class NewsTools {
                 "LuceneQuerier",
                 "Pulls information from Lucene",
                 new Parameter[]{
-                        new FlaggedOption("action", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'a', "actions",
+                        new FlaggedOption("actions", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'a', "actions",
                                 "Action to perform"),
                         new FlaggedOption("scraper", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'g', "scraper",
                                 "Scraper to run"),
