@@ -243,7 +243,9 @@ public class LuceneQuerier {
         QueryParser queryParser = new QueryParser(Version.LUCENE_36, "text", analyzer);
         Query textQuery = queryParser.parse(terms);
 
-        Query dateRangeQuery = NumericRangeQuery.newIntRange("publicationDate", startDate, endDate, true, true);
+        Query dateRangeQuery = new TermRangeQuery("publicationDateText", startDate.toString(), endDate.toString(), true, true);
+
+        //Query dateRangeQuery = NumericRangeQuery.newIntRange("publicationDate", startDate, endDate, true, true);
 
         BooleanQuery booleanQuery = new BooleanQuery();
         booleanQuery.add(sourceQuery, BooleanClause.Occur.MUST);
