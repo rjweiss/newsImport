@@ -1,7 +1,6 @@
 package edu.stanford.pcl.news;
 
 import com.martiansoftware.jsap.*;
-import edu.stanford.pcl.news.classifiers.Classifier;
 import edu.stanford.pcl.news.dataHandlers.Importer;
 import edu.stanford.pcl.news.dataHandlers.Processor;
 import edu.stanford.pcl.news.queriers.LuceneQuerier;
