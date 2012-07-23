@@ -79,7 +79,7 @@ public class TimesIndiaScraper {
 
 
             String title = document.select("span[class=arttle] h1").text();
-            //System.out.println("title: " +title);
+            System.out.println("title: " + title);
             String paragraphText = document.select(".Normal").text();
 
             //System.out.println("text: " +paragraphText);
@@ -103,9 +103,9 @@ public class TimesIndiaScraper {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParserConfigurationException e) {
-            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (TransformerException e) {
-            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
     }
