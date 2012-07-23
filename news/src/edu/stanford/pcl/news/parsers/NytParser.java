@@ -42,12 +42,14 @@ public class NytParser extends Parser {
     }
 
     // TODO:  Handle missing fields robustly.
-    public Article parse(File file, String source) {
+    public Article parse(File file, String source, String language, String country) {
         Article article = new Article();
-        article.setMediaType("news");
+        article.setMediaType("printnews");
         article.setMediaSource(source);
         article.setFileName(file.getAbsolutePath());
-        article.setLanguage("en");
+        article.setLanguage(language);
+        article.setCountry(country);
+
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         domFactory.setNamespaceAware(true); // never forget this!
         domFactory.setValidating(false);

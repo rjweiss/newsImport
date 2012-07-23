@@ -37,11 +37,11 @@ public class TimesIndiaScraper {
         return dateFormat.parseDateTime(fullDate);
     }
 
-    public static void scrapeNews() throws IOException, TransformerException, ParserConfigurationException, InterruptedException {
+    public static void scrapeNews(String startDate, String endDate) throws IOException, TransformerException, ParserConfigurationException, InterruptedException {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-        DateTime dtStartDate = dateFormat.parseDateTime("2001-01-22");
-        DateTime dtEndDate = dateFormat.parseDateTime("2012-07-08");
+        DateTime dtStartDate = dateFormat.parseDateTime(startDate);
+        DateTime dtEndDate = dateFormat.parseDateTime(endDate);
 
         Integer starttime = 36913;
 

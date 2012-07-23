@@ -1,6 +1,7 @@
 package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.*;
+import edu.stanford.pcl.news.parsers.GeneralParser;
 import edu.stanford.pcl.news.parsers.NytParser;
 import edu.stanford.pcl.news.parsers.TribParser;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -48,14 +49,14 @@ public class Importer {
         }
     }
 
-    public int[] importAll(File path, String source) {
+    public int[] importAll(File path, String sourceName, String language, String country, String parserType) {
 
         int imported = 0;
         int skipped = 0;
         for (File file : path.listFiles()) {
             if (file.isDirectory()) {
                 // Recursively import sub-directories. and stuff
-                int[] result = importAll(file, source);
+                int[] result = importAll(file, sourceName, language, country, parserType);
 
                 System.out.println(file.getAbsolutePath() + " (" + result[0] + ", " + result[1] + ")");
             } else {
@@ -70,11 +71,14 @@ public class Importer {
                     Article article;
 
                     try {
-                        if ("New York Times".equals(source)) {
-                            article = new NytParser().parse(file, source);
+                        if (parserType.equals("NytParser")) {
+                            article = new NytParser().parse(file, sourceName, language, country);
+                        } else if (parserType.equals("TribParser")) {
+                            article = new TribParser().parse(file, sourceName, language, country);
                         } else {
-                            article = new TribParser().parse(file, source);
+                            article = new GeneralParser().parse(file, sourceName, language, country);
                         }
+
                     } catch (Exception e) {
                         // Parse failed, complain and skip.
                         e.printStackTrace(System.err);
@@ -112,7 +116,7 @@ public class Importer {
         return new int[]{imported, skipped};
     }
 
-    public static void importNews() throws IOException {
+    public static void importNews(String path, String sourceName, String language, String country, String parserType) throws IOException {
         // Connect to MongoDB.
         MongoConnect();
 
@@ -126,10 +130,7 @@ public class Importer {
 
         // Recursively parse and import XML files...
         Importer importer = new Importer(db.getCollection(MONGO_DB_ARTICLES_COLLECTION), indexWriter);
-        importer.importAll(new File("/rawdata/newspapers/nytimes"), "New York Times");
-        importer.importAll(new File("/rawdata/newspapers/chitrib"), "Chicago Tribune");
-        importer.importAll(new File("/rawdata/newspapers/latimes"), "Los Angeles Times");
-        importer.importAll(new File("/rawdata/newspapers/bsun"), "Baltimore Sun");
+        importer.importAll(new File(path), sourceName, language, country, parserType);
 
         // Clean up.
         indexWriter.close();

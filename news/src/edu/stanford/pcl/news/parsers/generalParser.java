@@ -22,10 +22,8 @@ import java.io.File;
  * To change this template use File | Settings | File Templates.
  */
 
-public class TribParser extends Parser {
+public class GeneralParser extends Parser {
 
-
-    // TODO:  Handle missing fields robustly.
     public Article parse(File file, String source, String language, String country) {
         Article article = new Article();
         article.setMediaType("printnews");
@@ -52,23 +50,18 @@ public class TribParser extends Parser {
             XPathExpression expr;
             NodeList result;
 
-            // Page Number
-            expr = xpath.compile("//docdt/startpg");
-            result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
-            try {
-                article.setPageNumber(result.item(0).getTextContent());
-            } catch (Exception e) {
-                article.setPageNumber("");
-            }
+
+            article.setPageNumber("");
+
 
             // Publication Date
-            expr = xpath.compile("//pcdt/pcdtn");
+            expr = xpath.compile("//article/publicationDate");
             result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
             try {
 //                String yearFour = result.item(0).getTextContent().substring(0,3);
 //                String monthTwo = result.item(0).getTextContent().substring(4,5);
 //                String dayTwo = result.item(0).getTextContent().substring(6,7);
-                DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyyMMdd");
+                DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
                 article.setPublicationDate(dateFormat.parseDateTime(result.item(0).getTextContent()));
 
@@ -79,7 +72,7 @@ public class TribParser extends Parser {
 
 
             // Headline
-            expr = xpath.compile("//docdt/doctitle");
+            expr = xpath.compile("//article/headline");
             result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
             try {
                 article.setHeadline(result.item(0).getTextContent());
@@ -89,13 +82,10 @@ public class TribParser extends Parser {
 
             // Text
             StringBuilder sb = new StringBuilder();
-            expr = xpath.compile("//txtdt/text/paragraph/text()");
+            expr = xpath.compile("//article/text");
             result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
-            for (int i = 0; i < result.getLength(); i++) {
-                sb.append(result.item(i).getTextContent()).append(" ");
-            }
             try {
-                article.setText(sb.toString());
+                article.setText(result.item(0).getTextContent());
             } catch (Exception e) {
                 article.setText("");
             }

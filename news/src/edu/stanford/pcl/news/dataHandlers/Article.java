@@ -24,6 +24,7 @@ public class Article {
     private String overLap;
     private String status;
     private String language;
+    private String country;
 
     //private Map<String, Object> features;
     private AnnotatedDocument annotation;
@@ -120,6 +121,14 @@ public class Article {
         this.language = language;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
 /*    public void addFeature(String featureName) {
         this.features.put(featureName, null);
     }
@@ -166,6 +175,7 @@ public class Article {
         obj.put("overLap", this.getOverLap());
         obj.put("status", this.getStatus());
         obj.put("language", this.getLanguage());
+        obj.put("country", this.getCountry());
         // obj.put("features", this.getFeatures());
 
         //Time, Location, Organization, Person, Money, Percent, Date
@@ -248,6 +258,7 @@ public class Article {
         article.setOverLap(object.get("overLap").toString());
         article.setPublicationDate(dateTime);
         article.setStatus(object.get("status").toString());
+        article.setCountry(object.get("country").toString());
 
         return article;
     }
@@ -266,6 +277,7 @@ public class Article {
         doc.add(new Field("overLap", this.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         doc.add(new Field("status", this.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         doc.add(new Field("language", this.getLanguage(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("country", this.getCountry(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 
         try {
             doc.add(new Field("entitiesTime", this.getAnnotation().entitiesTime.toString(), Field.Store.YES, Field.Index.ANALYZED));
@@ -313,7 +325,6 @@ public class Article {
 
     public boolean isValid() {
         boolean valid = true;
-        valid &= (pageNumber != null && !pageNumber.isEmpty());
         valid &= (headline != null && !headline.isEmpty());
         valid &= (text != null && !text.isEmpty());
         valid &= (publicationDate != null);
@@ -335,6 +346,7 @@ public class Article {
             this.setPublicationDate(null);
             this.setStatus(null);
             this.setText(null);
+            this.setCountry(null);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Clear fields failed");

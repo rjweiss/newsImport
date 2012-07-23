@@ -41,7 +41,13 @@ public class NewsTools {
 
 
         if (JSAPconfig.getString("actions").equals("import")) {
-            Importer.importNews();
+
+            Importer.importNews("/rawdata/newspapers/diewelt", "Die Welt", "german", "Germany", "GeneralParser");
+            Importer.importNews("/rawdata/newspapers/nytimes", "New York Times", "english", "US", "NytParser");
+            Importer.importNews("/rawdata/newspapers/chitrib", "Chicago Tribune", "english", "US", "TribParser");
+            Importer.importNews("/rawdata/newspapers/latimes", "Los Angeles Times", "english", "US", "TribParser");
+            Importer.importNews("/rawdata/newspapers/bsun", "Baltimore Sun", "english", "US", "TribParser");
+
         } else if (JSAPconfig.getString("actions").equals("scrape")) {
             if (JSAPconfig.getString("scraper").equals("DerSpiegel")) {
                 DerSpiegelScraper.scrapeNews();
@@ -50,7 +56,7 @@ public class NewsTools {
             } else if (JSAPconfig.getString("scraper").equals("Liberation")) {
                 LiberationScraper.scrapeNews();
             } else if (JSAPconfig.getString("scraper").equals("TimesIndia")) {
-                TimesIndiaScraper.scrapeNews();
+                TimesIndiaScraper.scrapeNews("2001-01-31", "2012-07-08");
             } else if (JSAPconfig.getString("scraper").equals("Welt")) {
                 WeltScraper.scrapeNews();
             } else if (JSAPconfig.getString("scraper").equals("Zeit")) {
