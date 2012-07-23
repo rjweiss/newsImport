@@ -327,6 +327,19 @@ public class StanfordClassifier {
         // TODO: call classifier on records of subset
     }
 
+   public static void classifyNews() throws Exception {
+        connect();
+        BasicDBObject query = new BasicDBObject();
+
+        List<String> includedFeatures = new ArrayList<String>();
+
+//        NewsClassifier classifier = new NewsClassifier();
+//        classifier.classify();
+//        makeTrainingData(DBCollection collection, BasicDBObject query, ArrayList<String> includedFeatures, String labelName) throws Exception {
+//        makeTrainingData();
+
+
+    }
     public static void main(String[] args) throws Exception {
         connect();
 
