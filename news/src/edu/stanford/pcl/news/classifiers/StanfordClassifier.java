@@ -7,7 +7,9 @@ import edu.stanford.nlp.ling.BasicDatum;
 import edu.stanford.nlp.ling.Datum;
 
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 //import java.io.Serializable;
 //implement serializable to dump the trained classifier (eventually)
@@ -30,7 +32,7 @@ public class StanfordClassifier {
     private LinearClassifier<String, String> classifier;
 
     private StanfordClassifier() {
-        this.trainingData =  new ArrayList<Datum<String, String>>();
+        this.trainingData = new ArrayList<Datum<String, String>>();
         this.testData = new ArrayList<Datum<String, String>>();
         this.factory = new LinearClassifierFactory<String, String>();
     }
@@ -47,7 +49,8 @@ public class StanfordClassifier {
         }
         articles = db.getCollection("articles");
     }
-//
+
+    //
     private Datum<String, String> makeDatum(List<String> features, String label) {
 
         BasicDatum<String, String> datum;
@@ -188,7 +191,7 @@ public class StanfordClassifier {
 //        System.out.println("Done.");
 //    }
 
-    public static void main(String[] args) throws Exception {
+    public static void classifyNews() throws Exception {
         connect();
         BasicDBObject query = new BasicDBObject();
 
