@@ -13,13 +13,13 @@ public class NewsTools {
                 "LuceneQuerier",
                 "Pulls information from Lucene",
                 new Parameter[]{
-                        new FlaggedOption("action", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'a', "action",
+                        new FlaggedOption("action", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'a', "actions",
                                 "Action to perform"),
                         new FlaggedOption("scraper", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'g', "scraper",
                                 "Scraper to run"),
-                        new FlaggedOption("queryListFile", JSAP.STRING_PARSER, "", JSAP.NOT_REQUIRED, 'q', "queryListFile",
+                        new FlaggedOption("queryListFile", JSAP.STRING_PARSER, "/home/ec2-user/queries/conflictQuery.txt", JSAP.NOT_REQUIRED, 'q', "queryListFile",
                                 "List of queries to run"),
-                        new FlaggedOption("querySources", JSAP.STRING_PARSER, "", JSAP.NOT_REQUIRED, 's', "querySources",
+                        new FlaggedOption("querySources", JSAP.STRING_PARSER, "all", JSAP.NOT_REQUIRED, 's', "querySources",
                                 "Sources to query (source name, all, or aggregate)"),
                         new FlaggedOption("outputFile", JSAP.STRING_PARSER, "", JSAP.NOT_REQUIRED, 'o', "outputFile",
                                 "Path and name for output"),
@@ -31,7 +31,7 @@ public class NewsTools {
                                 "Out file path (occurrence only)"),
                         new FlaggedOption("sourceList", JSAP.STRING_PARSER, "/home/ec2-user/sourceList.txt", JSAP.NOT_REQUIRED, 'l', "sourceList",
                                 "Source List File Location"),
-                        new FlaggedOption("type", JSAP.STRING_PARSER, "count", JSAP.NOT_REQUIRED, 't', "type",
+                        new FlaggedOption("type", JSAP.STRING_PARSER, "occurrenceList", JSAP.NOT_REQUIRED, 't', "type",
                                 "Type of data output (queryCounts, dateRangeCounts, occurrenceList)").setList(true).setListSeparator(',')
                 }
         );
