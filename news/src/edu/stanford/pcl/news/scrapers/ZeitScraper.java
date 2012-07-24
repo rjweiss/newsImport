@@ -42,7 +42,7 @@ public class ZeitScraper {
         int issue = 1;
         for (year = 2000; year <= 2011; year++) {
             for (issue = 1; issue <= 55; issue++) {
-                if (year != 2000 || !(year == 2001 && issue <= 15)) {
+                if (year != 2000 && !(year == 2001 && issue <= 15)) {
                     String twoDigitIssue = Integer.toString(issue);
                     if (twoDigitIssue.length() < 2) {
                         twoDigitIssue = "0" + twoDigitIssue;
