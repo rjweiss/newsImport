@@ -4,9 +4,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import edu.stanford.nlp.pipeline.Annotation;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 
@@ -40,9 +37,9 @@ public class Processor {
 
     public static void processNews() throws IOException {
         BasicDBObject query = new BasicDBObject();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-        DateTime date = dateTimeFormatter.parseDateTime("2001-01-11");
-        query.put("publicationDate", date.toDate());
+        //DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        //DateTime date = dateTimeFormatter.parseDateTime("2001-01-11");
+        query.put("mediaSource", "Baltimore Sun");
         annotateUpdate("articles", query);
     }
 }

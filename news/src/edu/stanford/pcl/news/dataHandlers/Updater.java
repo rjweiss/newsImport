@@ -1,16 +1,10 @@
 package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.*;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -18,7 +12,7 @@ import java.util.ArrayList;
 public class Updater {
 
     private static final String MONGO_DB_NAME = "news";
-    private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
+    //private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
     private static final String MONGO_DB_MASTER_IP = "184.73.204.235";
     private static final String MONGO_DB_SLAVE_IP = "107.22.253.110";
 
@@ -48,14 +42,14 @@ public class Updater {
             e.printStackTrace();
         }
 
-        try {
+        /*   try {
             StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
             Directory index = FSDirectory.open(new File(LUCENE_INDEX_DIRECTORY));
             IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_36, analyzer);
             indexWriter = new IndexWriter(index, config);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void updateMongo(Article article, String collectionName) {
@@ -76,7 +70,7 @@ public class Updater {
 
     public void close() throws IOException {
         mongo.close();
-        indexWriter.close();
+        // indexWriter.close();
     }
 }
 
