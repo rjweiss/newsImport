@@ -163,8 +163,9 @@ public class Article {
     public BasicDBObject toMongoObject() {
 
         BasicDBObject obj = new BasicDBObject();
-
-        obj.put("_id", new ObjectId(id));
+        if (!this.getId().isEmpty()) {
+            obj.put("_id", new ObjectId(id));
+        }
         obj.put("pageNumber", this.getPageNumber());
         obj.put("publicationDate", this.getPublicationDate().toDate());
         obj.put("headline", this.getHeadline());
