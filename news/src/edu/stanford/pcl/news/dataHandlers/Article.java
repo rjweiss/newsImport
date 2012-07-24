@@ -222,18 +222,23 @@ public class Article {
             e.printStackTrace();
         }
 
-        DBObject annotation = new BasicDBObject();
-        BasicDBList list = new BasicDBList();
-        for (AnnotatedToken token : this.annotation.tokens) {
-            DBObject t = new BasicDBObject();
-            t.put("text", token.text);
-            t.put("lemma", token.lemma);
-            t.put("pos", token.pos);
-            t.put("entity", token.entity);
-            list.add(t);
+
+        try {
+            DBObject annotation = new BasicDBObject();
+            BasicDBList list = new BasicDBList();
+            for (AnnotatedToken token : this.annotation.tokens) {
+                DBObject t = new BasicDBObject();
+                t.put("text", token.text);
+                t.put("lemma", token.lemma);
+                t.put("pos", token.pos);
+                t.put("entity", token.entity);
+                list.add(t);
+            }
+            annotation.put("tokens", list);
+            obj.put("annotation", annotation);
+        } catch (Exception e) {
+            //e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        annotation.put("tokens", list);
-        obj.put("annotation", annotation);
 
         return obj;
     }
