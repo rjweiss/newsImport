@@ -73,12 +73,12 @@ public class TimesIndiaScraper {
 
     public static void processFile(String URL, DateTime date, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
         try {
-            System.out.println("waiting");
+            // System.out.println("waiting");
             Document document = Jsoup.connect(URL).timeout(0).get();
 
 
             String title = document.select("span[class=arttle] h1").text();
-            System.out.println("title: " + title);
+            // System.out.println("title: " + title);
             String paragraphText = document.select(".Normal").text();
 
             //System.out.println("text: " +paragraphText);
