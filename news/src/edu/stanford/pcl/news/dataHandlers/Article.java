@@ -164,7 +164,7 @@ public class Article {
 
         BasicDBObject obj = new BasicDBObject();
         if (!this.getId().isEmpty()) {
-            obj.put("_id", new ObjectId(id));
+            obj.put("_id", new ObjectId(this.getId()));
         }
         obj.put("pageNumber", this.getPageNumber());
         obj.put("publicationDate", this.getPublicationDate().toDate());
