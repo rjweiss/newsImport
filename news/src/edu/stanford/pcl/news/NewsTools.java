@@ -19,6 +19,8 @@ public class NewsTools {
                                 "Scraper to run"),
                         new FlaggedOption("queryListFile", JSAP.STRING_PARSER, "/home/ec2-user/queries/conflictQuery.txt", JSAP.NOT_REQUIRED, 'q', "queryListFile",
                                 "List of queries to run"),
+                        new FlaggedOption("mediaSource", JSAP.STRING_PARSER, "", JSAP.NOT_REQUIRED, 'd', "mediaSource",
+                                "Media Source Name"),
                         new FlaggedOption("querySources", JSAP.STRING_PARSER, "all", JSAP.NOT_REQUIRED, 's', "querySources",
                                 "Sources to query (source name, all, or aggregate)"),
                         new FlaggedOption("outputFile", JSAP.STRING_PARSER, "", JSAP.NOT_REQUIRED, 'o', "outputFile",
@@ -63,7 +65,7 @@ public class NewsTools {
                 ZeitScraper.scrapeNews();
             }
         } else if (JSAPconfig.getString("actions").equals("process")) {
-            Processor.processNews();
+            Processor.processNews(JSAPconfig.getString("mediaSource"));
         } else if (JSAPconfig.getString("actions").equals("classify")) {
             StanfordClassifier.classifyNews();
         } else if (JSAPconfig.getString("actions").equals("query")) {

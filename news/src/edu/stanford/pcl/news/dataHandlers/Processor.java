@@ -37,11 +37,11 @@ public class Processor {
         updater.close();
     }
 
-    public static void processNews() throws IOException {
+    public static void processNews(String mediaSource) throws IOException {
         BasicDBObject query = new BasicDBObject();
         //DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         //DateTime date = dateTimeFormatter.parseDateTime("2001-01-11");
-        query.put("mediaSource", "Baltimore Sun");
+        query.put("mediaSource", mediaSource);
         annotateUpdate("articles", query);
     }
 }
