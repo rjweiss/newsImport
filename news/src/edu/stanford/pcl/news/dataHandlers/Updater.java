@@ -40,21 +40,21 @@ public class Updater {
             ArrayList<ServerAddress> address = new ArrayList<ServerAddress>();
             address.add(new ServerAddress(MONGO_DB_MASTER_IP, 27017));
             address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
-            mongo = new Mongo(address);
+            mongo = new Mongo("localhost");
             db = mongo.getDB(MONGO_DB_NAME);
 
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
 
-        try {
-            StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-            Directory index = FSDirectory.open(new File(LUCENE_INDEX_DIRECTORY));
-            IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_36, analyzer);
-            indexWriter = new IndexWriter(index, config);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+//            Directory index = FSDirectory.open(new File(LUCENE_INDEX_DIRECTORY));
+//            IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_36, analyzer);
+//            indexWriter = new IndexWriter(index, config);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void updateMongo(Article article, String collectionName) {
@@ -75,7 +75,7 @@ public class Updater {
 
     public void close() throws IOException {
         mongo.close();
-        indexWriter.close();
+//        indexWriter.close();
     }
 }
 
