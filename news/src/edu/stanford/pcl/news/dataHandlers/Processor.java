@@ -19,7 +19,7 @@ public class Processor {
         Updater updater = new Updater();
         updater.connect();
         DBCursor cursor = updater.queryCursor(collectionName, query);
-
+        Integer count = 0;
         while (cursor.hasNext()) {
             cursor.next();
             DBObject obj = cursor.curr();
@@ -30,7 +30,9 @@ public class Processor {
 
             updater.updateMongo(article, collectionName);
             //updater.updateLucene(article);
-            System.out.println(article.getFileName());
+            //System.out.println(article.getFileName());
+            count++;
+            System.out.println(count);
         }
         updater.close();
     }

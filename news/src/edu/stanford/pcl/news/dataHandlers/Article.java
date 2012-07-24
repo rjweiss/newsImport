@@ -221,7 +221,16 @@ public class Article {
         } catch (Exception e) {
             //  e.printStackTrace();
         }
-
+        try {
+            obj.put("entitiesCurrency", createMongoList(this.getAnnotation().entitiesCurrency, "currency"));
+        } catch (Exception e) {
+            //  e.printStackTrace();
+        }
+        try {
+            obj.put("entitiesDuration", createMongoList(this.getAnnotation().entitiesDuration, "duration"));
+        } catch (Exception e) {
+            //  e.printStackTrace();
+        }
 
         try {
             DBObject annotation = new BasicDBObject();

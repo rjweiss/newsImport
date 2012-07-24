@@ -26,5 +26,5 @@ run:
 	java -cp out:$(CLASSPATH) $(MAINCLASS)
 
 query:
-	java -cp out:$(CLASSPATH) $(MAINCLASS) ${ARGS}
+	java -Xmx60g -cp out:$(CLASSPATH) $(MAINCLASS) ${ARGS}
 
