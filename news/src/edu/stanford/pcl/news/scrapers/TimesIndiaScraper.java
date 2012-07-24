@@ -47,7 +47,7 @@ public class TimesIndiaScraper {
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate.plusDays(1)); date = date.plusDays(1)) {
             System.out.println(date.toString("d-M-yyyy"));
             getNewsArticleList(date, startTime);
-            starttime++;
+            startTime++;
         }
 
     }
