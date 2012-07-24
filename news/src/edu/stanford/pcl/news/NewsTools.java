@@ -56,7 +56,7 @@ public class NewsTools {
             } else if (JSAPconfig.getString("scraper").equals("Liberation")) {
                 LiberationScraper.scrapeNews();
             } else if (JSAPconfig.getString("scraper").equals("TimesIndia")) {
-                TimesIndiaScraper.scrapeNews("2001-01-31", "2012-07-08");
+                TimesIndiaScraper.scrapeNews("2001-02-12", "2012-07-08", 36934);
             } else if (JSAPconfig.getString("scraper").equals("Welt")) {
                 WeltScraper.scrapeNews();
             } else if (JSAPconfig.getString("scraper").equals("Zeit")) {

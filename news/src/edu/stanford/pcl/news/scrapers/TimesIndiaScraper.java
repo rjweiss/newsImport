@@ -37,17 +37,16 @@ public class TimesIndiaScraper {
         return dateFormat.parseDateTime(fullDate);
     }
 
-    public static void scrapeNews(String startDate, String endDate) throws IOException, TransformerException, ParserConfigurationException, InterruptedException {
+    public static void scrapeNews(String startDate, String endDate, Integer startTime) throws IOException, TransformerException, ParserConfigurationException, InterruptedException {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
         DateTime dtStartDate = dateFormat.parseDateTime(startDate);
         DateTime dtEndDate = dateFormat.parseDateTime(endDate);
 
-        Integer starttime = 36922;
 
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate.plusDays(1)); date = date.plusDays(1)) {
             System.out.println(date.toString("d-M-yyyy"));
-            getNewsArticleList(date, starttime);
+            getNewsArticleList(date, startTime);
             starttime++;
         }
 
