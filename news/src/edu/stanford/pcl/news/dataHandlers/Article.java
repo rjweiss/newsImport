@@ -163,7 +163,7 @@ public class Article {
     public BasicDBObject toMongoObject() {
 
         BasicDBObject obj = new BasicDBObject();
-        if (!this.getId().isEmpty()) {
+        if (this.getId() != null) {
             obj.put("_id", new ObjectId(this.getId()));
         }
         obj.put("pageNumber", this.getPageNumber());
