@@ -42,7 +42,8 @@ public class Updater {
             address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
             mongo = new Mongo("localhost");
             db = mongo.getDB(MONGO_DB_NAME);
-
+            ReadPreference readPreference = ReadPreference.SECONDARY;
+            db.setReadPreference(readPreference);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

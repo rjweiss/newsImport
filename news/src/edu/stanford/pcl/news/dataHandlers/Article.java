@@ -24,6 +24,7 @@ public class Article {
     private String overLap;
     private String status;
     private String language;
+    private String country;
 
     //private Map<String, Object> features;
     private AnnotatedDocument annotation;
@@ -120,6 +121,14 @@ public class Article {
         this.language = language;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
 /*    public void addFeature(String featureName) {
         this.features.put(featureName, null);
     }
@@ -154,8 +163,9 @@ public class Article {
     public BasicDBObject toMongoObject() {
 
         BasicDBObject obj = new BasicDBObject();
-
-        obj.put("_id", new ObjectId(id));
+        if (this.getId() != null) {
+            obj.put("_id", new ObjectId(this.getId()));
+        }
         obj.put("pageNumber", this.getPageNumber());
         obj.put("publicationDate", this.getPublicationDate().toDate());
         obj.put("headline", this.getHeadline());
@@ -166,6 +176,7 @@ public class Article {
         obj.put("overLap", this.getOverLap());
         obj.put("status", this.getStatus());
         obj.put("language", this.getLanguage());
+        obj.put("country", this.getCountry());
         // obj.put("features", this.getFeatures());
 
         //Time, Location, Organization, Person, Money, Percent, Date
@@ -173,56 +184,61 @@ public class Article {
         try {
             obj.put("entitiesTime", createMongoList(this.getAnnotation().entitiesTime, "time"));
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
         try {
             obj.put("entitiesLocation", createMongoList(this.getAnnotation().entitiesLocation, "location"));
         } catch (Exception e) {
-            e.printStackTrace();
+            //  e.printStackTrace();
         }
         try {
             obj.put("entitiesOrganization", createMongoList(this.getAnnotation().entitiesOrganization, "organization"));
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
         try {
             obj.put("entitiesPerson", createMongoList(this.getAnnotation().entitiesPerson, "person"));
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
         try {
             obj.put("entitiesMoney", createMongoList(this.getAnnotation().entitiesMoney, "money"));
         } catch (Exception e) {
-            e.printStackTrace();
+            //  e.printStackTrace();
         }
         try {
             obj.put("entitiesPercent", createMongoList(this.getAnnotation().entitiesPercent, "percent"));
         } catch (Exception e) {
-            e.printStackTrace();
+            //  e.printStackTrace();
         }
         try {
             obj.put("entitiesDate", createMongoList(this.getAnnotation().entitiesDate, "date"));
         } catch (Exception e) {
-            e.printStackTrace();
+            //  e.printStackTrace();
         }
         try {
             obj.put("entitiesMisc", createMongoList(this.getAnnotation().entitiesMisc, "misc"));
         } catch (Exception e) {
-            e.printStackTrace();
+            //  e.printStackTrace();
         }
 
-        DBObject annotation = new BasicDBObject();
-        BasicDBList list = new BasicDBList();
-        for (AnnotatedToken token : this.annotation.tokens) {
-            DBObject t = new BasicDBObject();
-            t.put("text", token.text);
-            t.put("lemma", token.lemma);
-            t.put("pos", token.pos);
-            t.put("entity", token.entity);
-            list.add(t);
+
+        try {
+            DBObject annotation = new BasicDBObject();
+            BasicDBList list = new BasicDBList();
+            for (AnnotatedToken token : this.annotation.tokens) {
+                DBObject t = new BasicDBObject();
+                t.put("text", token.text);
+                t.put("lemma", token.lemma);
+                t.put("pos", token.pos);
+                t.put("entity", token.entity);
+                list.add(t);
+            }
+            annotation.put("tokens", list);
+            obj.put("annotation", annotation);
+        } catch (Exception e) {
+            //e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        annotation.put("tokens", list);
-        obj.put("annotation", annotation);
 
         return obj;
     }
@@ -248,6 +264,7 @@ public class Article {
         article.setOverLap(object.get("overLap").toString());
         article.setPublicationDate(dateTime);
         article.setStatus(object.get("status").toString());
+        article.setCountry(object.get("country").toString());
 
         return article;
     }
@@ -266,46 +283,47 @@ public class Article {
         doc.add(new Field("overLap", this.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         doc.add(new Field("status", this.getMediaType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         doc.add(new Field("language", this.getLanguage(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("country", this.getCountry(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 
         try {
             doc.add(new Field("entitiesTime", this.getAnnotation().entitiesTime.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesLocation", this.getAnnotation().entitiesLocation.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesOrganization", this.getAnnotation().entitiesOrganization.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesPerson", this.getAnnotation().entitiesPerson.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();
+            //  e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesMoney", this.getAnnotation().entitiesMoney.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();
+            //  e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesPercent", this.getAnnotation().entitiesPercent.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();
+            //  e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesDate", this.getAnnotation().entitiesDate.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesMisc", this.getAnnotation().entitiesMisc.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
 
         return (doc);
@@ -313,7 +331,6 @@ public class Article {
 
     public boolean isValid() {
         boolean valid = true;
-        valid &= (pageNumber != null && !pageNumber.isEmpty());
         valid &= (headline != null && !headline.isEmpty());
         valid &= (text != null && !text.isEmpty());
         valid &= (publicationDate != null);
@@ -335,6 +352,7 @@ public class Article {
             this.setPublicationDate(null);
             this.setStatus(null);
             this.setText(null);
+            this.setCountry(null);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Clear fields failed");

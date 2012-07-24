@@ -37,18 +37,17 @@ public class TimesIndiaScraper {
         return dateFormat.parseDateTime(fullDate);
     }
 
-    public static void scrapeNews() throws IOException, TransformerException, ParserConfigurationException, InterruptedException {
+    public static void scrapeNews(String startDate, String endDate, Integer startTime) throws IOException, TransformerException, ParserConfigurationException, InterruptedException {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-        DateTime dtStartDate = dateFormat.parseDateTime("2001-01-22");
-        DateTime dtEndDate = dateFormat.parseDateTime("2012-07-08");
+        DateTime dtStartDate = dateFormat.parseDateTime(startDate);
+        DateTime dtEndDate = dateFormat.parseDateTime(endDate);
 
-        Integer starttime = 36913;
 
         for (DateTime date = dtStartDate; date.isBefore(dtEndDate.plusDays(1)); date = date.plusDays(1)) {
             System.out.println(date.toString("d-M-yyyy"));
-            getNewsArticleList(date, starttime);
-            starttime++;
+            getNewsArticleList(date, startTime);
+            startTime++;
         }
 
     }
@@ -57,14 +56,14 @@ public class TimesIndiaScraper {
         String URL = "http://timesofindia.indiatimes.com/" + date.toString("yyyy") + "/" + date.toString("M") + "/" + date.toString("d") + "/archivelist/year-" + date.toString("yyyy") + ",month-" + date.toString("M") + ",starttime-" + starttime + ".cms";
 
         System.out.println(URL);
-        Document document = Jsoup.connect(URL).timeout(30000).get();
+        Document document = Jsoup.connect(URL).timeout(0).get();
 
         Elements links = document.select("div[style=font-family:arial ;font-size:12;font-weight:bold; color: #006699] a");
         Integer articleNumber = 0;
         for (Element link : links) {
 
             String linkHref = link.attr("href");
-            //System.out.println("link: " + linkHref);
+            System.out.println("link: " + linkHref);
             processFile(linkHref, date, articleNumber);
             Thread.currentThread().sleep(3000);
             articleNumber++;
@@ -74,12 +73,12 @@ public class TimesIndiaScraper {
 
     public static void processFile(String URL, DateTime date, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
         try {
-            System.out.println("waiting");
+            // System.out.println("waiting");
             Document document = Jsoup.connect(URL).timeout(0).get();
 
 
             String title = document.select("span[class=arttle] h1").text();
-            //System.out.println("title: " +title);
+            // System.out.println("title: " + title);
             String paragraphText = document.select(".Normal").text();
 
             //System.out.println("text: " +paragraphText);
@@ -92,6 +91,7 @@ public class TimesIndiaScraper {
                 Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
                 try {
                     out.write(result);
+                    System.out.println("saved");
                 } catch (Exception e) {
                     System.out.println("No text for article: " + title);
                 }
@@ -102,9 +102,9 @@ public class TimesIndiaScraper {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParserConfigurationException e) {
-            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (TransformerException e) {
-            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
     }
