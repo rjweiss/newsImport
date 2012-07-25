@@ -120,15 +120,14 @@ public class NytParser extends Parser {
             expr = xpath.compile("//body/body.content/block[@class=\"full_text\"]/p");
             result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
             for (int i = 0; i < result.getLength(); i++) {
-                sb.append("<p>" + result.item(i).getTextContent().replace("\n", "") + "</p>").append(" ");
+                sb.append("<p>" + result.item(i).getTextContent().replace("\n", "") + "</p>").append("");
             }
             try {
                 article.setText(sb.toString());
             } catch (Exception e) {
                 article.setText("");
             }
-            System.out.println(article.getFileName());
-            System.out.println(article.getText());
+
             // set status
             article.setStatus("0");
 
