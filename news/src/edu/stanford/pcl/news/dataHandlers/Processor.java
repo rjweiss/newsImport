@@ -26,11 +26,13 @@ public class Processor {
             article = Article.fromMongoObject(obj);
             document = annotator.getAnnotations(article.getText());
 
+            System.out.println(article.getFileName());
+
             article.setAnnotation(new AnnotatedDocument(document));
 
             updater.updateMongo(article, collectionName);
             //updater.updateLucene(article);
-            //System.out.println(article.getFileName());
+
             count++;
             System.out.println(article.getMediaSource() + count);
         }
