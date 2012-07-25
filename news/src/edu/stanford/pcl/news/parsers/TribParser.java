@@ -101,8 +101,7 @@ public class TribParser extends Parser {
             } catch (Exception e) {
                 article.setText("");
             }
-            System.out.println(article.getFileName());
-            System.out.println(article.getText());
+
 
             // set status
             article.setStatus("0");
