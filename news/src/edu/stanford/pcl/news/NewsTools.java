@@ -4,6 +4,7 @@ import com.martiansoftware.jsap.*;
 import edu.stanford.pcl.news.classifiers.StanfordClassifier;
 import edu.stanford.pcl.news.dataHandlers.Importer;
 import edu.stanford.pcl.news.dataHandlers.Processor;
+import edu.stanford.pcl.news.dataHandlers.Sampler;
 import edu.stanford.pcl.news.queriers.LuceneQuerier;
 import edu.stanford.pcl.news.scrapers.*;
 
@@ -41,7 +42,6 @@ public class NewsTools {
         JSAPResult JSAPconfig = jsap.parse(args);
         if (jsap.messagePrinted()) System.exit(1);
 
-
         if (JSAPconfig.getString("actions").equals("import")) {
 
             // Importer.importNews("/rawdata/newspapers/diewelt", "Die Welt", "german", "Germany", "generalParser");
@@ -65,11 +65,13 @@ public class NewsTools {
                 ZeitScraper.scrapeNews();
             }
         } else if (JSAPconfig.getString("actions").equals("process")) {
-            Processor.processNews("New York Times");
+            Processor.processNews("Chicago Tribune");
         } else if (JSAPconfig.getString("actions").equals("classify")) {
             StanfordClassifier.classifyNews();
         } else if (JSAPconfig.getString("actions").equals("query")) {
             LuceneQuerier.queryNews(JSAPconfig);
+        } else if (JSAPconfig.getString("actions").equals("sample")) {
+            Sampler.sample(JSAPconfig);
         }
 
 
