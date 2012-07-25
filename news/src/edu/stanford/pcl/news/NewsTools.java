@@ -65,7 +65,7 @@ public class NewsTools {
                 ZeitScraper.scrapeNews();
             }
         } else if (JSAPconfig.getString("actions").equals("process")) {
-            Processor.processNews("New York Times");
+            Processor.processNews("Los Angeles Times");
         } else if (JSAPconfig.getString("actions").equals("classify")) {
             NewsClassifier.classifyNews();
         } else if (JSAPconfig.getString("actions").equals("query")) {
