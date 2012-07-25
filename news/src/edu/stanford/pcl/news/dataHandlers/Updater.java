@@ -25,7 +25,7 @@ public class Updater {
 
     public DBCursor queryCursor(String collectionName, BasicDBObject query) {
         DBCollection collection = db.getCollection(collectionName);
-        DBCursor cursor = collection.find(query).batchSize(10);
+        DBCursor cursor = collection.find(query);
         return cursor;
     }
 
@@ -36,8 +36,8 @@ public class Updater {
             address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
             mongo = new Mongo(address);
             db = mongo.getDB(MONGO_DB_NAME);
-            ReadPreference readPreference = ReadPreference.SECONDARY;
-            db.setReadPreference(readPreference);
+            // ReadPreference readPreference = ReadPreference.SECONDARY;
+            // db.setReadPreference(readPreference);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

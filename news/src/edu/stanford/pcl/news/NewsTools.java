@@ -4,6 +4,7 @@ import com.martiansoftware.jsap.*;
 import edu.stanford.pcl.news.classifiers.StanfordClassifier;
 import edu.stanford.pcl.news.dataHandlers.Importer;
 import edu.stanford.pcl.news.dataHandlers.Processor;
+import edu.stanford.pcl.news.dataHandlers.Sampler;
 import edu.stanford.pcl.news.queriers.LuceneQuerier;
 import edu.stanford.pcl.news.scrapers.*;
 
@@ -19,6 +20,8 @@ public class NewsTools {
                                 "Scraper to run"),
                         new FlaggedOption("queryListFile", JSAP.STRING_PARSER, "/home/ec2-user/queries/conflictQuery.txt", JSAP.NOT_REQUIRED, 'q', "queryListFile",
                                 "List of queries to run"),
+                        new FlaggedOption("mediaSource", JSAP.STRING_PARSER, "", JSAP.NOT_REQUIRED, 'd', "mediaSource",
+                                "Media Source Name"),
                         new FlaggedOption("querySources", JSAP.STRING_PARSER, "all", JSAP.NOT_REQUIRED, 's', "querySources",
                                 "Sources to query (source name, all, or aggregate)"),
                         new FlaggedOption("outputFile", JSAP.STRING_PARSER, "", JSAP.NOT_REQUIRED, 'o', "outputFile",
@@ -38,7 +41,6 @@ public class NewsTools {
 
         JSAPResult JSAPconfig = jsap.parse(args);
         if (jsap.messagePrinted()) System.exit(1);
-
 
         if (JSAPconfig.getString("actions").equals("import")) {
 
@@ -63,11 +65,13 @@ public class NewsTools {
                 ZeitScraper.scrapeNews();
             }
         } else if (JSAPconfig.getString("actions").equals("process")) {
-            Processor.processNews();
+            Processor.processNews("Los Angeles Times");
         } else if (JSAPconfig.getString("actions").equals("classify")) {
             StanfordClassifier.classifyNews();
         } else if (JSAPconfig.getString("actions").equals("query")) {
             LuceneQuerier.queryNews(JSAPconfig);
+        } else if (JSAPconfig.getString("actions").equals("sample")) {
+            Sampler.sample(JSAPconfig);
         }
 
 

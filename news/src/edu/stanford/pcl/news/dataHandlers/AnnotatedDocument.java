@@ -18,6 +18,8 @@ public class AnnotatedDocument extends ReflectionDBObject {
     List<String> entitiesPercent = new ArrayList<String>();
     List<String> entitiesDate = new ArrayList<String>();
     List<String> entitiesMisc = new ArrayList<String>();
+    List<String> entitiesDuration = new ArrayList<String>();
+    List<String> entitiesCurrency = new ArrayList<String>();
 
     //Time, Location, Organization, Person, Money, Percent, Date
 
@@ -35,7 +37,7 @@ public class AnnotatedDocument extends ReflectionDBObject {
                 if (at.entity.equals(lastEntityType)) {
                     fullEntityName += " " + at.text;
                 } else if (!at.entity.equals(lastEntityType) && !fullEntityName.isEmpty()) {
-                    System.out.println(at.entity + " last: " + lastEntityType + " full: " + fullEntityName + " current text: " + at.text);
+                    //System.out.println(at.entity + " last: " + lastEntityType + " full: " + fullEntityName + " current text: " + at.text);
                     if (lastEntityType.equals("TIME")) {
                         entitiesTime.add(fullEntityName);
                     } else if (lastEntityType.equals("LOCATION")) {
@@ -52,6 +54,10 @@ public class AnnotatedDocument extends ReflectionDBObject {
                         entitiesDate.add(fullEntityName);
                     } else if (lastEntityType.equals("MISC")) {
                         entitiesMisc.add(fullEntityName);
+                    } else if (lastEntityType.equals("CURRENCY")) {
+                        entitiesCurrency.add(fullEntityName);
+                    } else if (lastEntityType.equals("DURATION")) {
+                        entitiesDuration.add(fullEntityName);
                     }
                     fullEntityName = at.text;
                 } else {

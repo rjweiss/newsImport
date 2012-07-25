@@ -117,13 +117,13 @@ public class NytParser extends Parser {
 
             // Text
             StringBuilder sb = new StringBuilder();
-            expr = xpath.compile("//body/body.content/block[@class=\"full_text\"]");
+            expr = xpath.compile("//body/body.content/block[@class=\"full_text\"]/p");
             result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
-/*            for (int i = 0; i < result.getLength(); i++) {
-                sb.append(result.item(i).getTextContent()).append(" ");
-            }*/
+            for (int i = 0; i < result.getLength(); i++) {
+                sb.append("<p>" + result.item(i).getTextContent().replace("\n", "") + "</p>").append("");
+            }
             try {
-                article.setText(result.item(0).getTextContent());
+                article.setText(sb.toString());
             } catch (Exception e) {
                 article.setText("");
             }

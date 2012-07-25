@@ -19,27 +19,32 @@ public class Processor {
         Updater updater = new Updater();
         updater.connect();
         DBCursor cursor = updater.queryCursor(collectionName, query);
-
+        Integer count = 0;
         while (cursor.hasNext()) {
             cursor.next();
             DBObject obj = cursor.curr();
             article = Article.fromMongoObject(obj);
             document = annotator.getAnnotations(article.getText());
 
+            System.out.println(article.getFileName());
+
             article.setAnnotation(new AnnotatedDocument(document));
 
             updater.updateMongo(article, collectionName);
             //updater.updateLucene(article);
-            System.out.println(article.getFileName());
+
+            count++;
+            System.out.println(article.getMediaSource() + count);
         }
         updater.close();
     }
 
-    public static void processNews() throws IOException {
+    public static void processNews(String mediaSource) throws IOException {
         BasicDBObject query = new BasicDBObject();
         //DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         //DateTime date = dateTimeFormatter.parseDateTime("2001-01-11");
-        query.put("mediaSource", "Baltimore Sun");
+        query.put("mediaSource", mediaSource);
+        query.put("annotation", null);
         annotateUpdate("articles", query);
     }
 }

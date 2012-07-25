@@ -91,16 +91,17 @@ public class TribParser extends Parser {
             StringBuilder sb = new StringBuilder();
             expr = xpath.compile("//txtdt/text/paragraph");
             result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
-            /* for (int i = 0; i < result.getLength(); i++) {
-                sb.append(result.item(i).getTextContent()).append(" ");
-            }*/
+            for (int i = 0; i < result.getLength(); i++) {
+                sb.append("<p>" + result.item(i).getTextContent().replace("\n", "") + "</p>").append("");
+            }
             try {
-                String cleaned = result.item(0).getTextContent().replace("<paragraph>", "<p>");
-                cleaned = cleaned.replace("</paragraph>", "</p>");
-                article.setText(cleaned);
+                //String cleaned = result.item(0)..replace("<paragraph>", "<p>");
+                //cleaned = cleaned.replace("</paragraph>", "</p>");
+                article.setText(sb.toString());
             } catch (Exception e) {
                 article.setText("");
             }
+
 
             // set status
             article.setStatus("0");
