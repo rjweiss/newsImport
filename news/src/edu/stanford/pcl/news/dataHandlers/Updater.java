@@ -25,7 +25,7 @@ public class Updater {
 
     public DBCursor queryCursor(String collectionName, BasicDBObject query) {
         DBCollection collection = db.getCollection(collectionName);
-        DBCursor cursor = collection.find(query).batchSize(100);
+        DBCursor cursor = collection.find(query);
         return cursor;
     }
 
