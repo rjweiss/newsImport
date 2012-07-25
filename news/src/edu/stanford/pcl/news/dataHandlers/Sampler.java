@@ -1,6 +1,7 @@
 package edu.stanford.pcl.news.dataHandlers;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import com.martiansoftware.jsap.JSAPResult;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -27,8 +28,8 @@ public class Sampler {
         writer.close();
     }
 
-    //public static void sample(JSAPResult JSAPconfig) throws IOException {
-    public static void main(String[] args) throws Exception {
+    public static void sample(JSAPResult JSAPconfig) throws IOException {
+
         Integer i;
 
         Set<Integer> years = new HashSet<Integer>();
