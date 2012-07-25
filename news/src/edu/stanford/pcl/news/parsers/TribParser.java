@@ -95,7 +95,7 @@ public class TribParser extends Parser {
                 sb.append(result.item(i).getTextContent()).append(" ");
             }*/
             try {
-                String cleaned = result.item(0).getNodeValue().replace("<paragraph>", "<p>");
+                String cleaned = result.item(0).getTextContent().replace("<paragraph>", "<p>");
                 cleaned = cleaned.replace("</paragraph>", "</p>");
                 article.setText(cleaned);
             } catch (Exception e) {
