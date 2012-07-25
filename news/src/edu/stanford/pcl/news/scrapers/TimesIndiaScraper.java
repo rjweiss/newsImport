@@ -65,7 +65,7 @@ public class TimesIndiaScraper {
             String linkHref = link.attr("href");
             System.out.println("link: " + linkHref);
             processFile(linkHref, date, articleNumber);
-            Thread.currentThread().sleep(3000);
+            Thread.currentThread().sleep(1000);
             articleNumber++;
 
         }
