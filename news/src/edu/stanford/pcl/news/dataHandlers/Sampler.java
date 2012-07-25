@@ -1,7 +1,6 @@
 package edu.stanford.pcl.news.dataHandlers;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import com.martiansoftware.jsap.JSAPResult;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -28,7 +27,8 @@ public class Sampler {
         writer.close();
     }
 
-    public static void sample(JSAPResult JSAPconfig) throws IOException {
+    //public static void sample(JSAPResult JSAPconfig) throws IOException {
+    public static void main(String[] args) throws Exception {
         Integer i;
 
         Set<Integer> years = new HashSet<Integer>();
@@ -70,13 +70,13 @@ public class Sampler {
 
             DateTime date = new DateTime(year, 1, 1, 0, 0, 0, 0).plusWeeks(week);
             date = date.plusDays(day);
-
+            System.out.println(date.toString());
             String sources[] = new String[]{"New York Times", "Chicago Tribune", "Los Angeles Times", "Baltimore Sun"};
             Integer weights[] = new Integer[]{10, 10, 10, 10};
 
             int j;
             for (j = 0; j < 4; j++) {
-
+                System.out.println(sources[j]);
                 query.put("publicationDate", date.toDate());
                 query.put("mediaSource", sources[j]);
 
