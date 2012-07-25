@@ -65,7 +65,7 @@ public class NewsTools {
                 ZeitScraper.scrapeNews();
             }
         } else if (JSAPconfig.getString("actions").equals("process")) {
-            Processor.processNews("Chicago Tribune");
+            Processor.processNews("New York Times");
         } else if (JSAPconfig.getString("actions").equals("classify")) {
             StanfordClassifier.classifyNews();
         } else if (JSAPconfig.getString("actions").equals("query")) {
