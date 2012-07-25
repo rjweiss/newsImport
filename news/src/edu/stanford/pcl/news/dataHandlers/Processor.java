@@ -32,7 +32,7 @@ public class Processor {
             //updater.updateLucene(article);
             //System.out.println(article.getFileName());
             count++;
-            System.out.println(count);
+            System.out.println(article.getMediaSource() + count);
         }
         updater.close();
     }
