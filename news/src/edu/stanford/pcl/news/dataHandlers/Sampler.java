@@ -43,6 +43,8 @@ public class Sampler {
             years.add(2000 + random.nextInt(7));
         }
 
+        System.out.println("here2");
+
         random = new Random();
         while (weeks.size() <= 28) {
             weeks.add(random.nextInt(52) + 1);
