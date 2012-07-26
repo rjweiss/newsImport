@@ -1,7 +1,6 @@
 package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import edu.stanford.nlp.pipeline.Annotation;
@@ -61,7 +60,7 @@ public class Processor {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         //System.out.println();
-        query.put("publicationDate", BasicDBObjectBuilder.start("$gte", dateFormat.parse(startDate).toString()).add("$lte", dateFormat.parse(endDate).toString()).get());
+        // query.put("publicationDate", BasicDBObjectBuilder.start("$gte", dateFormat.parse(startDate).toString()).add("$lte", dateFormat.parse(endDate).toString()).get());
         query.put("mediaSource", mediaSource);
         query.put("annotation", null);
         annotateUpdate("articles", query);

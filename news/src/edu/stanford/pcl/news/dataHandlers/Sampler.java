@@ -100,7 +100,7 @@ public class Sampler {
                     cursor.limit(-1).skip(nextArticleIndex).next();
                     DBObject obj = cursor.curr();
                     article = Article.fromMongoObject(obj);
-                    resultSet.add(article.getPublicationDate().toString("yyyy-MM-dd"));
+                    resultSet.add(article.getPublicationDate().toString("yyyyMMdd"));
                     resultSet.add(article.getMediaSource());
                     resultSet.add(article.getFileName());
                     resultSet.add(article.getHeadline());
