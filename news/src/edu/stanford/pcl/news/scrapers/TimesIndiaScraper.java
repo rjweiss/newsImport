@@ -82,41 +82,43 @@ public class TimesIndiaScraper {
     }
 
     public static void processFile(String URL, DateTime date, Integer articleNumber) throws IOException, TransformerException, ParserConfigurationException {
-        try {
-            // System.out.println("waiting");
-            Document document = Jsoup.connect(URL).timeout(0).get();
+        if (URL.contains("http")) {
+
+            try {
+                // System.out.println("waiting");
+                Document document = Jsoup.connect(URL).timeout(0).get();
 
 
-            String title = document.select("span[class=arttle] h1").text();
-            // System.out.println("title: " + title);
-            String paragraphText = document.select(".Normal").text();
+                String title = document.select("span[class=arttle] h1").text();
+                // System.out.println("title: " + title);
+                String paragraphText = document.select(".Normal").text();
 
-            //System.out.println("text: " +paragraphText);
+                //System.out.println("text: " +paragraphText);
 
-            if (!paragraphText.isEmpty()) {
-                String result = createXMLDoc(title, date, paragraphText);
-                String fileName = "/rawdata/newspapers/timesindia/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
+                if (!paragraphText.isEmpty()) {
+                    String result = createXMLDoc(title, date, paragraphText);
+                    String fileName = "/rawdata/newspapers/timesindia/" + date.toString("yyyy-MM-dd") + "-" + articleNumber.toString() + ".xml";
 
 
-                Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
-                try {
-                    out.write(result);
-                    //System.out.println("saved");
-                } catch (Exception e) {
-                    //System.out.println("No text for article: " + title);
+                    Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
+                    try {
+                        out.write(result);
+                        //System.out.println("saved");
+                    } catch (Exception e) {
+                        //System.out.println("No text for article: " + title);
+                    }
+
+
+                    out.close();
                 }
-
-
-                out.close();
+            } catch (IOException e) {
+                // e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (TransformerException e) {
+                // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (TransformerException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-
     }
 
     public static String createXMLDoc(String title, DateTime date, String paragraphs) throws ParserConfigurationException, TransformerException {
