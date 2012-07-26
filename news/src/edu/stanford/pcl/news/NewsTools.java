@@ -71,7 +71,8 @@ public class NewsTools {
         } else if (JSAPconfig.getString("actions").equals("query")) {
             LuceneQuerier.queryNews(JSAPconfig);
         } else if (JSAPconfig.getString("actions").equals("sample")) {
-            Sampler.sample(JSAPconfig);
+            Sampler sampler = new Sampler();
+            sampler.sample(JSAPconfig);
         }
 
 

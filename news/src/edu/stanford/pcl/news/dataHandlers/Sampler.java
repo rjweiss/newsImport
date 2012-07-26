@@ -13,9 +13,9 @@ import java.util.*;
 
 
 public class Sampler {
-    LinkedHashMap<String, ArrayList> results = new LinkedHashMap<String, ArrayList>();
+    private static LinkedHashMap<String, ArrayList> results = new LinkedHashMap<String, ArrayList>();
 
-    public void saveFile(String outputFile) throws IOException {
+    private static void saveFile(String outputFile) throws IOException {
         Iterator<Map.Entry<String, ArrayList>> iterator = results.entrySet().iterator();
         CSVWriter writer = new CSVWriter(new FileWriter(outputFile), '\t');
 
@@ -105,15 +105,12 @@ public class Sampler {
                     resultSet.add(article.getFileName());
                     resultSet.add(article.getHeadline());
                     resultSet.add(article.getText());
-
+                    results.put(Integer.toString(i + j), resultSet);
                 }
             }
         }
         updater.close();
-        Sampler sampler = new Sampler();
-        sampler.saveFile("/home/ec2-user/sample.txt");
-
-
+        saveFile("/home/ec2-user/sample.txt");
     }
 
 }
