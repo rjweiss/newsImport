@@ -65,7 +65,7 @@ public class NewsTools {
                 ZeitScraper.scrapeNews();
             }
         } else if (JSAPconfig.getString("actions").equals("process")) {
-            Processor.processNews("Baltimore Sun");
+            Processor.processNews(JSAPconfig.getString("mediaSource"));
         } else if (JSAPconfig.getString("actions").equals("classify")) {
             NewsClassifier.classifyNews();
         } else if (JSAPconfig.getString("actions").equals("query")) {

@@ -44,6 +44,18 @@ public class Processor {
         BasicDBObject query = new BasicDBObject();
         //DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         //DateTime date = dateTimeFormatter.parseDateTime("2001-01-11");
+
+        if (mediaSource.equals("NewYorkTimes")) {
+            mediaSource = "New York Times";
+        } else if (mediaSource.equals("BaltimoreSun")) {
+            mediaSource = "Baltimore Sun";
+        } else if (mediaSource.equals("ChicagoTribune")) {
+            mediaSource = "Chicago Tribune";
+
+        } else if (mediaSource.equals("LosAngelesTimes")) {
+            mediaSource = "Los Angeles Times";
+        }
+
         query.put("mediaSource", mediaSource);
         query.put("annotation", null);
         annotateUpdate("articles", query);
