@@ -32,9 +32,9 @@ public class Sampler {
 
         Integer i;
 
-        Set<Integer> years = new HashSet<Integer>();
-        Set<Integer> weeks = new HashSet<Integer>();
-        Set<Integer> days = new HashSet<Integer>();
+        List<Integer> years = new ArrayList<Integer>();
+        List<Integer> weeks = new ArrayList<Integer>();
+        List<Integer> days = new ArrayList<Integer>();
         Random random = new Random();
 
         System.out.println("here");
