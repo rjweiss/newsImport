@@ -206,8 +206,8 @@ public class NewsClassifier {
     public static void main(String[] args) throws Exception {
         connect();
         List<String> featureAttributes = new ArrayList<String>();
-        featureAttributes.add("text");
-//        featureAttributes.add("annotation.tokens.pos");
+//        featureAttributes.add("text");
+        featureAttributes.add("annotation.tokens.pos");
         //featuresAttributes to add
         String labelAttribute = "mediaSource";
 
