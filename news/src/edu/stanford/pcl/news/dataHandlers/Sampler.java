@@ -83,7 +83,7 @@ public class Sampler {
             for (j = 0; j < 4; j++) {
                 System.out.println(sources[j]);
                 query.clear();
-                query.put("publicationDate", date.toDate());
+                query.put("publicationDate", date.toDate().toString());
                 query.put("mediaSource", sources[j]);
 
                 System.out.println(query.toString());
