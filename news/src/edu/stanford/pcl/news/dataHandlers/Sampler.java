@@ -40,11 +40,11 @@ public class Sampler {
         System.out.println("here");
 
         while (years.size() <= 28) {
-            years.add(2000 + random.nextInt(7));
-            System.out.println(years.size());
+            int y = 2000 + random.nextInt(7);
+            years.add(y);
+            System.out.println(y);
         }
 
-        System.out.println("here2");
 
         random = new Random();
         while (weeks.size() <= 28) {
