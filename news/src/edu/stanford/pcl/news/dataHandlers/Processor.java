@@ -60,8 +60,8 @@ public class Processor {
         }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-
-        query.put("publicationDate", BasicDBObjectBuilder.start("$gte", dateFormat.parse(startDate).toString()).add("$lte", dateFormat.parse(endDate).toString()).get());
+        System.out.println(BasicDBObjectBuilder.start("$gte", dateFormat.parse(startDate).toString()).add("$lte", dateFormat.parse(endDate).toString()).get());
+        //query.put("publicationDate", );
         query.put("mediaSource", mediaSource);
         query.put("annotation", null);
         annotateUpdate("articles", query);
