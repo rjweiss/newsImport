@@ -1,11 +1,14 @@
 package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import edu.stanford.nlp.pipeline.Annotation;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class Processor {
 
@@ -40,7 +43,7 @@ public class Processor {
         updater.close();
     }
 
-    public static void processNews(String mediaSource) throws IOException {
+    public static void processNews(String mediaSource, String startDate, String endDate) throws IOException, ParseException {
         BasicDBObject query = new BasicDBObject();
         //DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         //DateTime date = dateTimeFormatter.parseDateTime("2001-01-11");
@@ -56,6 +59,9 @@ public class Processor {
             mediaSource = "Los Angeles Times";
         }
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+
+        query.put("publicationDate", BasicDBObjectBuilder.start("$gte", dateFormat.parse(startDate).toString()).add("$lte", dateFormat.parse(endDate).toString()).get());
         query.put("mediaSource", mediaSource);
         query.put("annotation", null);
         annotateUpdate("articles", query);

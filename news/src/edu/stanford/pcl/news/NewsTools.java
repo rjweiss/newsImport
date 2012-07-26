@@ -65,7 +65,7 @@ public class NewsTools {
                 ZeitScraper.scrapeNews();
             }
         } else if (JSAPconfig.getString("actions").equals("process")) {
-            Processor.processNews(JSAPconfig.getString("mediaSource"));
+            Processor.processNews(JSAPconfig.getString("mediaSource"), JSAPconfig.getString("startDate"), JSAPconfig.getString("endDate"));
         } else if (JSAPconfig.getString("actions").equals("classify")) {
             NewsClassifier.classifyNews();
         } else if (JSAPconfig.getString("actions").equals("query")) {
