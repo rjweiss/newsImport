@@ -62,11 +62,21 @@ public class TimesIndiaScraper {
         Integer articleNumber = 0;
         for (Element link : links) {
 
-            String linkHref = link.attr("href");
-            System.out.println("link: " + linkHref);
-            processFile(linkHref, date, articleNumber);
-            Thread.currentThread().sleep(1000);
-            articleNumber++;
+            try {
+                String linkHref = link.attr("href");
+                System.out.println("link: " + linkHref);
+                processFile(linkHref, date, articleNumber);
+                Thread.currentThread().sleep(1000);
+                articleNumber++;
+            } catch (IOException e) {
+                //e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (TransformerException e) {
+                //e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (ParserConfigurationException e) {
+                //e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (InterruptedException e) {
+                //e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
 
         }
     }
