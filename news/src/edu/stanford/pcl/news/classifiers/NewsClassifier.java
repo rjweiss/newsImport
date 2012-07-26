@@ -1,7 +1,6 @@
 package edu.stanford.pcl.news.classifiers;
 
 import com.mongodb.*;
-import edu.stanford.nlp.classify.Classifier;
 import edu.stanford.nlp.classify.LinearClassifier;
 import edu.stanford.nlp.classify.LinearClassifierFactory;
 import edu.stanford.nlp.ling.BasicDatum;
@@ -32,18 +31,9 @@ public class NewsClassifier {
     private ArrayList<Datum<String, String>> testData;
     private LinearClassifierFactory<String, String> factory;
     private LinearClassifier<String, String> classifier;
-    private Counter<String> contingency;
     private BasicDBObject subsetQuery;
     private List<String> includedFeatures;
     private String classificationLabel;
-
-    public NewsClassifier(List<String> featureAttributes, String labelAttribute) {
-        this.featureAttributes = featureAttributes;
-        this.labelAttribute = labelAttribute;
-        this.trainingData =  new ArrayList<Datum<String, String>>();
-        this.testData = new ArrayList<Datum<String, String>>();
-        this.factory = new LinearClassifierFactory<String, String>();
-    }
 
     private static void connect() {
         try {
@@ -58,7 +48,7 @@ public class NewsClassifier {
         }
         articles = db.getCollection("articles");
     }
-
+//
     private static Datum<String, String> makeDatum(List<String> features, String label) {
 
         BasicDatum<String, String> datum;
@@ -73,6 +63,14 @@ public class NewsClassifier {
     private List<String> featureAttributes = new ArrayList<String>();
     private String labelAttribute;
 
+    public NewsClassifier(List<String> featureAttributes, String labelAttribute) {
+        this.featureAttributes = featureAttributes;
+        this.labelAttribute = labelAttribute;
+        this.trainingData =  new ArrayList<Datum<String, String>>();
+        this.testData = new ArrayList<Datum<String, String>>();
+        this.factory = new LinearClassifierFactory<String, String>();
+
+    }
 
     private Object getFeature(Object object, String[] attributeParts, int attributeIndex) {
         if (attributeParts.length == 1) {
@@ -88,7 +86,7 @@ public class NewsClassifier {
             return list;
         }
         else {
-            return getFeature(((DBObject)object).get(attributeParts[attributeIndex]), attributeParts, 1 + attributeIndex);
+            return getFeature(((DBObject)object).get(attributeParts[attributeIndex]), attributeParts, attributeIndex + 1);
         }
     }
 
@@ -98,7 +96,6 @@ public class NewsClassifier {
     }
 
     public void train(BasicDBObject subsetQuery, double testSamplePercentage) {
-
         // TODO: make datum, sample, train and classify test subset
         DBCursor cursor = articles.find(subsetQuery);
         while (cursor.hasNext()) {
@@ -115,8 +112,6 @@ public class NewsClassifier {
                 }
             }
             trainingData.add(makeDatum(features, (String)obj.get(labelAttribute)));
-            System.out.println(obj.get("fileName"));
-//            System.out.println(trainingData.size());
         }
 
         double numSamples = trainingData.size() / testSamplePercentage;
@@ -135,9 +130,8 @@ public class NewsClassifier {
         factory.useConjugateGradientAscent();
         factory.setVerbose(true);
         factory.setSigma(10.0);
+        LinearClassifier<String, String> classifier = factory.trainClassifier(trainingData);
 
-//        LinearClassifier<String, String> classifier = factory.trainClassifier(trainingData);
-        classifier = factory.trainClassifier(trainingData);
         Counter<String> contingency = new ClassicCounter<String>();
         Iterator<Datum<String, String>> iterator = testData.iterator();
 
@@ -164,18 +158,17 @@ public class NewsClassifier {
                 }
             }
         }
-        printSummary(contingency, classifier);
-        System.out.println(classifier.getTopFeatures(4.0, true, 5));
-    }
 
-    private void printSummary(Counter<String> contingency, Classifier<String,String> c) {
-        // Adapted from ColumnDataClassifier.java (StanfordCoreNLP).
-        Collection<String> totalLabels = c.labels();
+        //adapted from ColumnDataClassifier.java (StanfordCoreNLP)
+
+        Collection<String> totalLabels = classifier.labels();
         NumberFormat nf = NumberFormat.getNumberInstance();
         nf.setMinimumFractionDigits(3);
         nf.setMaximumFractionDigits(3);
         int num = testData.size();
 //        int numClasses = 0;
+//        double microAccuracy = 0.0;
+//        double macroF1 = 0.0;
 
         for (String key : totalLabels) {
 //            numClasses++;
@@ -187,12 +180,18 @@ public class NewsClassifier {
             double r = (tp == 0) ? 0.0 : ((double) tp) / (tp + fn);
             double f = (p == 0.0 && r == 0.0) ? 0.0 : 2 * p * r / (p + r);
             double acc = ((double) tp + tn) / num;
+//            macroF1 += f;
+//            microAccuracy += tp;
             System.err.println("Cls " + key + ": TP=" + tp + " FN=" + fn + " FP=" + fp + " TN=" + tn + "; Acc " + nf.format(acc) + " P " + nf.format(p) + " R " + nf.format(r) + " F1 " + nf.format(f));
-            nf.setMinimumFractionDigits(5);
-            nf.setMaximumFractionDigits(5);
+//            microAccuracy = microAccuracy / num;
+//            macroF1 = macroF1 / numClasses;
+//            nf.setMinimumFractionDigits(5);
+//            nf.setMaximumFractionDigits(5);
+//            System.err.println("Micro-averaged accuracy/F1: " + nf.format(microAccuracy));
+//            System.err.println("Macro-averaged F1: " + nf.format(macroF1));
         }
 
-
+        System.out.println("Done.");
     }
 
     public void classify(BasicDBObject subsetQuery) {
@@ -201,18 +200,31 @@ public class NewsClassifier {
 
    public static void classifyNews() throws Exception {
         connect();
-    }
+        BasicDBObject query = new BasicDBObject();
 
+        List<String> includedFeatures = new ArrayList<String>();
+
+//        NewsClassifier classifier = new NewsClassifier();
+//        classifier.classify();
+//        makeTrainingData(DBCollection collection, BasicDBObject query, ArrayList<String> includedFeatures, String labelName) throws Exception {
+//        makeTrainingData();
+
+
+    }
     public static void main(String[] args) throws Exception {
         connect();
+
         List<String> featureAttributes = new ArrayList<String>();
 //        featureAttributes.add("text");
-        featureAttributes.add("annotation.tokens.pos");
-        //featuresAttributes to add
+//        featureAttributes.add("annotation.tokens.pos");
+        featureAttributes.add("annotation.tokens.lemma.pos");
         String labelAttribute = "mediaSource";
 
         NewsClassifier c = new NewsClassifier(featureAttributes, labelAttribute);
         c.train(new BasicDBObject(), 10.0);
 //        c.classify(new BasicDBObject());
+
+
     }
+
 }

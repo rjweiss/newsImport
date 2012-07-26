@@ -64,7 +64,7 @@ public class TimesIndiaScraper {
 
             try {
                 String linkHref = link.attr("href");
-                System.out.println("link: " + linkHref);
+                System.out.println(date.toString("yyyy-MM-dd" + articleNumber));
                 processFile(linkHref, date, articleNumber);
                 Thread.currentThread().sleep(1000);
                 articleNumber++;
@@ -101,9 +101,9 @@ public class TimesIndiaScraper {
                 Writer out = new OutputStreamWriter(new FileOutputStream(fileName));
                 try {
                     out.write(result);
-                    System.out.println("saved");
+                    //System.out.println("saved");
                 } catch (Exception e) {
-                    System.out.println("No text for article: " + title);
+                    //System.out.println("No text for article: " + title);
                 }
 
 
