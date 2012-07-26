@@ -86,6 +86,8 @@ public class Sampler {
                 query.put("publicationDate", date.toDate());
                 query.put("mediaSource", sources[j]);
 
+                System.out.println(query.toString());
+
                 DBCursor cursor = updater.queryCursor("articles", query);
                 Integer count = 0;
                 int size = cursor.size();
