@@ -41,6 +41,7 @@ public class Sampler {
 
         while (years.size() <= 28) {
             years.add(2000 + random.nextInt(7));
+            System.out.println(years.size());
         }
 
         System.out.println("here2");
