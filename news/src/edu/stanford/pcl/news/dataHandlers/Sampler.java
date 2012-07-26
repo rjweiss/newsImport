@@ -37,6 +37,8 @@ public class Sampler {
         Set<Integer> days = new HashSet<Integer>();
         Random random = new Random();
 
+        System.out.println("here");
+
         while (years.size() <= 28) {
             years.add(2000 + random.nextInt(7));
         }
