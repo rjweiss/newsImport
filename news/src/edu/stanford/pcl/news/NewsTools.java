@@ -1,7 +1,7 @@
 package edu.stanford.pcl.news;
 
 import com.martiansoftware.jsap.*;
-import edu.stanford.pcl.news.classifiers.StanfordClassifier;
+import edu.stanford.pcl.news.classifiers.NewsClassifier;
 import edu.stanford.pcl.news.dataHandlers.Importer;
 import edu.stanford.pcl.news.dataHandlers.Processor;
 import edu.stanford.pcl.news.dataHandlers.Sampler;
@@ -58,16 +58,16 @@ public class NewsTools {
             } else if (JSAPconfig.getString("scraper").equals("Liberation")) {
                 LiberationScraper.scrapeNews();
             } else if (JSAPconfig.getString("scraper").equals("TimesIndia")) {
-                TimesIndiaScraper.scrapeNews("2001-02-12", "2012-07-08", 36934);
+                TimesIndiaScraper.scrapeNews("2001-07-25", "2012-07-08", 37097);
             } else if (JSAPconfig.getString("scraper").equals("Welt")) {
                 WeltScraper.scrapeNews();
             } else if (JSAPconfig.getString("scraper").equals("Zeit")) {
                 ZeitScraper.scrapeNews();
             }
         } else if (JSAPconfig.getString("actions").equals("process")) {
-            Processor.processNews("Los Angeles Times");
+            Processor.processNews("Baltimore Sun");
         } else if (JSAPconfig.getString("actions").equals("classify")) {
-            StanfordClassifier.classifyNews();
+            NewsClassifier.classifyNews();
         } else if (JSAPconfig.getString("actions").equals("query")) {
             LuceneQuerier.queryNews(JSAPconfig);
         } else if (JSAPconfig.getString("actions").equals("sample")) {

@@ -24,7 +24,8 @@ public class Processor {
             cursor.next();
             DBObject obj = cursor.curr();
             article = Article.fromMongoObject(obj);
-            document = annotator.getAnnotations(article.getText());
+
+            document = annotator.getAnnotations(article.getText().replace("<p>", "").replace("</p>", ""));
 
             System.out.println(article.getFileName());
 
