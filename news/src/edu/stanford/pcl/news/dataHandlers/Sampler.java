@@ -37,10 +37,9 @@ public class Sampler {
         List<Integer> days = new ArrayList<Integer>();
         Random random = new Random();
 
-        System.out.println("here");
 
         while (years.size() <= 28) {
-            int y = 2000 + random.nextInt(7);
+            int y = 2000 + random.nextInt(8);
             years.add(y);
             System.out.println(y);
         }
@@ -91,7 +90,7 @@ public class Sampler {
                 Integer count = 0;
                 int size = cursor.size();
 
-
+                System.out.println("here");
                 Set<Integer> articles = new HashSet<Integer>();
 
                 random = new Random();
