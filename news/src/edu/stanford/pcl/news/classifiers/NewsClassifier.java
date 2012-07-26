@@ -88,7 +88,7 @@ public class NewsClassifier {
             return list;
         }
         else {
-            return getFeature(((DBObject)object).get(attributeParts[attributeIndex]), attributeParts, attributeIndex + 1);
+            return getFeature(((DBObject)object).get(attributeParts[attributeIndex]), attributeParts, 1 + attributeIndex);
         }
     }
 
@@ -115,6 +115,8 @@ public class NewsClassifier {
                 }
             }
             trainingData.add(makeDatum(features, (String)obj.get(labelAttribute)));
+            System.out.println(obj.get("fileName"));
+//            System.out.println(trainingData.size());
         }
 
         double numSamples = trainingData.size() / testSamplePercentage;
@@ -134,7 +136,8 @@ public class NewsClassifier {
         factory.setVerbose(true);
         factory.setSigma(10.0);
 
-        LinearClassifier<String, String> classifier = factory.trainClassifier(trainingData);
+//        LinearClassifier<String, String> classifier = factory.trainClassifier(trainingData);
+        classifier = factory.trainClassifier(trainingData);
         Counter<String> contingency = new ClassicCounter<String>();
         Iterator<Datum<String, String>> iterator = testData.iterator();
 
@@ -162,11 +165,12 @@ public class NewsClassifier {
             }
         }
         printSummary(contingency, classifier);
+        System.out.println(classifier.getTopFeatures(4.0, true, 5));
     }
 
     private void printSummary(Counter<String> contingency, Classifier<String,String> c) {
         // Adapted from ColumnDataClassifier.java (StanfordCoreNLP).
-        Collection<String> totalLabels = classifier.labels();
+        Collection<String> totalLabels = c.labels();
         NumberFormat nf = NumberFormat.getNumberInstance();
         nf.setMinimumFractionDigits(3);
         nf.setMaximumFractionDigits(3);
@@ -187,6 +191,8 @@ public class NewsClassifier {
             nf.setMinimumFractionDigits(5);
             nf.setMaximumFractionDigits(5);
         }
+
+
     }
 
     public void classify(BasicDBObject subsetQuery) {
@@ -195,23 +201,18 @@ public class NewsClassifier {
 
    public static void classifyNews() throws Exception {
         connect();
-        BasicDBObject query = new BasicDBObject();
-        List<String> includedFeatures = new ArrayList<String>();
     }
 
     public static void main(String[] args) throws Exception {
         connect();
-
         List<String> featureAttributes = new ArrayList<String>();
-        featureAttributes.add("annotation.tokens.lemma.pos");
+        featureAttributes.add("text");
+//        featureAttributes.add("annotation.tokens.pos");
         //featuresAttributes to add
         String labelAttribute = "mediaSource";
 
         NewsClassifier c = new NewsClassifier(featureAttributes, labelAttribute);
         c.train(new BasicDBObject(), 10.0);
 //        c.classify(new BasicDBObject());
-
-
     }
-
 }
