@@ -1,11 +1,11 @@
 package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.*;
+import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.pcl.news.parsers.NytParser;
 import edu.stanford.pcl.news.parsers.TribParser;
 import edu.stanford.pcl.news.parsers.generalParser;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
@@ -31,6 +31,8 @@ public class Importer {
 
     private static Mongo mongo;
     private static DB db;
+    private static AnnotationExtractor annotator = new AnnotationExtractor("tokenize, ssplit, pos, lemma, ner");//, parse");
+    private static Annotation document;
 
     public Importer(DBCollection collection, IndexWriter indexWriter) {
         this.collection = collection;
@@ -41,7 +43,7 @@ public class Importer {
         try {
             ArrayList<ServerAddress> address = new ArrayList<ServerAddress>();
             address.add(new ServerAddress(MONGO_DB_MASTER_IP, 27017));
-            address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
+            //address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
             mongo = new Mongo(address);
             db = mongo.getDB(MONGO_DB_NAME);
         } catch (UnknownHostException e) {
@@ -92,6 +94,9 @@ public class Importer {
                         continue;
                     }
 
+                    document = annotator.getAnnotations(article.getText().replace("<p>", "").replace("</p>", ""));
+                    article.setAnnotation(new AnnotatedDocument(document));
+
                     try {
                         BasicDBObject mongoObject;
                         mongoObject = article.toMongoObject();
@@ -101,13 +106,14 @@ public class Importer {
                         continue;
                     }
 
-                    try {
+
+                    /* try {
                         Document doc;
                         doc = article.toLuceneDocument();
                         indexWriter.addDocument(doc);
                     } catch (IOException e) {
                         e.printStackTrace(System.err);
-                    }
+                    }*/
                     imported++;
 
                 }
