@@ -18,6 +18,8 @@ public class NewsTools {
                                 "Action to perform"),
                         new FlaggedOption("scraper", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'g', "scraper",
                                 "Scraper to run"),
+                        new FlaggedOption("importPath", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'i', "importPath",
+                                "path to import"),
                         new FlaggedOption("queryListFile", JSAP.STRING_PARSER, "/home/ec2-user/queries/conflictQuery.txt", JSAP.NOT_REQUIRED, 'q', "queryListFile",
                                 "List of queries to run"),
                         new FlaggedOption("mediaSource", JSAP.STRING_PARSER, "", JSAP.NOT_REQUIRED, 'd', "mediaSource",
@@ -44,14 +46,13 @@ public class NewsTools {
 
         if (JSAPconfig.getString("actions").equals("import")) {
             if (JSAPconfig.getString("mediaSource").equals("NewYorkTimes")) {
-                Importer.importNews("/rawdata/newspapers/nytimes", "New York Times", "english", "US", "NytParser");
+                Importer.importNews(JSAPconfig.getString("importPath"), "New York Times", "english", "US", "NytParser");
             } else if (JSAPconfig.getString("mediaSource").equals("BaltimoreSun")) {
-                Importer.importNews("/rawdata/newspapers/bsun", "Baltimore Sun", "english", "US", "TribParser");
+                Importer.importNews(JSAPconfig.getString("importPath"), "Baltimore Sun", "english", "US", "TribParser");
             } else if (JSAPconfig.getString("mediaSource").equals("ChicagoTribune")) {
-                Importer.importNews("/rawdata/newspapers/chitrib", "Chicago Tribune", "english", "US", "TribParser");
-
+                Importer.importNews(JSAPconfig.getString("importPath"), "Chicago Tribune", "english", "US", "TribParser");
             } else if (JSAPconfig.getString("mediaSource").equals("LosAngelesTimes")) {
-                Importer.importNews("/rawdata/newspapers/latimes", "Los Angeles Times", "english", "US", "TribParser");
+                Importer.importNews(JSAPconfig.getString("importPath"), "Los Angeles Times", "english", "US", "TribParser");
             }
 
 
