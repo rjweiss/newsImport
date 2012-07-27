@@ -43,12 +43,17 @@ public class NewsTools {
         if (jsap.messagePrinted()) System.exit(1);
 
         if (JSAPconfig.getString("actions").equals("import")) {
+            if (JSAPconfig.getString("mediaSource").equals("NewYorkTimes")) {
+                Importer.importNews("/rawdata/newspapers/nytimes", "New York Times", "english", "US", "NytParser");
+            } else if (JSAPconfig.getString("mediaSource").equals("BaltimoreSun")) {
+                Importer.importNews("/rawdata/newspapers/bsun", "Baltimore Sun", "english", "US", "TribParser");
+            } else if (JSAPconfig.getString("mediaSource").equals("ChicagoTribune")) {
+                Importer.importNews("/rawdata/newspapers/chitrib", "Chicago Tribune", "english", "US", "TribParser");
 
-            // Importer.importNews("/rawdata/newspapers/diewelt", "Die Welt", "german", "Germany", "generalParser");
-            Importer.importNews("/rawdata/newspapers/nytimes", "New York Times", "english", "US", "NytParser");
-            Importer.importNews("/rawdata/newspapers/chitrib", "Chicago Tribune", "english", "US", "TribParser");
-            Importer.importNews("/rawdata/newspapers/latimes", "Los Angeles Times", "english", "US", "TribParser");
-            Importer.importNews("/rawdata/newspapers/bsun", "Baltimore Sun", "english", "US", "TribParser");
+            } else if (JSAPconfig.getString("mediaSource").equals("LosAngelesTimes")) {
+                Importer.importNews("/rawdata/newspapers/latimes", "Los Angeles Times", "english", "US", "TribParser");
+            }
+
 
         } else if (JSAPconfig.getString("actions").equals("scrape")) {
             if (JSAPconfig.getString("scraper").equals("DerSpiegel")) {
