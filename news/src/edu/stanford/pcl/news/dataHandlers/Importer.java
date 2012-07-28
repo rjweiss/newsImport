@@ -89,18 +89,26 @@ public class Importer {
                         continue;
                     }
 
-                    document = annotator.getAnnotations(article.getText().replace("<p>", "").replace("</p>", ""));
-                    article.setAnnotation(new AnnotatedDocument(document));
+                    if (article.getText().length() > 200) {
 
-                    try {
-                        BasicDBObject mongoObject;
-                        mongoObject = article.toMongoObject();
-                        collection.insert(mongoObject, WriteConcern.SAFE);
-                    } catch (Exception e) {
-                        e.printStackTrace(System.err);
-                        continue;
+                        try {
+                            document = annotator.getAnnotations(article.getText().replace("<p>", "").replace("</p>", ""));
+                            article.setAnnotation(new AnnotatedDocument(document));
+                        } catch (Exception e) {
+                            skipped++;//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                            continue;
+                        }
+
+
+                        try {
+                            BasicDBObject mongoObject;
+                            mongoObject = article.toMongoObject();
+                            collection.insert(mongoObject, WriteConcern.SAFE);
+                        } catch (Exception e) {
+                            e.printStackTrace(System.err);
+                            continue;
+                        }
                     }
-
 
                     /* try {
                         Document doc;
