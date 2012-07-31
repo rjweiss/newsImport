@@ -5,7 +5,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
@@ -52,6 +52,26 @@ public class Updater {
         }*/
     }
 
+    public void batchAttributeUpdate(String collectionName, File batchFile) throws IOException {
+//        DBCollection collection = db.getCollection(collectionName);
+        BufferedReader reader = new BufferedReader(new FileReader(batchFile));
+        String line = reader.readLine();
+
+        String[] columnNames = line.split("\t");
+
+        while ((line = reader.readLine()) != null) {
+            String[] columnValues = line.split("\t");
+//            String value;
+            for (int i=0; i<columnValues.length; i++) {
+                System.out.println(columnNames[i] + ": " + columnValues[i]);
+            }
+
+            // Got the record.
+            
+            System.out.println("");
+        }
+    }
+
     public void updateMongo(Article article, String collectionName) {
         DBCollection collection = db.getCollection(collectionName);
         BasicDBObject query = new BasicDBObject();
@@ -71,6 +91,12 @@ public class Updater {
     public void close() throws IOException {
         mongo.close();
         // indexWriter.close();
+    }
+
+    public static void main(String[] args) throws IOException {
+        File batchFile = new File("C:\\Users\\Rebecca\\Documents\\computationalMediaAnalysis\\data.txt");
+        Updater update = new Updater();
+        update.batchAttributeUpdate("foo", batchFile);
     }
 }
 
