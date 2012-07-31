@@ -334,7 +334,16 @@ public class Article {
         } catch (Exception e) {
             // e.printStackTrace();
         }
-
+        try {
+            doc.add(new Field("entitiesDuration", this.getAnnotation().entitiesDuration.toString(), Field.Store.YES, Field.Index.ANALYZED));
+        } catch (Exception e) {
+            // e.printStackTrace();
+        }
+        try {
+            doc.add(new Field("entitiesCurrency", this.getAnnotation().entitiesCurrency.toString(), Field.Store.YES, Field.Index.ANALYZED));
+        } catch (Exception e) {
+            // e.printStackTrace();
+        }
         return (doc);
     }
 

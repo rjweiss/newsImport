@@ -1,16 +1,11 @@
 package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.*;
+import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.pcl.news.parsers.NytParser;
 import edu.stanford.pcl.news.parsers.TribParser;
 import edu.stanford.pcl.news.parsers.generalParser;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.SimpleFSDirectory;
-import org.apache.lucene.util.Version;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,18 +26,20 @@ public class Importer {
 
     private static Mongo mongo;
     private static DB db;
+    private static AnnotationExtractor annotator = new AnnotationExtractor("tokenize, ssplit, pos, lemma, ner");//, parse");
+    private static Annotation document;
 
-    public Importer(DBCollection collection, IndexWriter indexWriter) {
+    public Importer(DBCollection collection) {//}, IndexWriter indexWriter) {
         this.collection = collection;
-        this.indexWriter = indexWriter;
+        //this.indexWriter = indexWriter;
     }
 
     private static void MongoConnect() {
         try {
             ArrayList<ServerAddress> address = new ArrayList<ServerAddress>();
             address.add(new ServerAddress(MONGO_DB_MASTER_IP, 27017));
-            address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
-            mongo = new Mongo(address);
+            //address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
+            mongo = new Mongo("184.73.204.235", 27017);
             db = mongo.getDB(MONGO_DB_NAME);
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -92,22 +89,34 @@ public class Importer {
                         continue;
                     }
 
-                    try {
-                        BasicDBObject mongoObject;
-                        mongoObject = article.toMongoObject();
-                        collection.insert(mongoObject, WriteConcern.SAFE);
-                    } catch (Exception e) {
-                        e.printStackTrace(System.err);
-                        continue;
+                    if (article.getText().length() > 200) {
+
+                        try {
+                            document = annotator.getAnnotations(article.getText().replace("<p>", "").replace("</p>", ""));
+                            article.setAnnotation(new AnnotatedDocument(document));
+                        } catch (Exception e) {
+                            skipped++;//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                            continue;
+                        }
+
+
+                        try {
+                            BasicDBObject mongoObject;
+                            mongoObject = article.toMongoObject();
+                            collection.insert(mongoObject, WriteConcern.SAFE);
+                        } catch (Exception e) {
+                            e.printStackTrace(System.err);
+                            continue;
+                        }
                     }
 
-                    try {
+                    /* try {
                         Document doc;
                         doc = article.toLuceneDocument();
                         indexWriter.addDocument(doc);
                     } catch (IOException e) {
                         e.printStackTrace(System.err);
-                    }
+                    }*/
                     imported++;
 
                 }
@@ -122,18 +131,18 @@ public class Importer {
 
         db.getCollection(MONGO_DB_ARTICLES_COLLECTION).createIndex(new BasicDBObject("fileName", 1));
 
-        // Create/Open Lucene index.
-        StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-        Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
-        IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_36, analyzer);
-        IndexWriter indexWriter = new IndexWriter(index, config);
+        /*   // Create/Open Lucene index.
+   StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+   Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
+   IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_36, analyzer);
+   IndexWriter indexWriter = new IndexWriter(index, config);*/
 
         // Recursively parse and import XML files...
-        Importer importer = new Importer(db.getCollection(MONGO_DB_ARTICLES_COLLECTION), indexWriter);
+        Importer importer = new Importer(db.getCollection(MONGO_DB_ARTICLES_COLLECTION));//, indexWriter);
         importer.importAll(new File(path), sourceName, language, country, parserType);
 
         // Clean up.
-        indexWriter.close();
+        //indexWriter.close();
         mongo.close();
 
         System.out.println("Done.");
