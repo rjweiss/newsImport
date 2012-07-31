@@ -1,6 +1,12 @@
 package edu.stanford.pcl.news.servers;
 
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import edu.stanford.pcl.news.dataHandlers.Article;
+import edu.stanford.pcl.news.dataHandlers.Updater;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,12 +19,8 @@ public class ClassifierServer {
 
 
     // server constructor
-    public ClassifierServer(int port) {
-        articleList.add("one");
-        articleList.add("two");
-        articleList.add("three");
-        articleList.add("four");
-        articleList.add("five");
+    public ClassifierServer(int port) throws IOException {
+        loadArticles();
         /* create socket server and wait for connection requests */
         try {
             ServerSocket serverSocket = new ServerSocket(port);
@@ -37,7 +39,7 @@ public class ClassifierServer {
     }
 
     //	you must "run" server to have the server run as a console application
-    public static void newServer(int port) {
+    public static void newServer(int port) throws IOException {
         // start server on port 1500
         new ClassifierServer(port);
     }
@@ -104,6 +106,23 @@ public class ClassifierServer {
         }
     }
 
+    public synchronized void loadArticles() throws IOException {
+        BasicDBObject query = new BasicDBObject();
+
+        Updater updater = new Updater();
+        updater.connect();
+        DBCursor cursor = updater.queryCursor("articles", query);
+        Article article;
+        System.out.println("loading list of articles to classify");
+        while (cursor.hasNext()) {
+            cursor.next();
+            DBObject obj = cursor.curr();
+            article = Article.fromMongoObject(obj);
+            articleList.add(article.getFileName());
+        }
+        updater.close();
+    }
+
     public synchronized String getNext() {
         int current = articleList.size() - 1;
         String item = articleList.get(current);
@@ -111,10 +130,8 @@ public class ClassifierServer {
         return item;
     }
 
-    //
     public synchronized Integer getLength() {
         int size = articleList.size();
-
         return size;
     }
 }
