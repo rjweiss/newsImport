@@ -49,7 +49,8 @@ public class NewsClassifier {
         }
         articles = db.getCollection("articles");
     }
-//
+
+    //
     private static Datum<String, String> makeDatum(List<String> features, String label) {
 
         BasicDatum<String, String> datum;
@@ -67,26 +68,25 @@ public class NewsClassifier {
     public NewsClassifier(List<String> featureAttributes, String labelAttribute) {
         this.featureAttributes = featureAttributes;
         this.labelAttribute = labelAttribute;
-        this.trainingData =  new ArrayList<Datum<String, String>>();
+        this.trainingData = new ArrayList<Datum<String, String>>();
         this.testData = new ArrayList<Datum<String, String>>();
         this.factory = new LinearClassifierFactory<String, String>();
     }
 
     private Object getFeature(Object object, String[] attributeParts, int attributeIndex) {
         if (attributeParts.length == 1) {
-            return ((DBObject)object).get(attributeParts[0]);
+            return ((DBObject) object).get(attributeParts[0]);
         }
         if (object instanceof List) {
             // XXX  Should check that this is the last dotted attribute.  Fine for now.
             List<Object> list = new ArrayList<Object>();
-            for (Object item : (List)object) {
+            for (Object item : (List) object) {
                 // XXX  Should come up with attribute syntax for following format "text+[feature1,feature2,...]".
-                list.add(((DBObject)item).get("text") + "+" + ((DBObject)item).get(attributeParts[attributeIndex]));
+                list.add(((DBObject) item).get("text") + "+" + ((DBObject) item).get(attributeParts[attributeIndex]));
             }
             return list;
-        }
-        else {
-            return getFeature(((DBObject)object).get(attributeParts[attributeIndex]), attributeParts, attributeIndex + 1);
+        } else {
+            return getFeature(((DBObject) object).get(attributeParts[attributeIndex]), attributeParts, attributeIndex + 1);
         }
     }
 
@@ -105,13 +105,12 @@ public class NewsClassifier {
             for (String attribute : featureAttributes) {
                 Object feature = getFeature(obj, attribute);
                 if (feature instanceof String) {
-                    features.add((String)feature);
-                }
-                else if (feature instanceof List) {
-                    features.addAll((List<String>)feature);
+                    features.add((String) feature);
+                } else if (feature instanceof List) {
+                    features.addAll((List<String>) feature);
                 }
             }
-            trainingData.add(makeDatum(features, (String)obj.get(labelAttribute)));
+            trainingData.add(makeDatum(features, (String) obj.get(labelAttribute)));
         }
 
         double numSamples = trainingData.size() / testSamplePercentage;
@@ -169,7 +168,6 @@ public class NewsClassifier {
         int num = testData.size();
 
         //adapted from ColumnDataClassifier.java (StanfordCoreNLP)
-
         for (String key : totalLabels) {
             int tp = (int) contingency.getCount(key + "|TP");
             int fn = (int) contingency.getCount(key + "|FN");
@@ -200,17 +198,17 @@ public class NewsClassifier {
     }
 
     public static void classifyNews(String featureString, String labelString, BasicDBObject trainQuery, BasicDBObject classifyQuery) throws Exception {
-       connect();
+        connect();
 
-       // for sharding
-       // classifyNews should take in label exists, hand labeled, and other query limiters (date and source)
+        // for sharding
+        // classifyNews should take in label exists, hand labeled, and other query limiters (date and source)
 
-       List<String> featureAttributes = new ArrayList<String>();
-       featureAttributes.add(featureString);
-       String labelAttribute = labelString;
+        List<String> featureAttributes = new ArrayList<String>();
+        featureAttributes.add(featureString);
+        String labelAttribute = labelString;
 
-       NewsClassifier c = new NewsClassifier(featureAttributes, labelAttribute);
-       c.train(trainQuery, 10.0);
+        NewsClassifier c = new NewsClassifier(featureAttributes, labelAttribute);
+        c.train(trainQuery, 10.0);
 //        c.classify(classifyQuery);
     }
 
