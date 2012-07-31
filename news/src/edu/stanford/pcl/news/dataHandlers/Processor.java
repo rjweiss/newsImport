@@ -11,10 +11,9 @@ import java.text.SimpleDateFormat;
 
 public class Processor {
 
-
     public static void annotateUpdate(String collectionName, BasicDBObject query) throws IOException {
-        Article article;
 
+        Article article;
         AnnotationExtractor annotator = new AnnotationExtractor("tokenize, ssplit, pos, lemma, ner");//, parse");
         Annotation document;
 
