@@ -190,6 +190,10 @@ public class NewsClassifier {
         classifier = LinearClassifier.readClassifier(path);
     }
 
+    public void saveClassifier(LinearClassifier c, String path) {
+        c.writeClassifier(c, path);
+    }
+
     public Article classify(Article article) {
         // TODO: call classifier on an article
         return article;
@@ -225,5 +229,4 @@ public class NewsClassifier {
 //        c.classify();  needs to take an object of type Article
 
     }
-
 }
