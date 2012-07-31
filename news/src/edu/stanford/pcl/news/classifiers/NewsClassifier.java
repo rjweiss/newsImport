@@ -7,6 +7,7 @@ import edu.stanford.nlp.ling.BasicDatum;
 import edu.stanford.nlp.ling.Datum;
 import edu.stanford.nlp.stats.ClassicCounter;
 import edu.stanford.nlp.stats.Counter;
+import edu.stanford.pcl.news.dataHandlers.Article;
 
 import java.net.UnknownHostException;
 import java.text.NumberFormat;
@@ -69,7 +70,6 @@ public class NewsClassifier {
         this.trainingData =  new ArrayList<Datum<String, String>>();
         this.testData = new ArrayList<Datum<String, String>>();
         this.factory = new LinearClassifierFactory<String, String>();
-
     }
 
     private Object getFeature(Object object, String[] attributeParts, int attributeIndex) {
@@ -158,20 +158,19 @@ public class NewsClassifier {
                 }
             }
         }
+        printSummary(contingency, classifier);
+    }
 
-        //adapted from ColumnDataClassifier.java (StanfordCoreNLP)
-
+    private void printSummary(Counter<String> contingency, LinearClassifier<String, String> classifier) {
         Collection<String> totalLabels = classifier.labels();
         NumberFormat nf = NumberFormat.getNumberInstance();
         nf.setMinimumFractionDigits(3);
         nf.setMaximumFractionDigits(3);
         int num = testData.size();
-//        int numClasses = 0;
-//        double microAccuracy = 0.0;
-//        double macroF1 = 0.0;
+
+        //adapted from ColumnDataClassifier.java (StanfordCoreNLP)
 
         for (String key : totalLabels) {
-//            numClasses++;
             int tp = (int) contingency.getCount(key + "|TP");
             int fn = (int) contingency.getCount(key + "|FN");
             int fp = (int) contingency.getCount(key + "|FP");
@@ -180,50 +179,49 @@ public class NewsClassifier {
             double r = (tp == 0) ? 0.0 : ((double) tp) / (tp + fn);
             double f = (p == 0.0 && r == 0.0) ? 0.0 : 2 * p * r / (p + r);
             double acc = ((double) tp + tn) / num;
-//            macroF1 += f;
-//            microAccuracy += tp;
             System.err.println("Cls " + key + ": TP=" + tp + " FN=" + fn + " FP=" + fp + " TN=" + tn + "; Acc " + nf.format(acc) + " P " + nf.format(p) + " R " + nf.format(r) + " F1 " + nf.format(f));
-//            microAccuracy = microAccuracy / num;
-//            macroF1 = macroF1 / numClasses;
-//            nf.setMinimumFractionDigits(5);
-//            nf.setMaximumFractionDigits(5);
-//            System.err.println("Micro-averaged accuracy/F1: " + nf.format(microAccuracy));
-//            System.err.println("Macro-averaged F1: " + nf.format(macroF1));
         }
 
-        System.out.println("Done.");
+        System.out.println(classifier.getTopFeatures(0.01, false, 10));
+        classifier.dump();
     }
 
-    public void classify(BasicDBObject subsetQuery) {
+    public void loadClassifier(String path) {
+        classifier = LinearClassifier.readClassifier(path);
+    }
+
+    public void classify(Article article) {
         // TODO: call classifier on records of subset
     }
 
-   public static void classifyNews() throws Exception {
-        connect();
-        BasicDBObject query = new BasicDBObject();
+    public static void classifyNews(String featureString, String labelString, BasicDBObject trainQuery, BasicDBObject classifyQuery) throws Exception {
+       connect();
 
-        List<String> includedFeatures = new ArrayList<String>();
+       // for sharding
+       // classifyNews should take in label exists, hand labeled, and other query limiters (date and source)
 
-//        NewsClassifier classifier = new NewsClassifier();
-//        classifier.classify();
-//        makeTrainingData(DBCollection collection, BasicDBObject query, ArrayList<String> includedFeatures, String labelName) throws Exception {
-//        makeTrainingData();
+       List<String> featureAttributes = new ArrayList<String>();
+       featureAttributes.add(featureString);
+       String labelAttribute = labelString;
 
-
+       NewsClassifier c = new NewsClassifier(featureAttributes, labelAttribute);
+       c.train(trainQuery, 10.0);
+//        c.classify(classifyQuery);
     }
+
     public static void main(String[] args) throws Exception {
         connect();
 
         List<String> featureAttributes = new ArrayList<String>();
 //        featureAttributes.add("text");
 //        featureAttributes.add("annotation.tokens.pos");
-        featureAttributes.add("annotation.tokens.lemma.pos");
+        featureAttributes.add("annotation.tokens.lemma.pos.ner");
         String labelAttribute = "mediaSource";
 
         NewsClassifier c = new NewsClassifier(featureAttributes, labelAttribute);
         c.train(new BasicDBObject(), 10.0);
-//        c.classify(new BasicDBObject());
-
+//      c.classify(new BasicDBObject());
+//        c.classify();  needs to take an object of type Article
 
     }
 
