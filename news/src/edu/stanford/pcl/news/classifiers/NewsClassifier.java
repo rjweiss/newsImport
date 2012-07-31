@@ -190,8 +190,9 @@ public class NewsClassifier {
         classifier = LinearClassifier.readClassifier(path);
     }
 
-    public void classify(Article article) {
-        // TODO: call classifier on records of subset
+    public Article classify(Article article) {
+        // TODO: call classifier on an article
+        return article;
     }
 
     public static void classifyNews(String featureString, String labelString, BasicDBObject trainQuery, BasicDBObject classifyQuery) throws Exception {
