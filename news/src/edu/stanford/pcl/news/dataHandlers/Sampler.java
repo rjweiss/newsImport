@@ -1,7 +1,6 @@
 package edu.stanford.pcl.news.dataHandlers;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import com.martiansoftware.jsap.JSAPResult;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -27,7 +26,7 @@ public class Sampler {
         writer.close();
     }
 
-    public static void sample(JSAPResult JSAPconfig, Integer sampleSize, Integer totalArticles) throws IOException {
+    public static void sample(Integer sampleSize, Integer totalArticles) throws IOException {
 
         Set<Integer> sample = new HashSet<Integer>();
         Random random = new Random();

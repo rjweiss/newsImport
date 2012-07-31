@@ -1,12 +1,14 @@
 package edu.stanford.pcl.news;
 
 import com.martiansoftware.jsap.*;
+import edu.stanford.pcl.news.classifiers.ClassifierClient;
 import edu.stanford.pcl.news.classifiers.NewsClassifier;
 import edu.stanford.pcl.news.dataHandlers.Importer;
 import edu.stanford.pcl.news.dataHandlers.Processor;
 import edu.stanford.pcl.news.dataHandlers.Sampler;
 import edu.stanford.pcl.news.queriers.LuceneQuerier;
 import edu.stanford.pcl.news.scrapers.*;
+import edu.stanford.pcl.news.servers.ClassifierServer;
 
 public class NewsTools {
     public static void main(String[] args) throws Exception {
@@ -78,9 +80,13 @@ public class NewsTools {
             LuceneQuerier.queryNews(JSAPconfig);
         } else if (JSAPconfig.getString("actions").equals("sample")) {
             Sampler sampler = new Sampler();
-            sampler.sample(JSAPconfig);
-        }
+            sampler.sample(1500, 3000000);
 
+        } else if (JSAPconfig.getString("actions").equals("server")) {
+            ClassifierServer classifierServer = new ClassifierServer(1500);
+        } else if (JSAPconfig.getString("actions").equals("classifierWorker")) {
+            ClassifierClient classifierClient = new ClassifierClient("localhost", 1500);
+        }
 
     }
 }
