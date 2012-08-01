@@ -11,13 +11,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Updater {
 
     private static final String MONGO_DB_NAME = "news";
     //private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
-    private static final String MONGO_DB_MASTER_IP = "184.73.204.235";
-    private static final String MONGO_DB_SLAVE_IP = "107.22.253.110";
+//    private static final String MONGO_DB_MASTER_IP = "184.73.204.235";
+//    private static final String MONGO_DB_SLAVE_IP = "107.22.253.110";
 
     private static Mongo mongo;
     private static DB db;
@@ -35,9 +37,10 @@ public class Updater {
     public void connect() throws IOException {
         try {
             ArrayList<ServerAddress> address = new ArrayList<ServerAddress>();
-            address.add(new ServerAddress(MONGO_DB_MASTER_IP, 27017));
-            address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
-            mongo = new Mongo(address);
+//            address.add(new ServerAddress(MONGO_DB_MASTER_IP, 27017));
+//            address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
+//            mongo = new Mongo(address);
+            mongo = new Mongo("localhost");
             db = mongo.getDB(MONGO_DB_NAME);
             // ReadPreference readPreference = ReadPreference.SECONDARY;
             // db.setReadPreference(readPreference);
@@ -56,8 +59,9 @@ public class Updater {
     }
 
     public void batchAttributeUpdate(String collectionName, File batchFile, String fieldToUpdate, String idAttribute) throws IOException {
-//        DBCollection collection = db.getCollection(collectionName);
-        BufferedReader reader = new BufferedReader(new FileReader(batchFile));
+        DBCollection collection = db.getCollection(collectionName);
+
+        BufferedReader reader = new BufferedReader(new FileReader(batchFile)); //change to CSVreader
         String line = reader.readLine();
 
         String[] columnNames = line.split("\t");
@@ -65,16 +69,31 @@ public class Updater {
         while ((line = reader.readLine()) != null) {
             String[] columnValues = line.split("\t");
 //            String value;
-            for (int i=0; i<columnValues.length; i++) {
+            Map<String, String> docLabels = new HashMap<String, String>();
+            for (int i = 0; i < columnValues.length; i++) {
                 System.out.println(columnNames[i] + ": " + columnValues[i]);
+                docLabels.put(columnNames[i], columnValues[i]);
             }
-
-            // Got the record.
-
-            //Mongo connect here, get mongo document based on fileName (idAttribute)
-            // Article article = MONGOGET;
-            // article.setLabel(columnName[i], columnValues[i])
-            System.out.println("");
+            BasicDBObject query = new BasicDBObject();
+            query.put(idAttribute, columnValues[0]);
+            if (queryCursor(collectionName, query).hasNext()) {
+                DBObject obj = queryCursor(collectionName, query).next();
+                Article article = Article.fromMongoObject(obj);
+                for (Map.Entry<String, String> entry : docLabels.entrySet()) {
+                    if (!"fileName".equals(entry.getKey())) {
+                        String labelName = entry.getKey();
+                        String labelValue = entry.getValue();
+                        article.setLabel(labelName, labelValue);
+                    }
+                }
+                try {
+                    collection.save(article.toMongoObject());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                // article.setLabel(columnName[i], columnValues[i])
+                System.out.println("");
+            }
         }
     }
 
@@ -100,9 +119,11 @@ public class Updater {
     }
 
     public static void main(String[] args) throws IOException {
-        File batchFile = new File("C:\\Users\\Rebecca\\Documents\\computationalMediaAnalysis\\data.txt");
-        Updater update = new Updater();
-//        update.batchAttributeUpdate("foo", batchFile);
+        File batchFile = new File("/Users/Rebecca/Dropbox/research/stanfordBigData/dummyfile/data.txt");
+        Updater updater = new Updater();
+        updater.connect();
+        updater.batchAttributeUpdate("articles", batchFile, "labels", "fileName");
+        System.out.println("done");
     }
 }
 

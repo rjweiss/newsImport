@@ -15,18 +15,18 @@ import java.util.List;
 import java.util.Map;
 
 public class Article {
-    private String id;
-    private String pageNumber;
-    private String headline;
-    private String text;
-    private DateTime publicationDate;
-    private String fileName;
-    private String mediaType;
-    private String mediaSource;
-    private String overLap;
-    private String status;
-    private String language;
-    private String country;
+    private String id = "";
+    private String pageNumber = "";
+    private String headline = "";
+    private String text = "";
+    private DateTime publicationDate = new DateTime();
+    private String fileName = "";
+    private String mediaType = "";
+    private String mediaSource = "";
+    private String overLap = "";
+    private String status = "";
+    private String language = "";
+    private String country = "";
 
     //private Map<String, Object> features;
     private AnnotatedDocument annotation;
@@ -297,7 +297,7 @@ public class Article {
         article.setOverLap(object.get("overLap").toString());
         article.setPublicationDate(dateTime);
         article.setStatus(object.get("status").toString());
-        article.setCountry(object.get("country").toString());
+//        article.setCountry(object.get("country").toString());
 
         return article;
     }
@@ -360,27 +360,27 @@ public class Article {
         }
 
         try {
-            doc.add(new Field("hardsoft1", this.labels.get("hardsoft1"), Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new Field("labelHardsoft1", this.labels.get("hardsoft1"), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
         }
 
         try {
-            doc.add(new Field("hardsoft2", this.labels.get("hardsoft2"), Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new Field("labelHardsoft2", this.labels.get("hardsoft2"), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
         }
 
         try {
-            doc.add(new Field("hardsoft3", this.labels.get("hardsoft3"), Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new Field("labelHardsoft3", this.labels.get("hardsoft3"), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
         }
 
         try {
-            doc.add(new Field("topic", this.labels.get("topic"), Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new Field("labelTopic", this.labels.get("topic"), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
         }
 
         try {
-            doc.add(new Field("sentiment", this.labels.get("sentiment"), Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new Field("labelSentiment", this.labels.get("sentiment"), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
         }
 
