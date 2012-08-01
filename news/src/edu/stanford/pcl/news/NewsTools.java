@@ -74,8 +74,8 @@ public class NewsTools {
             }
         } else if (JSAPconfig.getString("actions").equals("process")) {
             Processor.processNews(JSAPconfig.getString("mediaSource"), JSAPconfig.getString("startDate"), JSAPconfig.getString("endDate"));
-        } else if (JSAPconfig.getString("actions").equals("classify")) {
-            NewsClassifier.classifyNews();
+        } else if (JSAPconfig.getString("actions").equals("train")) {
+            //NewsClassifier.classifyNews();
         } else if (JSAPconfig.getString("actions").equals("query")) {
             LuceneQuerier.queryNews(JSAPconfig);
         } else if (JSAPconfig.getString("actions").equals("sample")) {
@@ -85,7 +85,7 @@ public class NewsTools {
         } else if (JSAPconfig.getString("actions").equals("server")) {
             ClassifierServer classifierServer = new ClassifierServer(1500);
         } else if (JSAPconfig.getString("actions").equals("classifierWorker")) {
-            ClassifierClient classifierClient = new ClassifierClient("localhost", 1500);
+            ClassifierClient classifierClient = new ClassifierClient("localhost", 1500, "", "");
         }
 
     }
