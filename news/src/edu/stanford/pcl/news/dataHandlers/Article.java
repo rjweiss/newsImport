@@ -10,7 +10,9 @@ import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Article {
     private String id;
@@ -28,11 +30,9 @@ public class Article {
 
     //private Map<String, Object> features;
     private AnnotatedDocument annotation;
+    private Map<String,String> labels = new HashMap<String, String>();
 
-    //public Article() {
-    //    features = null;
-    //}
-
+    
     public String getId() {
         return id;
     }
@@ -149,6 +149,18 @@ public class Article {
         this.annotation = annotation;
     }
 
+    public Map<String, String> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(Map<String, String> labels) {
+        this.labels = labels;
+    }
+
+    public void setLabel(String labelName, String labelValue) {
+        this.labels.put(labelName, labelValue);
+    }
+
     private static BasicDBList createMongoList(List<String> list, String keyName) {
         BasicDBList basicDBList = new BasicDBList();
         for (String entity : list) {
@@ -177,6 +189,7 @@ public class Article {
         obj.put("status", this.getStatus());
         obj.put("language", this.getLanguage());
         obj.put("country", this.getCountry());
+
         // obj.put("features", this.getFeatures());
 
         //Time, Location, Organization, Person, Money, Percent, Date
@@ -238,7 +251,7 @@ public class Article {
             for (AnnotatedToken token : this.annotation.tokens) {
                 DBObject t = new BasicDBObject();
                 t.put("text", token.text);
-                t.put("lemma", token.lemma);
+               t.put("lemma", token.lemma);
                 t.put("pos", token.pos);
                 t.put("entity", token.entity);
                 list.add(t);
@@ -249,6 +262,17 @@ public class Article {
             //e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
+        try {
+            DBObject l = new BasicDBObject();
+            for (Map.Entry<String, String> entry : this.labels.entrySet()) {
+                String labelName = entry.getKey();
+                String labelValue = entry.getValue();
+                l.put(labelName, labelValue);
+            }
+            obj.put("labels", l);
+        } catch (Exception e) {
+            //e.printStackTrace()
+        }
         return obj;
     }
 
@@ -297,53 +321,69 @@ public class Article {
         try {
             doc.add(new Field("entitiesTime", this.getAnnotation().entitiesTime.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            // e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesLocation", this.getAnnotation().entitiesLocation.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            //e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesOrganization", this.getAnnotation().entitiesOrganization.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            // e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesPerson", this.getAnnotation().entitiesPerson.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            //  e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesMoney", this.getAnnotation().entitiesMoney.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            //  e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesPercent", this.getAnnotation().entitiesPercent.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            //  e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesDate", this.getAnnotation().entitiesDate.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            // e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesMisc", this.getAnnotation().entitiesMisc.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            // e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesDuration", this.getAnnotation().entitiesDuration.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            // e.printStackTrace();
         }
         try {
             doc.add(new Field("entitiesCurrency", this.getAnnotation().entitiesCurrency.toString(), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-            // e.printStackTrace();
         }
+
+        try {
+            doc.add(new Field("hardsoft1", this.labels.get("hardsoft1"), Field.Store.YES, Field.Index.ANALYZED));
+        } catch (Exception e) {
+        }
+
+        try {
+            doc.add(new Field("hardsoft2", this.labels.get("hardsoft2"), Field.Store.YES, Field.Index.ANALYZED));
+        } catch (Exception e) {
+        }
+
+        try {
+            doc.add(new Field("hardsoft3", this.labels.get("hardsoft3"), Field.Store.YES, Field.Index.ANALYZED));
+        } catch (Exception e) {
+        }
+
+        try {
+            doc.add(new Field("topic", this.labels.get("topic"), Field.Store.YES, Field.Index.ANALYZED));
+        } catch (Exception e) {
+        }
+
+        try {
+            doc.add(new Field("sentiment", this.labels.get("sentiment"), Field.Store.YES, Field.Index.ANALYZED));
+        } catch (Exception e) {
+        }
+
         return (doc);
     }
 

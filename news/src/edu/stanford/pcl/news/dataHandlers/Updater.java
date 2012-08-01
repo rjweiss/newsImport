@@ -5,7 +5,10 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
@@ -52,7 +55,7 @@ public class Updater {
         }*/
     }
 
-    public void batchAttributeUpdate(String collectionName, File batchFile) throws IOException {
+    public void batchAttributeUpdate(String collectionName, File batchFile, String fieldToUpdate, String idAttribute) throws IOException {
 //        DBCollection collection = db.getCollection(collectionName);
         BufferedReader reader = new BufferedReader(new FileReader(batchFile));
         String line = reader.readLine();
@@ -67,7 +70,10 @@ public class Updater {
             }
 
             // Got the record.
-            
+
+            //Mongo connect here, get mongo document based on fileName (idAttribute)
+            // Article article = MONGOGET;
+            // article.setLabel(columnName[i], columnValues[i])
             System.out.println("");
         }
     }
@@ -96,7 +102,7 @@ public class Updater {
     public static void main(String[] args) throws IOException {
         File batchFile = new File("C:\\Users\\Rebecca\\Documents\\computationalMediaAnalysis\\data.txt");
         Updater update = new Updater();
-        update.batchAttributeUpdate("foo", batchFile);
+//        update.batchAttributeUpdate("foo", batchFile);
     }
 }
 
