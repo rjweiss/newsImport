@@ -1,6 +1,5 @@
 package edu.stanford.pcl.news.servers;
 
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -17,8 +16,6 @@ import java.util.ArrayList;
 public class ClassifierServer {
     private static ArrayList<String> articleList = new ArrayList<String>();
 
-
-    // server constructor
     public ClassifierServer(int port) throws IOException {
         loadArticles();
         /* create socket server and wait for connection requests */
@@ -38,15 +35,10 @@ public class ClassifierServer {
         }
     }
 
-    //	you must "run" server to have the server run as a console application
     public static void newServer(int port) throws IOException {
-        // start server on port 1500
         new ClassifierServer(port);
     }
 
-    /**
-     * One instance of this thread will run for each client
-     */
     class TcpThread extends Thread {
         // the socket where to listen/talk
         Socket socket;

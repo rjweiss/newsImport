@@ -16,8 +16,8 @@ import java.util.List;
 
 public class ClassifierClient {
 
-    ObjectInputStream serverInput;        // to read the socker
-    ObjectOutputStream serverOutput;    // towrite on the socket
+    ObjectInputStream serverInput;
+    ObjectOutputStream serverOutput;
     Socket socket;
     private NewsClassifier newsClassifier;
 
