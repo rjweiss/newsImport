@@ -35,7 +35,7 @@ public class ClassifierClient {
         try {
             socket = new Socket(ip, port);
         } catch (Exception e) {
-            System.out.println("Error connectiong to server:" + e);
+            System.out.println("Error connecting to server:" + e);
             return;
         }
         System.out.println("Connection accepted " +

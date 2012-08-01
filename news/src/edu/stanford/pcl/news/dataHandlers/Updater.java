@@ -53,7 +53,7 @@ public class Updater {
     }
 
     public void batchAttributeUpdate(String collectionName, File batchFile) throws IOException {
-//        DBCollection collection = db.getCollection(collectionName);
+//      DBCollection collection = db.getCollection(collectionName);
         BufferedReader reader = new BufferedReader(new FileReader(batchFile));
         String line = reader.readLine();
 
@@ -65,9 +65,7 @@ public class Updater {
             for (int i=0; i<columnValues.length; i++) {
                 System.out.println(columnNames[i] + ": " + columnValues[i]);
             }
-
             // Got the record.
-            
             System.out.println("");
         }
     }
@@ -94,7 +92,7 @@ public class Updater {
     }
 
     public static void main(String[] args) throws IOException {
-        File batchFile = new File("C:\\Users\\Rebecca\\Documents\\computationalMediaAnalysis\\data.txt");
+        File batchFile = new File("C:\\Users\\Rebecca\\Documents\\computationalMediaAnalysis\\data.txt"); //generalize
         Updater update = new Updater();
         update.batchAttributeUpdate("foo", batchFile);
     }
