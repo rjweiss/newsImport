@@ -148,16 +148,18 @@ public class ClassifierServer {
 
         query.put("status", "open");
 
-        DBCursor cursor = genericMongoConnection.getOne("queue", query);
+        DBObject doc = genericMongoConnection.getOne("queue", query);
         String fileName = "";
-        if (cursor.length() == 0) {
+
+
+        try {
+            fileName = doc.get("fileName").toString();
+        } catch (Exception e) {
             serverStatus = "closed";
             System.exit(1);
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        while (cursor.hasNext()) {
-            cursor.next();
-            fileName = cursor.curr().get("fileName").toString();
-        }
+
         setArticleStatus("pending", fileName);
         return fileName;
     }
