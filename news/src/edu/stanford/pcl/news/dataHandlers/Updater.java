@@ -70,7 +70,7 @@ public class Updater {
 //            String value;
             Map<String, String> newLabels = new HashMap<String, String>();
             for (int i = 0; i < columnValues.length; i++) {
-//                System.out.println(columnNames[i] + ": " + columnValues[i]);
+                System.out.println(columnNames[i] + ": " + columnValues[i]);
                 newLabels.put(columnNames[i], columnValues[i]);
             }
             BasicDBObject query = new BasicDBObject();
@@ -90,7 +90,7 @@ public class Updater {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-//                System.out.println("");
+                System.out.println("Inserted.");
             }
         }
     }
