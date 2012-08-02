@@ -54,6 +54,7 @@ public class Sampler {
             DBCursor cursor = updater.queryCursor("articles", query);
 
 
+            System.out.println(cursor.curr().toString());
             DBObject obj = cursor.curr();
 
             article = Article.fromMongoObject(obj);
