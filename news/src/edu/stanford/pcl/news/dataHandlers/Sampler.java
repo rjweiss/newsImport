@@ -49,7 +49,7 @@ public class Sampler {
 
             BasicDBObject query = new BasicDBObject();
 
-
+            System.out.println(sampleIterator.next().toString());
             query.put("articleNumber", sampleIterator.next().toString());
             DBCursor cursor = updater.queryCursor("articles", query);
 
