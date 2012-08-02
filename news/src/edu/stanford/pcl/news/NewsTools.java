@@ -80,12 +80,12 @@ public class NewsTools {
             LuceneQuerier.queryNews(JSAPconfig);
         } else if (JSAPconfig.getString("actions").equals("sample")) {
             Sampler sampler = new Sampler();
-            sampler.sample(1500, 3000000);
+            sampler.sample(1500, 3202924);
 
         } else if (JSAPconfig.getString("actions").equals("server")) {
             ClassifierServer classifierServer = new ClassifierServer(1500);
         } else if (JSAPconfig.getString("actions").equals("classifierWorker")) {
-            ClassifierClient classifierClient = new ClassifierClient("localhost", 1500, "");
+            //   ClassifierClient classifierClient = new ClassifierClient("localhost", 1500, "");
         }
 
     }

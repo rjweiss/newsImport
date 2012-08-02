@@ -5,6 +5,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
+import javax.sound.midi.SysexMessage;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -59,6 +60,7 @@ public class Sampler {
             resultSet.add(article.getFileName());
             resultSet.add(article.getHeadline());
             resultSet.add(article.getText());
+            System.out.println(i + " " + article.getFileName());
             results.put(Integer.toString(i), resultSet);
         }
 
