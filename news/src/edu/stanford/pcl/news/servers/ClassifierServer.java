@@ -1,9 +1,8 @@
 package edu.stanford.pcl.news.servers;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import com.mongodb.*;
 import edu.stanford.pcl.news.dataHandlers.Article;
+import edu.stanford.pcl.news.dataHandlers.GenericMongoConnection;
 import edu.stanford.pcl.news.dataHandlers.Updater;
 
 import java.io.IOException;
@@ -15,15 +14,20 @@ import java.util.ArrayList;
 
 public class ClassifierServer {
     private static ArrayList<String> articleList = new ArrayList<String>();
+    private GenericMongoConnection genericMongoConnection;
+    private String serverStatus;
 
     public ClassifierServer(int port) throws IOException {
+        genericMongoConnection = new GenericMongoConnection();
+        genericMongoConnection.connect();
+        serverStatus = "open";
         loadArticles();
         /* create socket server and wait for connection requests */
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("ClassifierServer waiting for client on port " + serverSocket.getLocalPort());
 
-            while (true) {
+            while (serverStatus.equals("open")) {
                 Socket socket = serverSocket.accept();  // accept connection
                 System.out.println("New client asked for a connection");
                 TcpThread t = new TcpThread(socket);    // make a thread of it
@@ -65,11 +69,22 @@ public class ClassifierServer {
 
             String clientMessage = "";
             int i = 0;
+
+            String fileName = null;
+
             do {
                 try {
                     clientMessage = (String) serverInput.readObject();
-                    System.out.println("client>" + clientMessage);
-                    sendMessage(getNext());
+                    if (clientMessage.equals("done")) {
+                        setArticleStatus("done", fileName);
+                        fileName = getArticle();
+                        setArticleStatus("pending", fileName);
+                        sendMessage(getArticle());
+                    } else if (fileName == null) {
+                        fileName = getArticle();
+                        setArticleStatus("pending", fileName);
+                        sendMessage(getArticle());
+                    }
                 } catch (ClassNotFoundException classnot) {
                     System.err.println("Data received in unknown format");
                 } catch (IOException e) {
@@ -77,7 +92,7 @@ public class ClassifierServer {
                 }
                 i++;
                 System.out.println(i);
-            } while (getLength() > 0);
+            } while (serverStatus.equals("open"));
             sendMessage("terminate");
 
             try {
@@ -115,16 +130,30 @@ public class ClassifierServer {
         updater.close();
     }
 
-    public synchronized String getNext() {
-        int current = articleList.size() - 1;
-        String item = articleList.get(current);
-        articleList.remove(current);
-        return item;
+    public synchronized String getArticle() throws IOException {
+
+        BasicDBObject query = new BasicDBObject();
+
+        query.put("status", "open");
+
+        DBCursor cursor = genericMongoConnection.getOne("queue", query);
+        String fileName = "";
+        if (cursor.length() == 0) {
+            serverStatus = "closed";
+            System.exit(1);
+        }
+        while (cursor.hasNext()) {
+            cursor.next();
+            fileName = cursor.curr().get("fileName").toString();
+        }
+        setArticleStatus("pending", fileName);
+        return fileName;
     }
 
-    public synchronized Integer getLength() {
-        int size = articleList.size();
-        return size;
+    public synchronized void setArticleStatus(String status, String fileName) {
+        BasicDBObject newDocument = new BasicDBObject().append("$set",
+                new BasicDBObject().append("status", status));
+        genericMongoConnection.update("queue", fileName, newDocument);
     }
 }
 
