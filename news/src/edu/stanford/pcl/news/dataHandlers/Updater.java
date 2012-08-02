@@ -34,6 +34,12 @@ public class Updater {
         return cursor;
     }
 
+    public DBObject getOne(String collectionName, BasicDBObject query) {
+        DBCollection collection = db.getCollection(collectionName);
+        DBObject doc = collection.findOne(query);
+        return doc;
+    }
+
     public void connect() throws IOException {
         try {
 

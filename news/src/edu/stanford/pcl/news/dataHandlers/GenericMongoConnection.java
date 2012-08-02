@@ -34,10 +34,10 @@ public class GenericMongoConnection {
         }
     }
 
-    public DBCursor getOne(String collectionName, BasicDBObject query) {
+    public DBObject getOne(String collectionName, BasicDBObject query) {
         DBCollection collection = db.getCollection(collectionName);
-        DBCursor cursor = collection.find(query).limit(1);
-        return cursor;
+        DBObject doc = collection.findOne(query);
+        return doc;
     }
 
     public DBCursor getFullSet(String collectionName, BasicDBObject query) {

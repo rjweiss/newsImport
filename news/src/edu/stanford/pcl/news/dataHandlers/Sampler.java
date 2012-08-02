@@ -51,11 +51,7 @@ public class Sampler {
             String nextArticle = sampleIterator.next().toString();
             System.out.println(nextArticle);
             query.put("articleNumber", nextArticle);
-            DBCursor cursor = updater.queryCursor("articles", query);
-
-
-            System.out.println(cursor.next().toString());
-            DBObject obj = cursor.curr();
+            DBObject obj = updater.getOne("articles", query);
 
             article = Article.fromMongoObject(obj);
             resultSet.add(article.getPublicationDate().toString("yyyyMMdd"));
@@ -65,7 +61,6 @@ public class Sampler {
             resultSet.add(article.getText());
             System.out.println(i + " " + article.getFileName());
             results.put(Integer.toString(i), resultSet);
-            cursor.close();
         }
 
 
