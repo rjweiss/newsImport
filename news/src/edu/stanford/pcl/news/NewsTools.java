@@ -85,7 +85,7 @@ public class NewsTools {
         } else if (JSAPconfig.getString("actions").equals("server")) {
             ClassifierServer classifierServer = new ClassifierServer(1500);
         } else if (JSAPconfig.getString("actions").equals("classifierWorker")) {
-            ClassifierClient classifierClient = new ClassifierClient("localhost", 1500, "", "");
+            ClassifierClient classifierClient = new ClassifierClient("localhost", 1500, "");
         }
 
     }
