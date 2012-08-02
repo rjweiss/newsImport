@@ -88,7 +88,7 @@ public class ClassifierServer {
                 } catch (ClassNotFoundException classnot) {
                     System.err.println("Data received in unknown format");
                 } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e.printStackTrace();
                 }
                 i++;
                 System.out.println(i);
@@ -99,6 +99,7 @@ public class ClassifierServer {
                 serverOutput.close();
                 serverInput.close();
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 

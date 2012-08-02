@@ -40,7 +40,7 @@ public class Updater {
 //            address.add(new ServerAddress(MONGO_DB_MASTER_IP, 27017));
 //            address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
 //            mongo = new Mongo(address);
-            mongo = new Mongo("localhost");
+            mongo = new Mongo("184.73.204.235");
             db = mongo.getDB(MONGO_DB_NAME);
             // ReadPreference readPreference = ReadPreference.SECONDARY;
             // db.setReadPreference(readPreference);

@@ -108,6 +108,6 @@ public class ClassifierClient {
         }
 
         cursor.close();
-        return "next";
+        return "done";
     }
 }
