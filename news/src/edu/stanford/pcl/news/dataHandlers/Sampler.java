@@ -39,7 +39,7 @@ public class Sampler {
         }
 
         Article article;
-        ArrayList<String> resultSet = new ArrayList<String>();
+
         Updater updater = new Updater();
         updater.connect();
 
@@ -48,6 +48,7 @@ public class Sampler {
         while (sampleIterator.hasNext() && i <= sampleSize) {
 
             try {
+                ArrayList<String> resultSet = new ArrayList<String>();
                 BasicDBObject query = new BasicDBObject();
                 Integer nextArticle = (Integer) sampleIterator.next();
                 query.put("articleNumber", nextArticle);
