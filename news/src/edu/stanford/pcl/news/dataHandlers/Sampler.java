@@ -53,7 +53,7 @@ public class Sampler {
             query.put("articleNumber", nextArticle);
             DBObject obj = updater.getOne("articles", query);
 
-            System.out.println(obj);
+            System.out.println(obj.get("fileName"));
 
             article = Article.fromMongoObject(obj);
             resultSet.add(article.getPublicationDate().toString("yyyyMMdd"));
