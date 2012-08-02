@@ -31,9 +31,11 @@ public class Sampler {
 
         Set<Integer> sample = new HashSet<Integer>();
         Random random = new Random();
-
+        int draw = 0;
         while (sample.size() < sampleSize) {
             sample.add(random.nextInt(totalArticles));
+            System.out.println(draw);
+            draw++;
         }
 
         Article article;
