@@ -60,7 +60,6 @@ public class Updater {
 
     public void batchAttributeUpdate(String collectionName, File batchFile, String fieldToUpdate, String idAttribute) throws IOException {
         DBCollection collection = db.getCollection(collectionName);
-
         BufferedReader reader = new BufferedReader(new FileReader(batchFile)); //change to CSVreader
         String line = reader.readLine();
 
@@ -69,17 +68,17 @@ public class Updater {
         while ((line = reader.readLine()) != null) {
             String[] columnValues = line.split("\t");
 //            String value;
-            Map<String, String> docLabels = new HashMap<String, String>();
+            Map<String, String> newLabels = new HashMap<String, String>();
             for (int i = 0; i < columnValues.length; i++) {
-                System.out.println(columnNames[i] + ": " + columnValues[i]);
-                docLabels.put(columnNames[i], columnValues[i]);
+//                System.out.println(columnNames[i] + ": " + columnValues[i]);
+                newLabels.put(columnNames[i], columnValues[i]);
             }
             BasicDBObject query = new BasicDBObject();
             query.put(idAttribute, columnValues[0]);
             if (queryCursor(collectionName, query).hasNext()) {
                 DBObject obj = queryCursor(collectionName, query).next();
                 Article article = Article.fromMongoObject(obj);
-                for (Map.Entry<String, String> entry : docLabels.entrySet()) {
+                for (Map.Entry<String, String> entry : newLabels.entrySet()) {
                     if (!"fileName".equals(entry.getKey())) {
                         String labelName = entry.getKey();
                         String labelValue = entry.getValue();
@@ -91,8 +90,7 @@ public class Updater {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                // article.setLabel(columnName[i], columnValues[i])
-                System.out.println("");
+//                System.out.println("");
             }
         }
     }

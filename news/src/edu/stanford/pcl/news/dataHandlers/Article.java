@@ -30,8 +30,7 @@ public class Article {
 
     //private Map<String, Object> features;
     private AnnotatedDocument annotation;
-    private Map<String,String> labels = new HashMap<String, String>();
-
+    private Map<String, String> labels = new HashMap<String, String>();
     
     public String getId() {
         return id;
@@ -251,7 +250,7 @@ public class Article {
             for (AnnotatedToken token : this.annotation.tokens) {
                 DBObject t = new BasicDBObject();
                 t.put("text", token.text);
-               t.put("lemma", token.lemma);
+                t.put("lemma", token.lemma);
                 t.put("pos", token.pos);
                 t.put("entity", token.entity);
                 list.add(t);
@@ -263,13 +262,17 @@ public class Article {
         }
 
         try {
-            DBObject l = new BasicDBObject();
+            BasicDBList list = new BasicDBList();
             for (Map.Entry<String, String> entry : this.labels.entrySet()) {
+                DBObject l = new BasicDBObject();
                 String labelName = entry.getKey();
                 String labelValue = entry.getValue();
-                l.put(labelName, labelValue);
+                l.put("handLabeled", "True");
+                l.put("classCategory", labelName);
+                l.put("classValue", labelValue);
+                list.add(l);
             }
-            obj.put("labels", l);
+            obj.put("labels", list);
         } catch (Exception e) {
             //e.printStackTrace()
         }
@@ -299,6 +302,19 @@ public class Article {
         article.setStatus(object.get("status").toString());
 //        article.setCountry(object.get("country").toString());
 
+        BasicDBObject annotation = (BasicDBObject) object.get("annotation");
+        BasicDBList tokens = (BasicDBList) annotation.get("tokens");
+
+        article.setAnnotation(new AnnotatedDocument());
+        for (int i = 0; i < tokens.size(); i++) {
+            BasicDBObject token = (BasicDBObject) tokens.get(Integer.toString(i));
+            AnnotatedToken t = new AnnotatedToken();
+            t.text = (String) token.get("text");
+            t.lemma = (String) token.get("lemma");
+            t.pos = (String) token.get("pos");
+            t.entity = (String) token.get("entity");
+            article.getAnnotation().tokens.add(t);
+        }
         return article;
     }
 

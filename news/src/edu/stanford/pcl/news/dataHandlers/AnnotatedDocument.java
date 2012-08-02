@@ -23,7 +23,9 @@ public class AnnotatedDocument extends ReflectionDBObject {
 
     //Time, Location, Organization, Person, Money, Percent, Date
 
+    public AnnotatedDocument() {
 
+    }
     public AnnotatedDocument(Annotation annotation) {
 
         List<CoreLabel> tokenList = annotation.get(CoreAnnotations.TokensAnnotation.class);
