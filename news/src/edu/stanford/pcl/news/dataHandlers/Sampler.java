@@ -32,7 +32,7 @@ public class Sampler {
         Set<Integer> sample = new HashSet<Integer>();
         Random random = new Random();
         int draw = 0;
-        while (sample.size() < sampleSize) {
+        while (sample.size() < sampleSize + 200) {
             sample.add(random.nextInt(totalArticles));
             System.out.println(draw);
             draw++;
@@ -45,16 +45,14 @@ public class Sampler {
 
         Iterator sampleIterator = sample.iterator();
         Integer i = 0;
-        while (sampleIterator.hasNext()) {
+        while (sampleIterator.hasNext() && i <= sampleSize) {
 
             try {
                 BasicDBObject query = new BasicDBObject();
                 Integer nextArticle = (Integer) sampleIterator.next();
-                System.out.println(nextArticle);
                 query.put("articleNumber", nextArticle);
                 DBObject obj = updater.getOne("articles", query);
 
-                System.out.println(query);
 
                 article = Article.fromMongoObject(obj);
                 resultSet.add(article.getPublicationDate().toString("yyyyMMdd"));
@@ -66,7 +64,7 @@ public class Sampler {
                 results.put(Integer.toString(i), resultSet);
                 i++;
             } catch (Exception e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                //  e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         }
 
