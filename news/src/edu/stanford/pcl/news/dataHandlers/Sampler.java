@@ -64,6 +64,7 @@ public class Sampler {
             resultSet.add(article.getText());
             System.out.println(i + " " + article.getFileName());
             results.put(Integer.toString(i), resultSet);
+            cursor.close();
         }
 
 
