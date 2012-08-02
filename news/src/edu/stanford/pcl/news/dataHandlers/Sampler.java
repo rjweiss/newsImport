@@ -47,23 +47,27 @@ public class Sampler {
         Integer i = 0;
         while (sampleIterator.hasNext()) {
 
-            BasicDBObject query = new BasicDBObject();
-            Integer nextArticle = (Integer) sampleIterator.next();
-            System.out.println(nextArticle);
-            query.put("articleNumber", nextArticle);
-            DBObject obj = updater.getOne("articles", query);
+            try {
+                BasicDBObject query = new BasicDBObject();
+                Integer nextArticle = (Integer) sampleIterator.next();
+                System.out.println(nextArticle);
+                query.put("articleNumber", nextArticle);
+                DBObject obj = updater.getOne("articles", query);
 
-            System.out.println(query);
+                System.out.println(query);
 
-            article = Article.fromMongoObject(obj);
-            resultSet.add(article.getPublicationDate().toString("yyyyMMdd"));
-            resultSet.add(article.getMediaSource());
-            resultSet.add(article.getFileName());
-            resultSet.add(article.getHeadline());
-            resultSet.add(article.getText());
-            System.out.println(i + " " + article.getFileName());
-            results.put(Integer.toString(i), resultSet);
-            i++;
+                article = Article.fromMongoObject(obj);
+                resultSet.add(article.getPublicationDate().toString("yyyyMMdd"));
+                resultSet.add(article.getMediaSource());
+                resultSet.add(article.getFileName());
+                resultSet.add(article.getHeadline());
+                resultSet.add(article.getText());
+                System.out.println(i + " " + article.getFileName());
+                results.put(Integer.toString(i), resultSet);
+                i++;
+            } catch (Exception e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
         }
 
 
