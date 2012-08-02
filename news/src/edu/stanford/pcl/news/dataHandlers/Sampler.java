@@ -53,7 +53,7 @@ public class Sampler {
             query.put("articleNumber", nextArticle);
             DBCursor cursor = updater.queryCursor("articles", query);
 
-            cursor.next();
+
             DBObject obj = cursor.curr();
 
             article = Article.fromMongoObject(obj);
