@@ -9,6 +9,9 @@ public class AnnotatedToken {
     String pos;
     String entity;
 
+    public AnnotatedToken() {
+
+    }
     public AnnotatedToken(CoreLabel token) {
         text = token.get(CoreAnnotations.TextAnnotation.class);
         lemma = token.get(CoreAnnotations.LemmaAnnotation.class);

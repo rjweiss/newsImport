@@ -301,7 +301,20 @@ public class Article {
         article.setPublicationDate(dateTime);
         article.setStatus(object.get("status").toString());
 //        article.setCountry(object.get("country").toString());
-//        article.setAnnotation(object.get("annotation").getClass().getAnnotations());
+
+        BasicDBObject annotation = (BasicDBObject) object.get("annotation");
+        BasicDBList tokens = (BasicDBList) annotation.get("tokens");
+
+        article.setAnnotation(new AnnotatedDocument());
+        for (int i = 0; i < tokens.size(); i++) {
+            BasicDBObject token = (BasicDBObject) tokens.get(Integer.toString(i));
+            AnnotatedToken t = new AnnotatedToken();
+            t.text = (String) token.get("text");
+            t.lemma = (String) token.get("lemma");
+            t.pos = (String) token.get("pos");
+            t.entity = (String) token.get("entity");
+            article.getAnnotation().tokens.add(t);
+        }
         return article;
     }
 
