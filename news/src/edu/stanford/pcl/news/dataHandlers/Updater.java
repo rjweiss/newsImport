@@ -36,10 +36,7 @@ public class Updater {
 
     public void connect() throws IOException {
         try {
-            ArrayList<ServerAddress> address = new ArrayList<ServerAddress>();
-//            address.add(new ServerAddress(MONGO_DB_MASTER_IP, 27017));
-//            address.add(new ServerAddress(MONGO_DB_SLAVE_IP, 27017));
-//            mongo = new Mongo(address);
+
             mongo = new Mongo("184.73.204.235", 27017);
             db = mongo.getDB(MONGO_DB_NAME);
             // ReadPreference readPreference = ReadPreference.SECONDARY;
@@ -116,13 +113,13 @@ public class Updater {
         // indexWriter.close();
     }
 
-    public static void main(String[] args) throws IOException {
+    /*public static void main(String[] args) throws IOException {
         File batchFile = new File("/Users/Rebecca/Dropbox/research/stanfordBigData/dummyfile/data.txt");
         Updater updater = new Updater();
         updater.connect();
         updater.batchAttributeUpdate("articles", batchFile, "labels", "fileName");
         System.out.println("done");
-    }
+    }*/
 }
 
 

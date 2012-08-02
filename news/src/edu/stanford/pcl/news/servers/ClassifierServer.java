@@ -4,6 +4,7 @@ import com.mongodb.*;
 import edu.stanford.pcl.news.dataHandlers.Article;
 import edu.stanford.pcl.news.dataHandlers.GenericMongoConnection;
 import edu.stanford.pcl.news.dataHandlers.Updater;
+import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,7 +23,6 @@ public class ClassifierServer {
         genericMongoConnection.connect();
         serverStatus = "open";
         loadArticles();
-        /* create socket server and wait for connection requests */
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("ClassifierServer waiting for client on port " + serverSocket.getLocalPort());
@@ -71,29 +71,40 @@ public class ClassifierServer {
             int i = 0;
 
             String fileName = null;
-
+            DateTime expiration = DateTime.now().plusMinutes(3);
             do {
-                try {
-                    clientMessage = (String) serverInput.readObject();
-                    if (clientMessage.equals("done")) {
-                        setArticleStatus("done", fileName);
-                        fileName = getArticle();
-                        setArticleStatus("pending", fileName);
-                        sendMessage(getArticle());
-                    } else if (fileName == null) {
-                        fileName = getArticle();
-                        setArticleStatus("pending", fileName);
-                        sendMessage(getArticle());
+                if (expiration.isAfterNow()) {
+
+                    try {
+                        clientMessage = (String) serverInput.readObject();
+                        if (clientMessage.equals("done")) {
+                            setArticleStatus("done", fileName);
+                            fileName = getArticle();
+                            setArticleStatus("pending", fileName);
+                            sendMessage(getArticle());
+                        } else if (fileName == null) {
+                            fileName = getArticle();
+                            setArticleStatus("pending", fileName);
+                            sendMessage(getArticle());
+                        }
+                    } catch (ClassNotFoundException classnot) {
+                        System.err.println("Data received in unknown format");
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (ClassNotFoundException classnot) {
-                    System.err.println("Data received in unknown format");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    i++;
+                    System.out.println(i);
+                    expiration = DateTime.now().plusMinutes(3);
+                } else {
+                    serverStatus = "closed";
                 }
-                i++;
-                System.out.println(i);
             } while (serverStatus.equals("open"));
-            sendMessage("terminate");
+
+            try {
+                sendMessage("terminate");
+            } catch (Exception e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
 
             try {
                 serverOutput.close();

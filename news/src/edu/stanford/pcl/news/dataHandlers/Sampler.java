@@ -48,9 +48,9 @@ public class Sampler {
         while (sampleIterator.hasNext()) {
 
             BasicDBObject query = new BasicDBObject();
-
-            System.out.println(sampleIterator.next().toString());
-            query.put("articleNumber", sampleIterator.next().toString());
+            String nextArticle = sampleIterator.next().toString();
+            System.out.println(nextArticle);
+            query.put("articleNumber", nextArticle);
             DBCursor cursor = updater.queryCursor("articles", query);
 
             cursor.next();
