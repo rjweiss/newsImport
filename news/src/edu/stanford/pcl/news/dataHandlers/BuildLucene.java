@@ -39,8 +39,6 @@ public class BuildLucene {
             DBObject obj = cursor.curr();
             article = Article.fromMongoObject(obj);
             updater.createLucene(article);
-            if (count > 5)
-                break;
             count++;
             System.out.println(article.getMediaSource() + count);
         }
