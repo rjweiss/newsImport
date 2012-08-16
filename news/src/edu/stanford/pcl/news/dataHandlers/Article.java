@@ -323,7 +323,7 @@ public class Article {
                 article.getAnnotation().entitiesTime.add(entity.get("time").toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            //   e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         try {
@@ -333,7 +333,7 @@ public class Article {
                 article.getAnnotation().entitiesLocation.add(entity.get("location").toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            //   e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         try {
@@ -343,7 +343,7 @@ public class Article {
                 article.getAnnotation().entitiesOrganization.add(entity.get("organization").toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            //  e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         try {
@@ -353,7 +353,7 @@ public class Article {
                 article.getAnnotation().entitiesPerson.add(entity.get("person").toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            //  e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
 
@@ -364,7 +364,7 @@ public class Article {
                 article.getAnnotation().entitiesMoney.add(entity.get("money").toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            //  e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         try {
@@ -374,7 +374,7 @@ public class Article {
                 article.getAnnotation().entitiesPercent.add(entity.get("person").toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            //  e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         try {
@@ -384,7 +384,7 @@ public class Article {
                 article.getAnnotation().entitiesDate.add(entity.get("date").toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            //  e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         try {
@@ -394,7 +394,7 @@ public class Article {
                 article.getAnnotation().entitiesMisc.add(entity.get("misc").toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         try {
@@ -404,7 +404,7 @@ public class Article {
                 article.getAnnotation().entitiesCurrency.add(entity.get("currency").toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         try {
@@ -414,7 +414,7 @@ public class Article {
                 article.getAnnotation().entitiesDuration.add(entity.get("duration").toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
 
