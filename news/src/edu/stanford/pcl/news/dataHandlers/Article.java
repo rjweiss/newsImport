@@ -315,65 +315,106 @@ public class Article {
             article.getAnnotation().tokens.add(t);
         }
 
-        BasicDBList entitiesTime = (BasicDBList) object.get("entitiesTime");
-        for (int i = 0; i < entitiesTime.size(); i++) {
-            BasicDBObject entity = (BasicDBObject) entitiesTime.get(Integer.toString(i));
-            article.getAnnotation().entitiesTime.add(entity.get("time").toString());
+        BasicDBList entitiesTime = null;
+        try {
+            entitiesTime = (BasicDBList) object.get("entitiesTime");
+            for (int i = 0; i < entitiesTime.size(); i++) {
+                BasicDBObject entity = (BasicDBObject) entitiesTime.get(Integer.toString(i));
+                article.getAnnotation().entitiesTime.add(entity.get("time").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        BasicDBList entitiesLocation = (BasicDBList) object.get("entitiesLocation");
-        for (int i = 0; i < entitiesTime.size(); i++) {
-            BasicDBObject entity = (BasicDBObject) entitiesLocation.get(Integer.toString(i));
-            article.getAnnotation().entitiesLocation.add(entity.get("location").toString());
+        try {
+            BasicDBList entitiesLocation = (BasicDBList) object.get("entitiesLocation");
+            for (int i = 0; i < entitiesTime.size(); i++) {
+                BasicDBObject entity = (BasicDBObject) entitiesLocation.get(Integer.toString(i));
+                article.getAnnotation().entitiesLocation.add(entity.get("location").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        BasicDBList entitiesOrganization = (BasicDBList) object.get("entitiesOrganization");
-        for (int i = 0; i < entitiesTime.size(); i++) {
-            BasicDBObject entity = (BasicDBObject) entitiesOrganization.get(Integer.toString(i));
-            article.getAnnotation().entitiesOrganization.add(entity.get("organization").toString());
+        try {
+            BasicDBList entitiesOrganization = (BasicDBList) object.get("entitiesOrganization");
+            for (int i = 0; i < entitiesTime.size(); i++) {
+                BasicDBObject entity = (BasicDBObject) entitiesOrganization.get(Integer.toString(i));
+                article.getAnnotation().entitiesOrganization.add(entity.get("organization").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        BasicDBList entitiesPerson = (BasicDBList) object.get("entitiesPerson");
-        for (int i = 0; i < entitiesTime.size(); i++) {
-            BasicDBObject entity = (BasicDBObject) entitiesPerson.get(Integer.toString(i));
-            article.getAnnotation().entitiesPerson.add(entity.get("person").toString());
+        try {
+            BasicDBList entitiesPerson = (BasicDBList) object.get("entitiesPerson");
+            for (int i = 0; i < entitiesTime.size(); i++) {
+                BasicDBObject entity = (BasicDBObject) entitiesPerson.get(Integer.toString(i));
+                article.getAnnotation().entitiesPerson.add(entity.get("person").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
 
-        BasicDBList entitiesMoney = (BasicDBList) object.get("entitiesMoney");
-        for (int i = 0; i < entitiesTime.size(); i++) {
-            BasicDBObject entity = (BasicDBObject) entitiesMoney.get(Integer.toString(i));
-            article.getAnnotation().entitiesMoney.add(entity.get("money").toString());
+        try {
+            BasicDBList entitiesMoney = (BasicDBList) object.get("entitiesMoney");
+            for (int i = 0; i < entitiesTime.size(); i++) {
+                BasicDBObject entity = (BasicDBObject) entitiesMoney.get(Integer.toString(i));
+                article.getAnnotation().entitiesMoney.add(entity.get("money").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        BasicDBList entitiesPercent = (BasicDBList) object.get("entitiesPercent");
-        for (int i = 0; i < entitiesTime.size(); i++) {
-            BasicDBObject entity = (BasicDBObject) entitiesPercent.get(Integer.toString(i));
-            article.getAnnotation().entitiesPercent.add(entity.get("person").toString());
+        try {
+            BasicDBList entitiesPercent = (BasicDBList) object.get("entitiesPercent");
+            for (int i = 0; i < entitiesTime.size(); i++) {
+                BasicDBObject entity = (BasicDBObject) entitiesPercent.get(Integer.toString(i));
+                article.getAnnotation().entitiesPercent.add(entity.get("person").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        BasicDBList entitiesDate = (BasicDBList) object.get("entitiesDate");
-        for (int i = 0; i < entitiesTime.size(); i++) {
-            BasicDBObject entity = (BasicDBObject) entitiesDate.get(Integer.toString(i));
-            article.getAnnotation().entitiesDate.add(entity.get("date").toString());
+        try {
+            BasicDBList entitiesDate = (BasicDBList) object.get("entitiesDate");
+            for (int i = 0; i < entitiesTime.size(); i++) {
+                BasicDBObject entity = (BasicDBObject) entitiesDate.get(Integer.toString(i));
+                article.getAnnotation().entitiesDate.add(entity.get("date").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        BasicDBList entitiesMisc = (BasicDBList) object.get("entitiesMisc");
-        for (int i = 0; i < entitiesTime.size(); i++) {
-            BasicDBObject entity = (BasicDBObject) entitiesMisc.get(Integer.toString(i));
-            article.getAnnotation().entitiesMisc.add(entity.get("misc").toString());
+        try {
+            BasicDBList entitiesMisc = (BasicDBList) object.get("entitiesMisc");
+            for (int i = 0; i < entitiesTime.size(); i++) {
+                BasicDBObject entity = (BasicDBObject) entitiesMisc.get(Integer.toString(i));
+                article.getAnnotation().entitiesMisc.add(entity.get("misc").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        BasicDBList entitiesCurrency = (BasicDBList) object.get("entitiesCurrency");
-        for (int i = 0; i < entitiesTime.size(); i++) {
-            BasicDBObject entity = (BasicDBObject) entitiesCurrency.get(Integer.toString(i));
-            article.getAnnotation().entitiesCurrency.add(entity.get("currency").toString());
+        try {
+            BasicDBList entitiesCurrency = (BasicDBList) object.get("entitiesCurrency");
+            for (int i = 0; i < entitiesTime.size(); i++) {
+                BasicDBObject entity = (BasicDBObject) entitiesCurrency.get(Integer.toString(i));
+                article.getAnnotation().entitiesCurrency.add(entity.get("currency").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        BasicDBList entitiesDuration = (BasicDBList) object.get("entitiesDuration");
-        for (int i = 0; i < entitiesTime.size(); i++) {
-            BasicDBObject entity = (BasicDBObject) entitiesDuration.get(Integer.toString(i));
-            article.getAnnotation().entitiesDuration.add(entity.get("duration").toString());
+        try {
+            BasicDBList entitiesDuration = (BasicDBList) object.get("entitiesDuration");
+            for (int i = 0; i < entitiesTime.size(); i++) {
+                BasicDBObject entity = (BasicDBObject) entitiesDuration.get(Integer.toString(i));
+                article.getAnnotation().entitiesDuration.add(entity.get("duration").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
 
@@ -437,7 +478,7 @@ public class Article {
         } catch (Exception e) {
         }
 
-        try {
+        /*  try {
             doc.add(new Field("labelHardsoft1", this.labels.get("hardsoft1"), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
         }
@@ -460,7 +501,7 @@ public class Article {
         try {
             doc.add(new Field("labelSentiment", this.labels.get("sentiment"), Field.Store.YES, Field.Index.ANALYZED));
         } catch (Exception e) {
-        }
+        }*/
 
         return (doc);
     }
