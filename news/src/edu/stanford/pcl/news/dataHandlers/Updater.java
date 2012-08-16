@@ -22,7 +22,7 @@ import java.util.Map;
 public class Updater {
 
     private static final String MONGO_DB_NAME = "news";
-    private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/englishNewspapers";
+    private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneData/englishNewspapers";
 
     private static Mongo mongo;
     private static DB db;
