@@ -1,9 +1,14 @@
 package edu.stanford.pcl.news.dataHandlers;
 
 import com.mongodb.*;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,9 +22,7 @@ import java.util.Map;
 public class Updater {
 
     private static final String MONGO_DB_NAME = "news";
-    //private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
-//    private static final String MONGO_DB_MASTER_IP = "184.73.204.235";
-//    private static final String MONGO_DB_SLAVE_IP = "107.22.253.110";
+    private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/englishNewspapers";
 
     private static Mongo mongo;
     private static DB db;
@@ -45,20 +48,18 @@ public class Updater {
 
             mongo = new Mongo("184.73.204.235", 27017);
             db = mongo.getDB(MONGO_DB_NAME);
-            // ReadPreference readPreference = ReadPreference.SECONDARY;
-            // db.setReadPreference(readPreference);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
 
-        /*   try {
+        try {
             StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
             Directory index = FSDirectory.open(new File(LUCENE_INDEX_DIRECTORY));
             IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_36, analyzer);
             indexWriter = new IndexWriter(index, config);
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     public void batchAttributeUpdate(String collectionName, File batchFile, String fieldToUpdate, String idAttribute) throws IOException {
@@ -110,22 +111,28 @@ public class Updater {
     }
 
     public void updateLucene(Article article) throws IOException {
-        Document document = article.toLuceneDocument();
-        indexWriter.updateDocument(new Term("fileName", article.getFileName()), document);
+        try {
+            Document document = article.toLuceneDocument();
+            indexWriter.updateDocument(new Term("fileName", article.getFileName()), document);
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+        }
     }
+
+    public void createLucene(Article article) throws IOException {
+        try {
+            Document document = article.toLuceneDocument();
+            indexWriter.addDocument(document);
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
 
     public void close() throws IOException {
         mongo.close();
-        // indexWriter.close();
+        indexWriter.close();
     }
-
-    /*public static void main(String[] args) throws IOException {
-        File batchFile = new File("/Users/Rebecca/Dropbox/research/stanfordBigData/dummyfile/data.txt");
-        Updater updater = new Updater();
-        updater.connect();
-        updater.batchAttributeUpdate("articles", batchFile, "labels", "fileName");
-        System.out.println("done");
-    }*/
 }
 
 

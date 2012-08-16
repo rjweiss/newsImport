@@ -151,7 +151,6 @@ public class ClassifierServer {
         DBObject doc = genericMongoConnection.getOne("queue", query);
         String fileName = "";
 
-
         try {
             fileName = doc.get("fileName").toString();
         } catch (Exception e) {

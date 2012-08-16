@@ -3,6 +3,7 @@ package edu.stanford.pcl.news;
 import com.martiansoftware.jsap.*;
 import edu.stanford.pcl.news.classifiers.ClassifierClient;
 import edu.stanford.pcl.news.classifiers.NewsClassifier;
+import edu.stanford.pcl.news.dataHandlers.BuildLucene;
 import edu.stanford.pcl.news.dataHandlers.Importer;
 import edu.stanford.pcl.news.dataHandlers.Processor;
 import edu.stanford.pcl.news.dataHandlers.Sampler;
@@ -86,6 +87,8 @@ public class NewsTools {
             ClassifierServer classifierServer = new ClassifierServer(1500);
         } else if (JSAPconfig.getString("actions").equals("classifierWorker")) {
             //   ClassifierClient classifierClient = new ClassifierClient("localhost", 1500, "");
+        } else if (JSAPconfig.getString("actions").equals("createLucene")) {
+            BuildLucene.addDocuments();
         }
 
     }
