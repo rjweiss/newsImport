@@ -508,7 +508,7 @@ public class Article {
 
     public boolean isValid() {
         boolean valid = true;
-        valid &= (headline != null && !headline.isEmpty());
+        valid = (headline != null && !headline.isEmpty());
         valid &= (text != null && !text.isEmpty());
         valid &= (publicationDate != null);
         valid &= (fileName != null && !fileName.isEmpty());

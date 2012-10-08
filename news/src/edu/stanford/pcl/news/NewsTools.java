@@ -79,6 +79,7 @@ public class NewsTools {
             //NewsClassifier.classifyNews();
         } else if (JSAPconfig.getString("actions").equals("query")) {
             LuceneQuerier.queryNews(JSAPconfig);
+            System.out.println("here");
         } else if (JSAPconfig.getString("actions").equals("sample")) {
             Sampler sampler = new Sampler();
             sampler.sample(1500, 3202924);
