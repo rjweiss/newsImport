@@ -33,7 +33,7 @@ import java.util.Map.Entry;
 // 2) Aggregate queries are not tested and should be used with extreme caution
 
 public class LuceneQuerier {
-    private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneindex";
+    private static final String LUCENE_INDEX_DIRECTORY = "/rawdata/luceneData";
     LinkedHashMap<String, ArrayList> results = new LinkedHashMap<String, ArrayList>();
     private static ArrayList<String> mediaSourceList = new ArrayList<String>();
 
