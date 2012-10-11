@@ -142,7 +142,7 @@ public class LuceneQuerier {
         for (String[] row : queries) {
             if (isHeader) {
                 ArrayList<String> resultHeader = new ArrayList<String>();
-                //resultHeader.add(null);
+                resultHeader.add("Term");
                 for (String column : row) {
                     if ("all".equals(querySources)) {
                         for (String source : mediaSourceList) {
@@ -346,7 +346,7 @@ public class LuceneQuerier {
                 endDate = i * 10000 + 1231;
                 System.out.println("start date: " + startDate);
                 System.out.println("end date: " + endDate);
-                generateQueryCounts(startDate, endDate, JSAPconfig.getString("querySources"), ql, queries, (JSAPconfig.getString("outputFile") + Integer.toString(i)));
+                generateQueryCounts(startDate, endDate, JSAPconfig.getString("querySources"), ql, queries, (JSAPconfig.getString("outputFile") + Integer.toString(i) + ".txt"));
             }
 
 
