@@ -22,10 +22,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 
 // Notes:
@@ -101,7 +98,8 @@ public class LuceneQuerier {
     }
 
     public String executeCountQuery(String source, String terms, Integer startDate, Integer endDate) throws IOException, ParseException {
-        StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+        Set set = new HashSet();
+        StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36, set);
         Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
         IndexReader reader = IndexReader.open(index);
 
