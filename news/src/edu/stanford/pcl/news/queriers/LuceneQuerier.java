@@ -340,6 +340,16 @@ public class LuceneQuerier {
                     generateOccurenceList(startDate, endDate, JSAPconfig.getString("querySources"), column, ql, JSAPconfig.getString("outputFilePath"));
                 }
             }
+        } else if ("queryCountsYearly".equals(JSAPconfig.getString("type"))) {
+            for (int i = 2000; i <= 2010; i++) {
+                startDate = i * 10000 + 101;
+                endDate = i * 10000 + 1231;
+                System.out.println("start date: " + startDate);
+                System.out.println("end date: " + endDate);
+                generateQueryCounts(startDate, endDate, JSAPconfig.getString("querySources"), ql, queries, (JSAPconfig.getString("outputFile") + Integer.toString(i)));
+            }
+
+
         } else {
             System.exit(1);
         }
