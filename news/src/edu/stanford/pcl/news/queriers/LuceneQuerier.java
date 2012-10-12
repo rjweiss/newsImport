@@ -98,8 +98,8 @@ public class LuceneQuerier {
     }
 
     public String executeCountQuery(String source, String terms, Integer startDate, Integer endDate) throws IOException, ParseException {
-        Set set = new HashSet();
-        StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36, set);
+        //Set set = new HashSet();
+        StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
         Directory index = new SimpleFSDirectory(new File(LUCENE_INDEX_DIRECTORY));
         IndexReader reader = IndexReader.open(index);
 
