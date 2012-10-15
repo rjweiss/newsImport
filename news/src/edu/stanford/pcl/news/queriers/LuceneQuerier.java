@@ -115,7 +115,12 @@ public class LuceneQuerier {
 
         BooleanQuery booleanQuery = new BooleanQuery();
         booleanQuery.add(sourceQuery, BooleanClause.Occur.MUST);
-        booleanQuery.add(textQuery, BooleanClause.Occur.MUST);
+
+        if (terms.equals("\"*\"")) {
+            booleanQuery.add(textQuery, BooleanClause.Occur.MUST);
+        }
+
+
         booleanQuery.add(dateRangeQuery, BooleanClause.Occur.MUST);
 
         IndexSearcher searcher = new IndexSearcher(reader);
