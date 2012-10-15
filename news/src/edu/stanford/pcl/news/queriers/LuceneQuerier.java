@@ -116,7 +116,7 @@ public class LuceneQuerier {
         BooleanQuery booleanQuery = new BooleanQuery();
         booleanQuery.add(sourceQuery, BooleanClause.Occur.MUST);
 
-        if (terms.equals("\"*\"")) {
+        if (!terms.equals("\"*\"")) {
             booleanQuery.add(textQuery, BooleanClause.Occur.MUST);
         }
 
